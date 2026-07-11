@@ -1,0 +1,23 @@
+.container {
+  display: grid;
+  grid-template-columns: [firstShadow-start] 0.5rem [image-start] 40% [firstShadow-end] 1fr [secondShadow-start] 40% [image-end] 0.5rem [secondShadow-end];
+
+  grid-template-rows: [secondShadow-start] 0.5rem [image-start] 30% [secondShadow-end] 1fr [firstShadow-start] 28% [image-end] 0.5rem [firstShadow-end];
+
+  > img {
+    object-fit: cover;
+    border-radius: 12px;
+  }
+  .image {
+    grid-area: image;
+  }
+
+  .shadow {
+    &:nth-child(1) {
+      grid-area: firstShadow;
+    }
+    &:nth-child(2) {
+      grid-area: secondShadow;
+    }
+  }
+}

@@ -1,0 +1,56 @@
+"use client";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { useUser } from "@/features/auth/hooks/useUser";
+import { convertDate } from "@/utils/helper";
+import { FileCheck } from "lucide-react";
+import { ContractStatusSkeleton } from "./ContractStatusSkeleton";
+
+export default function ContractStatus() {
+  const { user, isLoading } = useUser();
+
+  if (isLoading) return <ContractStatusSkeleton />;
+  return (
+    <Card className="overflow-hidden">
+      <CardHeader className="pb-2 flex items-start  justify-between">
+        <CardTitle className="flex items-center gap-1">
+          <FileCheck />
+          <span> وضعیت قرارداد</span>
+        </CardTitle>
+        <Badge
+          variant={user.contractStatus === "active" ? "outline" : "destructive"}
+        >
+          {user.contractStatus === "active" ? "فعال" : "غیر فعال"}
+        </Badge>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex justify-between text-sm">
+          <span className="text-muted-foreground">شروع قرارداد</span>
+          <span className="font-medium">
+            {convertDate(user.contractStartDate)}
+          </span>
+        </div>
+        <div className="flex justify-between text-sm">
+          <span className="text-muted-foreground">پایان قرارداد</span>
+          <span className="font-medium">
+            {convertDate(user.contractEndDate)}
+          </span>
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground"> سپری شده</span>
+            <span className="font-medium ">{user.contractProgress}%</span>
+          </div>
+          <Progress value={user.contractProgress} />
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <span>پایان</span>
+            <span>{user.contractDaysRemaining} روز باقی‌مانده</span>
+            <span>شروع</span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
