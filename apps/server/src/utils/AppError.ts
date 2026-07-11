@@ -1,5 +1,7 @@
 export class AppError extends Error {
   public status: string;
+  public code?: number;
+  public errmsg?: string;
   constructor(
     public message: string,
     public statusCode: number,

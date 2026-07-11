@@ -1,12 +1,9 @@
 import type { Request, Response } from "express";
-import CatchError from "../utils/catchAsync.js";
 import FollowUpModel from "../models/followUp.model.js";
-import SessionReportModel, {
-  type SessionReportDocument,
-} from "../models/sessionReport.model.js";
+import SessionReportModel from "../models/sessionReport.model.js";
 import type { UserDocument } from "../models/user.model.js";
-import { deleteOne, getOne } from "./handlerFactory.js";
 import { AppError } from "../utils/AppError.js";
+import CatchError from "../utils/catchAsync.js";
 
 export const createSessionReport = CatchError(
   async (req: Request, res: Response) => {

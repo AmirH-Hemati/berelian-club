@@ -3,9 +3,8 @@ import { AppError } from "../utils/AppError.js";
 import { z } from "zod";
 
 const handelDuplicateFieldsDb = (err: AppError) => {
-  const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
+  const value = err.errmsg?.match(/(["'])(\\?.)*?\1/)?.[0] || "";
   const message = `فیلد انتخاب شده تکراری است ${value} `;
-
   return new AppError(message, 400);
 };
 function handleJWTError() {

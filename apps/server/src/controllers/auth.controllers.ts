@@ -8,18 +8,22 @@ import jwt from "jsonwebtoken";
 import { thirtyDaysFromNow } from "../utils/date.js";
 import { getOne } from "./handlerFactory.js";
 import userModel from "../models/user.model.js";
-import multer from "multer";
+import multer, { type FileFilterCallback } from "multer";
 import crypto from "crypto";
 import sharp from "sharp";
 import path from "path";
 import fs from "fs";
 
 const multerStorage = multer.memoryStorage();
-const multerFilter = (req, file, cb) => {
+const multerFilter = (
+  req: Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback,
+) => {
   if (file.mimetype.startsWith("image")) {
     cb(null, true);
   } else {
-    cb(new AppError("لطفا فقط عکس اپلود کنید .", 400), false);
+    cb(new AppError("لطفا فقط عکس اپلود کنید .", 400));
   }
 };
 

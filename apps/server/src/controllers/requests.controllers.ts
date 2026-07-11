@@ -1,4 +1,3 @@
-import { NextRequest } from "next/server";
 import type { NextFunction, Request, Response } from "express";
 import RequestModel, { type RequestDocument } from "../models/request.model.js";
 import {
