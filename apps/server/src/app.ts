@@ -21,7 +21,12 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:4001", "http://localhost:4002"],
+    origin: [
+      "http://localhost:4001",
+      "http://localhost:4002",
+      "https://monorepo-bashgah-moshtarian-2.onrender.com/",
+      "https://monorepo-bashgah-moshtarian-1.onrender.com/",
+    ],
     credentials: true,
   }),
 );
