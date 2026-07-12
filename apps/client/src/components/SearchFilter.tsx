@@ -14,7 +14,7 @@ export default function SearchFilter() {
 
   useEffect(() => {
     updateQueryParams({ search: debounceValue });
-  }, [debounceValue]);
+  }, [debounceValue, updateQueryParams]);
 
   return (
     <div className="relative">

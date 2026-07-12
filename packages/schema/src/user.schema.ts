@@ -17,9 +17,9 @@ export const createUserSchema = z.object({
     .nonempty("کد ملی کاربر نمیتواند خالی باشد")
     .length(10, "کد ملی باید ۱۰ رقم باشد"),
   email: z.email("ایمیل معتبر نیست").nonempty("ایمیل نمی‌تواند خالی باشد"),
-  birthDate: z.coerce.date("تاریخ تولد نمیتواند خالی باشد"),
-  contractStartDate: z.coerce.date("تاریخ شروع قرارداد الزامی است"),
-  contractEndDate: z.coerce.date("تاریخ پایان قرارداد الزامی است"),
+  birthDate: z.date("تاریخ تولد نمیتواند خالی باشد"),
+  contractStartDate: z.date("تاریخ شروع قرارداد الزامی است"),
+  contractEndDate: z.date("تاریخ پایان قرارداد الزامی است"),
   bankAccountNumber: z
     .string()
     .nonempty("شماره حساب کاربر نمیتواند خالی باشد")

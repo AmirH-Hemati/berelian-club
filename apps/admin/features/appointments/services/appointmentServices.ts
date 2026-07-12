@@ -1,6 +1,6 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { buildQueryParams, GetRequestsParams } from "@/utils/buildQueryParams";
-import { SessionReportFormValues } from "@repo/schema";
+import { SessionReportFormValues, SessionReportType } from "@repo/schema";
 
 export async function getAppointments(qeury: GetRequestsParams) {
   const params = buildQueryParams(qeury);

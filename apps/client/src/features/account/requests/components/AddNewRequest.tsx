@@ -93,6 +93,7 @@ export default function AddNewRequest() {
 
           <FormField control={form.control} label="توضیحات" name="description">
             <Textarea
+              id="description"
               rows={6}
               className="placeholder:text-xs"
               placeholder="توضیحات درخواست خود را وارد کنید"

@@ -1,20 +1,20 @@
 import React from "react";
-import { Control, Controller, Path } from "react-hook-form";
+import { Control, Controller, FieldValues, Path } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "./ui/field";
 import { Textarea } from "./ui/textarea";
 
-type Props = {
-  control: Control;
-  name: string;
+type Props<T extends FieldValues> = {
+  control: Control<T>;
+  name: Path<T>;
   label: string;
   placeholder: string;
 };
-export default function TextareaFiled({
+export default function TextareaFiled<T extends FieldValues>({
   control,
   name,
   label,
   placeholder,
-}: Props) {
+}: Props<T>) {
   return (
     <Controller
       name={name}

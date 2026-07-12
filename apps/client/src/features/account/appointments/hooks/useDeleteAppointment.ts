@@ -1,3 +1,4 @@
+"use client";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteAppointment as deleteAppointmentApi } from "../services/appointmentsService";

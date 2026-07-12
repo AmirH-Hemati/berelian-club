@@ -1,26 +1,23 @@
 "use client";
-import Link from "next/link";
-import { SidebarTrigger } from "./ui/sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Moon, Settings, Sun, User } from "lucide-react";
+import { LogOut, Moon, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Button } from "./ui/button";
+import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useLogout } from "@/features/authentication/hooks/useLogout";
-import SearchFilter from "./SearchFilter";
+import { Button } from "./ui/button";
+import { SidebarTrigger } from "./ui/sidebar";
+// import { useLogout } from "@/features/authentication/hooks/useLogout";
 export default function Navbar() {
   const { setTheme } = useTheme();
-  const { logout, isPending } = useLogout();
-  function handelLogout() {
-    logout();
-  }
+  // const { logout, isPending } = useLogout();
+  // function handelLogout() {
+  //   logout();
+  // }
   return (
     <nav className="flex items-center justify-between p-4 sticky top-0 bg-background z-10">
       {/* left */}

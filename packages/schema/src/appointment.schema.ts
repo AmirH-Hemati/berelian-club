@@ -3,7 +3,7 @@ import { UserType } from "./user.schema.js";
 
 export const createAppointmentSchema = z
   .object({
-    appointmentDate: z.coerce.date("تاریخ مشاوره الزامی است"),
+    appointmentDate: z.date("تاریخ مشاوره الزامی است"),
     type: z.enum(["online", "phone"]).nonoptional("نوع مشاوره الزامی است"),
     description: z
       .string()

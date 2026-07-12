@@ -1,5 +1,4 @@
 import AddNewAppointment from "./AddNewAppointment";
-import AddNewRequest from "./AddNewAppointment";
 
 export default function AppointmentsHeader() {
   return (

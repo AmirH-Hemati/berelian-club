@@ -24,12 +24,11 @@ export function FormField<T extends FieldValues>({
       name={name}
       control={control}
       render={({ field, fieldState }) => (
-        <Field className={className}  data-invalid={fieldState.invalid}>
+        <Field className={className} data-invalid={fieldState.invalid}>
           <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
           {cloneElement(children, {
             ...field,
-            id: field.name,
-            "aria-invalid": fieldState.invalid,
+            ...(fieldState.invalid ? { "aria-invalid": true } : {}),
           })}
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
         </Field>

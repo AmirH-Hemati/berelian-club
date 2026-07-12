@@ -22,6 +22,7 @@ import {
 import { useMyNotifications } from "../hooks/useMyNotifications";
 import { useMarkAllNotificationsAsRead } from "../hooks/useMarkAllNotificationsAsRead";
 import { useMarkNotificationAsRead } from "../hooks/useMarkNotificationAsRead";
+import { NotificationType } from "@repo/schema";
 
 const notificationTypes = {
   birthday: { icon: Gift, className: "text-pink-500 bg-pink-50" },
@@ -75,7 +76,7 @@ export default function NotificationsDropdown() {
             notifications?.notifications?.length === 0 ? "h-26" : "h-52",
           )}
         >
-          {notifications.notifications.length === 0 ? (
+          {notifications?.notifications?.length === 0 ? (
             <div className="flex flex-col items-center mt-6 justify-center gap-2 ">
               <Bell className="size-8 text-muted-foreground/50" />
               <p className="text-sm text-muted-foreground">
@@ -84,7 +85,7 @@ export default function NotificationsDropdown() {
             </div>
           ) : (
             <div className="space-y-2 divide-y-2 divide-border p-1">
-              {notifications?.notifications.map((notif) => {
+              {notifications?.notifications.map((notif: NotificationType) => {
                 const Icon =
                   notificationTypes[
                     notif.type as keyof typeof notificationTypes

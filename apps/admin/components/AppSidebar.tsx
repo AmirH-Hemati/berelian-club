@@ -1,6 +1,6 @@
 "use client";
 
-import { useLogout } from "@/features/authentication/hooks/useLogout";
+// import { useLogout } from "@/features/authentication/hooks/useLogout";
 import { sidebarData } from "@/lib/constanst/SidebarItem";
 import { ChevronUp, Gem, LogOut, User, User2 } from "lucide-react";
 import Link from "next/link";
@@ -24,11 +24,11 @@ import {
 } from "./ui/sidebar";
 
 export default function AppSidebar() {
-  const { logout, isPending } = useLogout();
+  // const { logout, isPending } = useLogout();
 
-  function handelLogout() {
-    logout();
-  }
+  // function handelLogout() {
+  //   logout();
+  // }
   return (
     <Sidebar
       collapsible="icon"
@@ -98,7 +98,6 @@ export default function AppSidebar() {
 
                 <DropdownMenuItem
                   variant="destructive"
-                  disabled={isPending}
                   className="w-52"
                 >
                   <LogOut />

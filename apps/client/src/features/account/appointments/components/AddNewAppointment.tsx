@@ -31,7 +31,7 @@ export default function AddNewAppointment() {
   const form = useForm<createAppointmentTypes>({
     resolver: zodResolver(createAppointmentSchema),
     defaultValues: {
-      appointmentDate: new Date() as unknown as Date,
+      appointmentDate: new Date(),
       description: "",
       type: "online",
     },
@@ -96,6 +96,7 @@ export default function AddNewAppointment() {
             name="description"
           >
             <Textarea
+              id="description"
               rows={6}
               className="placeholder:text-xs"
               placeholder="توضیحات درخواست خود را وارد کنید"

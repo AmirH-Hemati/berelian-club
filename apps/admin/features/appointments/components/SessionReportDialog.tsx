@@ -54,13 +54,15 @@ export default function SessionReportDialog({
       resultDescription: "",
       notes: "",
       needFollowUp: false,
+      followUpDate: undefined,
+      followUpAction: undefined,
     },
   });
 
   const needFollowUp = form.watch("needFollowUp");
 
   function onSubmit(values: SessionReportFormValues) {
-    createSessionReport({ ...values, appointmentId, userId });
+    createSessionReport({ ...values, appointment: appointmentId, userId });
   }
 
   return (

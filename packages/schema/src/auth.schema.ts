@@ -32,7 +32,7 @@ export const updateMeSchema = z
       .nonempty("کد ملی کاربر نمیتواند خالی باشد")
       .length(10, "کد ملی باید ۱۰ رقم باشد"),
     email: z.email("ایمیل معتبر نیست").nonempty("ایمیل نمی‌تواند خالی باشد"),
-    birthDate: z.coerce.date({ error: "تاریخ تولد الزامی می باشد" }),
+    birthDate: z.date({ error: "تاریخ تولد الزامی می باشد" }),
     photo: z.file(),
   })
   .partial();

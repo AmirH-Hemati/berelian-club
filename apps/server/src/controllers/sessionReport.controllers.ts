@@ -8,7 +8,7 @@ import CatchError from "../utils/catchAsync.js";
 export const createSessionReport = CatchError(
   async (req: Request, res: Response) => {
     const {
-      appointmentId,
+      appointment,
       summary,
       userId,
       result,
@@ -20,14 +20,14 @@ export const createSessionReport = CatchError(
     } = req.body;
 
     const existSessionReport = await SessionReportModel.findOne({
-      appointment: appointmentId,
+      appointment,
     });
 
     if (existSessionReport) {
       throw new AppError("گزارش جلسه از قبل وارد شده است", 400);
     }
     const sessionReport = await SessionReportModel.create({
-      appointment: appointmentId,
+      appointment,
       user: userId,
       advisor: (req.user as UserDocument)._id,
       summary,

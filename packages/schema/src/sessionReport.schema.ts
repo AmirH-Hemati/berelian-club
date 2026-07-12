@@ -1,6 +1,8 @@
 import { z } from "zod";
 export const sessionReportSchema = z
   .object({
+    appointment: z.string().min(1, "شناسه جلسه الزامی است"),
+    userId: z.string().min(1, "شناسه کاربر الزامی است"),
     summary: z.string().min(3, "خلاصه جلسه حداقل ۳ کاراکتر است"),
     result: z.enum(["completed", "pending", "cancelled", "failed"], {
       error: "نتیجه جلسه الزامی است",
@@ -13,8 +15,8 @@ export const sessionReportSchema = z
       .string()
       .nonempty("یادداشت های  جلسه الزامی است")
       .min(3, "یادداشت جلسه حداقل ۳ کاراکتر است"),
-    needFollowUp: z.boolean().default(false),
-    followUpDate: z.coerce.date().optional(),
+    needFollowUp: z.boolean(),
+    followUpDate: z.date().optional(),
     followUpAction: z.string().optional(),
   })
   .superRefine((data, ctx) => {
@@ -42,16 +44,19 @@ export type SessionReportFormValues = z.infer<typeof sessionReportSchema>;
 export interface SessionReportType extends SessionReportFormValues {
   _id: string;
   appointment: string;
-  user: string;
+  userId: string;
   followUpDate?: Date;
   followUpAction?: string;
   createdAt: Date;
   updatedAt: Date;
 }
 export interface FollowUpType {
+  _id: string;
   sessionReport: Pick<SessionReportType, "summary" | "result">;
   dueDate: Date;
   note: string;
   status: "pending" | "completed" | "cancelled";
   isCompleted: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
