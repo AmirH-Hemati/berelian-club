@@ -45,7 +45,7 @@ export default function NotificationsDropdown() {
         <Button variant="outline" size="icon" className="relative">
           <Bell className="size-4" />
           {notifications?.unreadCount > 0 && (
-            <Badge className="absolute -top-2 -right-2 h-5 min-w-5 px-1.5 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white text-xs">
+            <Badge className="absolute -top-2 -right-2 h-5 min-w-5 px-1.5 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white text-100">
               {notifications?.unreadCount > 99
                 ? "99+"
                 : notifications?.unreadCount}
@@ -56,7 +56,7 @@ export default function NotificationsDropdown() {
 
       <DropdownMenuContent className="md:w-96 w-full" align="end">
         <div className="flex items-center justify-between p-3 border-b">
-          <h3 className="font-semibold text-sm">اعلان‌ها</h3>
+          <h3 className="font-semibold text-300">اعلان‌ها</h3>
 
           {notifications?.notifications?.length !== 0 && (
             <Button
@@ -79,7 +79,7 @@ export default function NotificationsDropdown() {
           {notifications?.notifications?.length === 0 ? (
             <div className="flex flex-col items-center mt-6 justify-center gap-2 ">
               <Bell className="size-8 text-muted-foreground/50" />
-              <p className="text-sm text-muted-foreground">
+              <p className="text-200 text-muted-foreground">
                 هیچ اعلانی وجود ندارد
               </p>
             </div>
@@ -112,18 +112,18 @@ export default function NotificationsDropdown() {
                         <div className="flex items-start justify-between gap-2">
                           <p
                             className={cn(
-                              "text-sm font-medium",
+                              "text-300 font-medium",
                               !notif.isRead && "text-primary",
                             )}
                           >
                             {notif.title}
                           </p>
-                          <span className="text-xs text-muted-foreground ">
+                          <span className="text-100 text-muted-foreground ">
                             {convertDate(notif.createdAt)}
                           </span>
                         </div>
                         <div className="flex items-center justify-between gap-4">
-                          <p className="text-xs text-muted-foreground mt-1 flex-1 ">
+                          <p className="text-200 text-muted-foreground mt-1 flex-1 ">
                             {notif.message}
                           </p>
                           {!notif.isRead && (

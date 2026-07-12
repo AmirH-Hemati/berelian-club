@@ -5,6 +5,16 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --text-100: var(--fz-100);
+  --text-200: var(--fz-200);
+  --text-300: var(--fz-300);
+  --text-400: var(--fz-400);
+  --text-500: var(--fz-500);
+  --text-600: var(--fz-600);
+  --text-700: var(--fz-700);
+  --text-800: var(--fz-800);
+  --text-900: var(--fz-900);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
@@ -48,7 +58,18 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-:root {
+:root,
+:root.light {
+  --fz-100: clamp(0.5rem, 0.58rem + 0.2vw, 0.75rem);
+  --fz-200: clamp(0.65rem, 0.4929rem + 0.4762vw, 0.85rem);
+  --fz-300: clamp(0.75rem, 0.6429rem + 0.4762vw, 1rem);
+  --fz-400: clamp(1rem, 0.8929rem + 0.4762vw, 1.25rem);
+  --fz-500: clamp(1.25rem, 1.1429rem + 0.4762vw, 1.5rem);
+  --fz-600: clamp(1.5rem, 1.2857rem + 0.9524vw, 2rem);
+  --fz-700: clamp(1.75rem, 1.4286rem + 1.4286vw, 2.5rem);
+  --fz-800: clamp(2.5rem, 1.8571rem + 2.8571vw, 4rem);
+  --fz-900: clamp(3rem, 1.7143rem + 5.7143vw, 6rem);
+
   --radius: 0.625rem;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0.008 326);
@@ -126,6 +147,7 @@
 
   body {
     @apply bg-background text-foreground;
+    font-size: var(--fz-300);
   }
 
   .loader {

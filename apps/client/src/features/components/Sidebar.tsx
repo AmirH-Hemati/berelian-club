@@ -35,7 +35,9 @@ export function AppSidebar() {
             <SidebarMenuButton asChild>
               <Link href="/account">
                 <Gem />
-                <span className="text-lg font-bold ">شرکت سبدگردان برلیان</span>
+                <span className="text-400 font-bold ">
+                  شرکت سبدگردان برلیان
+                </span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

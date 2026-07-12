@@ -80,7 +80,7 @@ export default function TodayFollowUps() {
                   <div className="flex gap-3">
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center justify-between gap-2 flex-wrap">
-                        <AlertTitle className="text-sm font-medium flex items-center gap-2">
+                        <AlertTitle className="text-300 font-medium flex items-center gap-2">
                           پیگیری گزارش
                         </AlertTitle>
 
@@ -93,12 +93,12 @@ export default function TodayFollowUps() {
                       </div>
 
                       {followUp.note && (
-                        <AlertDescription className="line-clamp-1 text-xs text-muted-foreground">
+                        <AlertDescription className="line-clamp-1 text-200 text-muted-foreground">
                           {followUp.note}
                         </AlertDescription>
                       )}
 
-                      <div className="flex flex-col  gap-1 text-xs text-muted-foreground/70 mt-1">
+                      <div className="flex flex-col  gap-1 text-100 text-muted-foreground/70 mt-1">
                         {followUp.sessionReport && (
                           <span className="flex items-center gap-1">
                             <span className="w-1 h-1 rounded-full bg-muted-foreground/30" />

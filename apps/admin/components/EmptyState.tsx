@@ -29,8 +29,8 @@ export function EmptyState({
         <EmptyMedia variant="icon">
           <Icon className="size-10 text-muted-foreground" />
         </EmptyMedia>
-        <EmptyTitle className="text-center">{title}</EmptyTitle>
-        <EmptyDescription className="text-center">
+        <EmptyTitle className="text-center text-300">{title}</EmptyTitle>
+        <EmptyDescription className="text-center text-200 text-muted-foreground">
           {description}
         </EmptyDescription>
       </EmptyHeader>

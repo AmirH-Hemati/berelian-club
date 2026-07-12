@@ -12,7 +12,7 @@ export default function Page() {
 
   return (
     <div className="overflow-auto space-y-4 mt-4">
-      <h1 className="font-semibold">درخواست های کاربران</h1>
+      <h1 className="font-semibold text-500">درخواست های کاربران</h1>
 
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <TabsComponents />

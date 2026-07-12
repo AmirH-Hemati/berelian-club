@@ -60,18 +60,18 @@ export default function RecentAppoinetments() {
 
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center justify-between gap-2">
-                        <AlertTitle className="text-sm font-medium">
+                        <AlertTitle className="text-300 font-medium">
                           {title}
                         </AlertTitle>
 
                         <StatusBadge status={appoint.status} />
                       </div>
 
-                      <AlertDescription className="line-clamp-1 text-xs text-muted-foreground">
+                      <AlertDescription className="line-clamp-1 text-200 text-muted-foreground">
                         {appoint.description}
                       </AlertDescription>
 
-                      <p className="text-xs text-muted-foreground/70 mt-1">
+                      <p className="text-100 text-muted-foreground/70 mt-1">
                         تاریخ ثبت درخواست :{formatDate(appoint.createdAt)}
                       </p>
                     </div>

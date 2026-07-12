@@ -33,16 +33,16 @@ export default function UserDataBox({ user }: Props) {
                 src={`http://localhost:3000/img/users/${user.photo}`}
                 className="object-cover"
               />
-              <AvatarFallback className="bg-primary/10 text-primary font-medium text-lg">
+              <AvatarFallback className="bg-primary/10 text-primary font-medium text-400">
                 {user.firstName?.[0]}
                 {user.lastName?.[0]}
               </AvatarFallback>
             </Avatar>
             <div>
-              <h2 className="text-base font-semibold">
+              <h2 className="text-300 font-semibold">
                 {user.firstName} {user.lastName}
               </h2>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-100 text-muted-foreground">
                 شناسه: {user._id?.slice(-8)}
               </p>
             </div>

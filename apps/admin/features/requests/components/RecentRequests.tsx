@@ -72,18 +72,16 @@ export default function RecentRequests() {
 
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center justify-between gap-2">
-                        <AlertTitle className="text-sm font-medium">
-                          {title}
-                        </AlertTitle>
+                        <AlertTitle className="text-300">{title}</AlertTitle>
 
                         <StatusBadge status={req.status} />
                       </div>
 
-                      <AlertDescription className=" line-clamp-1 text-xs text-muted-foreground">
+                      <AlertDescription className="text-200 text-muted-foreground line-clamp-1 ">
                         {req.description}
                       </AlertDescription>
 
-                      <p className="text-xs text-muted-foreground/70 mt-1">
+                      <p className="text-100 text-muted-foreground/90 mt-1">
                         تاریخ ثبت درخواست :{formatDate(req.createdAt)}
                       </p>
                     </div>

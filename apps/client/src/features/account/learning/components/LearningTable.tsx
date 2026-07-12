@@ -86,8 +86,10 @@ export default function LearningTable() {
                   <CircleAlert className="size-8 text-destructive" />
 
                   <div className="flex flex-col items-center">
-                    <p className="font-medium">خطا در دریافت اطلاعات</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
+                    <p className="font-medium text-300">
+                      خطا در دریافت اطلاعات
+                    </p>
+                    <p className="mt-1 text-200 text-muted-foreground">
                       متأسفانه اطلاعات در حال حاضر قابل دریافت نیست. لطفاً
                       دوباره تلاش کنید.
                     </p>
@@ -106,7 +108,7 @@ export default function LearningTable() {
                 colSpan={5}
                 className="text-center py-8 text-muted-foreground"
               >
-                محتوای آموزشی ای یافت نشد
+                <p className="text-300"> محتوای آموزشی ای یافت نشد</p>{" "}
               </TableCell>
             </TableRow>
           ) : (
@@ -118,12 +120,12 @@ export default function LearningTable() {
                   </div>
                   <div className="flex flex-col">
                     <span
-                      className="text-sm font-medium max-w-50 truncate"
+                      className="text-200 font-medium max-w-50 truncate"
                       title={file.file.originalName}
                     >
                       {file.file.originalName}
                     </span>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-100 text-muted-foreground">
                       {formatFileSize(file.file.size)}
                     </span>
                   </div>

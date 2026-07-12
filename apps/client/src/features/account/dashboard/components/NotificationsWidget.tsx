@@ -54,11 +54,11 @@ export default function NotificationsWidget() {
               <Alert key={notif._id} className="mb-3 group">
                 <Bell />
 
-                <AlertTitle className="text-sm font-medium">
+                <AlertTitle className="text-300 font-medium">
                   {notif.title}
                 </AlertTitle>
 
-                <AlertDescription className="text-xs text-muted-foreground">
+                <AlertDescription className="text-200 text-muted-foreground">
                   {notif.message}
                 </AlertDescription>
                 <AlertAction>

@@ -62,7 +62,7 @@ export default function RecentRequests() {
             </Button>
           </EmptyState>
         )}
-        <ScrollArea className={cn(requests.length !== 0 && "h-80")}>
+        <ScrollArea className="h-80">
           {requests.map((req: RequestType) => {
             const title = typesMap[req.type as keyof typeof typesMap].label;
             const Icon = typesMap[req.type as keyof typeof typesMap].icon;
@@ -77,18 +77,18 @@ export default function RecentRequests() {
 
                   <div className="flex-1 space-y-0.5">
                     <div className="flex items-center justify-between gap-2">
-                      <AlertTitle className="text-sm font-medium">
+                      <AlertTitle className="text-300">
                         {title}
                       </AlertTitle>
 
                       <StatusBadge status={req.status} />
                     </div>
 
-                    <AlertDescription className="text-xs text-muted-foreground">
+                    <AlertDescription className="text-200 text-muted-foreground line-clamp-1">
                       {req.description}
                     </AlertDescription>
 
-                    <p className="text-xs text-muted-foreground/70 mt-1">
+                    <p className="text-100 text-muted-foreground/90 mt-1">
                       تاریخ ثبت درخواست :{convertDate(req.createdAt)}
                     </p>
                   </div>

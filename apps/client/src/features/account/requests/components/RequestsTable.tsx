@@ -9,6 +9,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { PaginationControls } from "@/components/PaginationControls";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,23 +18,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CircleAlert, Inbox, MoreHorizontalIcon } from "lucide-react";
-import { useRequests } from "../hooks/useRequests";
 import { convertDate } from "@/utils/helper";
+import { RequestType } from "@repo/schema";
+import { CircleAlert, MoreHorizontalIcon } from "lucide-react";
+import Link from "next/link";
+import { typesMap } from "../data/typesMap";
+import { useDeleteRequest } from "../hooks/useDeleteRequest";
+import { useRequests } from "../hooks/useRequests";
 import StatusBadge from "./StatusBadge";
 import Typebadge from "./Typebadge";
-import { useDeleteRequest } from "../hooks/useDeleteRequest";
-import { typesMap } from "../data/typesMap";
-import Link from "next/link";
-import { PaginationControls } from "@/components/PaginationControls";
-import { TableSkeleton } from "@/components/TableSkeleton";
-import { RequestType } from "@repo/schema";
 
 export default function RequestsTable() {
   const { requests, pagination, isLoading, isError, refetch } = useRequests();
   const { deleteRequest, isDeleting } = useDeleteRequest();
   if (isLoading) return <TableSkeleton />;
-
+  console.log("loop");
   return (
     <div className="border border-border py-1 rounded-lg! flex flex-col gap-4">
       <Table>
@@ -52,8 +52,10 @@ export default function RequestsTable() {
                   <CircleAlert className="size-8 text-destructive" />
 
                   <div className="flex flex-col items-center">
-                    <p className="font-medium">خطا در دریافت اطلاعات</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
+                    <p className="font-medium text-300">
+                      خطا در دریافت اطلاعات
+                    </p>
+                    <p className="mt-1 text-200 text-muted-foreground">
                       متأسفانه اطلاعات در حال حاضر قابل دریافت نیست. لطفاً
                       دوباره تلاش کنید.
                     </p>
@@ -70,9 +72,9 @@ export default function RequestsTable() {
             <TableRow>
               <TableCell
                 colSpan={4}
-                className="text-center py-8 text-muted-foreground"
+                className="text-center py-8  text-muted-foreground"
               >
-                درخواستی ای یافت نشد
+                <p className="text-300"> درخواستی ای یافت نشد</p>
               </TableCell>
             </TableRow>
           ) : (

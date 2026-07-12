@@ -56,7 +56,7 @@ export default function FAQ() {
       <div className="space-y-3">
         <div className="flex items-center gap-2 ">
           <HelpCircle className="size-6 text-primary" />
-          <h2 className="text-2xl md:text-3xl font-semibold">سوالات متداول</h2>
+          <h2 className="text-500 font-semibold">سوالات متداول</h2>
         </div>
         <p className="text-muted-foreground max-w-2xl ">
           پاسخ سوالاتی که ممکنه براتون پیش بیاد
@@ -83,7 +83,7 @@ export default function FAQ() {
               </CollapsibleTrigger>
 
               <CollapsibleContent className="px-5 pb-4">
-                <p className="text-sm text-muted-foreground leading-relaxed border-t border-border/30 pt-3">
+                <p className="text-200 text-muted-foreground leading-relaxed border-t border-border/30 pt-3">
                   {faq.answer}
                 </p>
               </CollapsibleContent>

@@ -41,13 +41,13 @@ export function TodayAppointments() {
                   className="flex items-center justify-between p-2 bg-muted/30 rounded-lg mb-2"
                 >
                   <div>
-                    <p className="text-sm font-medium">
+                    <p className="text-300 font-medium">
                       {item.type === "online"
                         ? "🖥️ مشاوره آنلاین"
                         : "📞 مشاوره تلفنی"}
                     </p>
-                    <p className="text-xs text-muted-foreground">
-                      {formatDate(item.appointmentDate)} -{" "}
+                    <p className="text-100 text-muted-foreground">
+                      {formatDate(item.appointmentDate)} - {" "}
                       {formatTime(item.appointmentDate)}
                     </p>
                   </div>

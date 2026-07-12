@@ -24,13 +24,15 @@ export function EmptyState({
   children,
 }: EmptyStateProps) {
   return (
-    <Empty >
+    <Empty>
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <Icon className="size-12 text-muted-foreground" />
         </EmptyMedia>
-        <EmptyTitle>{title}</EmptyTitle>
-        <EmptyDescription>{description}</EmptyDescription>
+        <EmptyTitle className="text-300 ">{title}</EmptyTitle>
+        <EmptyDescription className="text-200 text-muted-foreground">
+          {description}
+        </EmptyDescription>
       </EmptyHeader>
       {children && (
         <EmptyContent className="flex-row justify-center gap-2">

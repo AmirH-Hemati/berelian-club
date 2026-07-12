@@ -46,7 +46,7 @@ export function DataTablePagination<TData>({
     <div className="flex items-center lg:justify-end w-full  px-2 my-4">
       <div className="flex items-center flex-wrap  space-x-6 lg:space-x-8 gap-2">
         <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">تعداد ردیف ها در صفحه</p>
+          <p className="text-200 font-medium">تعداد ردیف ها در صفحه</p>
           <Select value={`${currentLimit}`} onValueChange={handleLimitChange}>
             <SelectTrigger className="h-8">
               <SelectValue placeholder={currentLimit} />
@@ -61,7 +61,7 @@ export function DataTablePagination<TData>({
           </Select>
         </div>
 
-        <div className="flex  items-center justify-center text-sm font-medium">
+        <div className="flex  items-center justify-center text-200 font-medium">
           صفحه {currentPage} از {totalPages || 1}
         </div>
 

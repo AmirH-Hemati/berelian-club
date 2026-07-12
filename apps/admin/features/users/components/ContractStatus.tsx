@@ -10,7 +10,7 @@ export default function ContractStatus({ user }: Props) {
   return (
     <Card className="overflow-hidden">
       <CardHeader className="pb-2 flex items-start  justify-between">
-        <CardTitle className="flex items-center gap-1">
+        <CardTitle className="flex items-center gap-1 text-300 ">
           <FileCheck />
           <span> وضعیت قرارداد</span>
         </CardTitle>
@@ -20,13 +20,13 @@ export default function ContractStatus({ user }: Props) {
         </Badge>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex justify-between text-sm">
+        <div className="flex justify-between text-300">
           <span className="text-muted-foreground">شروع قرارداد</span>
           <span className="font-medium">
             {formatDate(user.contractStartDate)}
           </span>
         </div>
-        <div className="flex justify-between text-sm">
+        <div className="flex justify-between text-300">
           <span className="text-muted-foreground">پایان قرارداد</span>
           <span className="font-medium">
             {formatDate(user.contractEndDate)}
@@ -34,12 +34,12 @@ export default function ContractStatus({ user }: Props) {
         </div>
 
         <div className="space-y-2">
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-300">
             <span className="text-muted-foreground"> سپری شده</span>
             <span className="font-medium text-primary">۶۷٪</span>
           </div>
           <Progress value={67} />
-          <div className="flex justify-between text-xs text-muted-foreground">
+          <div className="flex justify-between text-200 text-muted-foreground">
             <span>پایان</span>
             <span>{user.contractDaysRemaining} روز باقی‌مانده</span>
             <span>شروع</span>

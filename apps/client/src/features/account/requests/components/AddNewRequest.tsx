@@ -95,7 +95,6 @@ export default function AddNewRequest() {
             <Textarea
               id="description"
               rows={6}
-              className="placeholder:text-xs"
               placeholder="توضیحات درخواست خود را وارد کنید"
             />
           </FormField>

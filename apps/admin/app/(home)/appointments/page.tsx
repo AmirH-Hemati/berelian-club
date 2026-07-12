@@ -2,7 +2,6 @@
 
 import { DataTable } from "@/components/DataTable";
 import SearchFilter from "@/components/SearchFilter";
-import { TableSkeleton } from "@/components/TableSkeleton";
 import TabsComponents from "@/components/TabsComponents";
 import { columns } from "@/features/appointments/components/columns";
 import { useAppointments } from "@/features/appointments/hooks/useAppointments";
@@ -13,7 +12,7 @@ export default function Page() {
 
   return (
     <div className="overflow-auto space-y-4 mt-4">
-      <h1 className="font-semibold">مشاوره های رزرو شده</h1>
+      <h1 className="font-semibold text-500">مشاوره های رزرو شده</h1>
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <TabsComponents />
 

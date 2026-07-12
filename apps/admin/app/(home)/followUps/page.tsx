@@ -10,7 +10,7 @@ export default function Page() {
 
   return (
     <div className="overflow-auto space-y-4 mt-4">
-      <h1 className="font-semibold">پیگیری گزارشات</h1>
+      <h1 className="font-semibold text-500">پیگیری گزارشات</h1>
       <SearchFilter />
       <DataTable
         columns={columns}

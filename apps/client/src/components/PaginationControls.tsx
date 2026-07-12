@@ -23,7 +23,7 @@ export function PaginationControls({
 
   return (
     <div className="w-full flex items-center px-2 justify-between flex-wrap gap-2">
-      <p className="text-xs">
+      <p className="text-100">
         صفحه {page} از {totalPages}
       </p>
       <div className="flex items-center gap-2">

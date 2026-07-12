@@ -20,9 +20,9 @@ export default function Header() {
   return (
     <header className="border-b py-4  border-border/40 bg-background/95  ">
       <div className="flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 text-xl font-bold">
+        <Link href="/" className="flex items-center gap-2  font-bold">
           <TrendingUp className="h-6 w-6 text-primary" />
-          <span className="md:block hidden">باشگاه مشتریان برلیان</span>
+          <span className="md:block hidden text-300">باشگاه مشتریان برلیان</span>
         </Link>
 
         <div className="flex items-center gap-2">

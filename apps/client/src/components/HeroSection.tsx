@@ -7,7 +7,7 @@ export default function HeroSection() {
     <section>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 items-center">
         <div className="space-y-6 text-center md:text-right">
-          <h1 className="text-3xl  md:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+          <h1 className="text-700 font-black tracking-tight leading-tight">
             سرمایه‌گذاری شما،
             <br />
             <span className="bg-linear-to-r from-primary via-primary/80 to-primary/40 bg-clip-text text-transparent">
@@ -15,7 +15,7 @@ export default function HeroSection() {
             </span>
           </h1>
 
-          <p className="text-base  md:text-lg text-muted-foreground max-w-lg leading-relaxed">
+          <p className="text-400 text-muted-foreground max-w-lg leading-relaxed">
             ابزارهای اختصاصی، تحلیل‌های به‌روز و امتیازات ویژه در کنار تیم
             حرفه‌ای ما، مسیر رشد مالی شما را هموار می‌کند.
           </p>
@@ -30,17 +30,17 @@ export default function HeroSection() {
 
           <div className="flex items-center gap-6 text-sm text-muted-foreground pt-2">
             <div>
-              <span className="text-2xl font-bold  block">۱۲+</span>
+              <span className="text-500 font-bold  block">۱۲+</span>
               <span>سال تجربه</span>
             </div>
             <div className="w-px h-12 bg-border" />
             <div>
-              <span className="text-2xl font-bold  block">۱۵۰۰+</span>
+              <span className="text-500 font-bold  block">۱۵۰۰+</span>
               <span>عضو فعال</span>
             </div>
             <div className="w-px h-12 bg-border" />
             <div>
-              <span className="text-2xl font-bold  block">۹۸٪</span>
+              <span className="text-500 font-bold  block">۹۸٪</span>
               <span>رضایت</span>
             </div>
           </div>

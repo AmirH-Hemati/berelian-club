@@ -51,14 +51,14 @@ export default function Stats() {
                 <Icon />
               </div>
               <div className="space-y-2">
-                <p className="text-muted-foreground text-xs font-medium text-center lg:text-start">
+                <p className="text-muted-foreground text-200 font-medium text-center lg:text-start">
                   {item.title}
                 </p>
 
                 <div className="flex items-center justify-center lg:justify-start gap-1">
-                  <span className="text-xl font-semibold ">{item.value}</span>
+                  <span className="text-500 font-semibold ">{item.value}</span>
 
-                  <span className="text-muted-foreground text-xs text-center">
+                  <span className="text-muted-foreground text-200 text-center">
                     {item.suffix}
                   </span>
                 </div>

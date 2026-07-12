@@ -19,7 +19,7 @@ export default function BankInformation({ user }: Props) {
       <CardContent>
         <div className="grid gap-4 md:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium">شماره حساب</label>
+            <label className="mb-1 block text-200 font-medium">شماره حساب</label>
 
             <InputGroup>
               <InputGroupAddon>
@@ -31,7 +31,7 @@ export default function BankInformation({ user }: Props) {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium">شماره شبا</label>
+            <label className="mb-1 block text-200 font-medium">شماره شبا</label>
 
             <InputGroup>
               <InputGroupAddon>

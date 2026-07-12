@@ -54,8 +54,10 @@ export default function AppointmentsTable() {
                   <CircleAlert className="size-8 text-destructive" />
 
                   <div className="flex flex-col items-center">
-                    <p className="font-medium">خطا در دریافت اطلاعات</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
+                    <p className="font-medium text-300">
+                      خطا در دریافت اطلاعات
+                    </p>
+                    <p className="mt-1 text-200 text-muted-foreground">
                       متأسفانه اطلاعات در حال حاضر قابل دریافت نیست. لطفاً
                       دوباره تلاش کنید.
                     </p>
@@ -74,7 +76,7 @@ export default function AppointmentsTable() {
                 colSpan={4}
                 className="text-center py-8 text-muted-foreground"
               >
-                جلسه مشاوره ای یافت نشد
+                <p className="text-300"> جلسه مشاوره ای یافت نشد</p>
               </TableCell>
             </TableRow>
           ) : (

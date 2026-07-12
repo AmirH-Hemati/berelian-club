@@ -27,7 +27,7 @@ export default function ProfileHeader({ user }: Props) {
         </Avatar>
 
         <div className="flex-1 space-y-0.5">
-          <h1 className="text-xl font-semibold">
+          <h1 className="text-400 font-semibold">
             {user.firstName} {user.lastName}
           </h1>
 

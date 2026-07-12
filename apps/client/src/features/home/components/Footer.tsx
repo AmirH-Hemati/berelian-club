@@ -10,9 +10,9 @@ export default function Footer() {
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="h-6 w-6 text-primary" />
-              <h4 className="font-semibold ">باشگاه مشتریان برلیان</h4>
+              <h4 className="font-semibold text-400">باشگاه مشتریان برلیان</h4>
             </div>
-            <div className="space-y-3 text-sm text-muted-foreground leading-relaxed">
+            <div className="space-y-3 text-300 text-muted-foreground leading-relaxed">
               <p>
                 باشگاه مشتریان ما فراتر از یک پنل مدیریت دارایی، بستری برای
                 <span className="text-primary font-medium">
@@ -29,8 +29,8 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">دسترسی سریع</h4>
-            <ul className="space-y-3 text-sm text-muted-foreground">
+            <h4 className="font-semibold mb-4 text-300">دسترسی سریع</h4>
+            <ul className="space-y-3 text-200 text-muted-foreground">
               <li>
                 <Link
                   href="#features"
@@ -67,8 +67,8 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">تماس با ما</h4>
-            <ul className="space-y-3 text-sm text-muted-foreground">
+            <h4 className="font-semibold mb-4 text-300">تماس با ما</h4>
+            <ul className="space-y-3 text-200 text-muted-foreground">
               <li className="flex items-center gap-3">
                 <Phone className="h-4 w-4 shrink-0" />
                 <span>۰۲۱-۱۲۳۴۵۶۷۸</span>
@@ -85,7 +85,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-border/40 mt-10 pt-6 text-center text-xs text-muted-foreground">
+        <div className="border-t border-border/40 mt-10 pt-6 text-center text-200 text-muted-foreground">
           <p>&copy;{year} کلیه حقوق برای باشگاه سرمایه‌گذاری برلیان محفوظ است.</p>
         </div>
       </div>
