@@ -17,10 +17,10 @@ import { useLogout } from "../auth/hooks/useLogout";
 import { useUser } from "../auth/hooks/useUser";
 
 export default function Navbar() {
-  const { user, isLoading } = useUser();
+  const { user, isLoading, isError } = useUser();
   const { setTheme } = useTheme();
   const { logout, isLogouting } = useLogout();
-
+  if (isError) return null;
   return (
     <nav className="flex items-center justify-between mb-4">
       <SidebarTrigger />

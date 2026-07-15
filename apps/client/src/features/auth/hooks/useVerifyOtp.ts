@@ -3,6 +3,7 @@ import { verifyOtp as verifyOtpApi } from "../services/authServices";
 import { verifyOtpTypes } from "@repo/schema";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/components/providers/authStore";
 
 export function useVerifyOtp() {
   const router = useRouter();
@@ -10,6 +11,7 @@ export function useVerifyOtp() {
     mutationFn: ({ phoneNumber, otp }: verifyOtpTypes) =>
       verifyOtpApi({ phoneNumber, otp }),
     onSuccess: () => {
+      useAuthStore.getState().login();
       router.push("/account");
       toast.success("خوش امدید ...");
     },

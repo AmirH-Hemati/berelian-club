@@ -74,14 +74,14 @@ export const completeAppointment = CatchError(async (req, res, NextRequest) => {
 });
 export const getUserAppointments = CatchError(async (req, res, next) => {
   const id = (req.user as UserDocument)._id;
-  const requests = await AppointmentModel.find({ user: id }).limit(10);
-  if (!requests) {
+  const appointments = await AppointmentModel.find({ user: id }).limit(10);
+  if (!appointments) {
     throw new AppError("جلسه مشاوره ای یافت نشد", 404);
   }
 
   res.status(200).json({
     status: "success",
-    data: requests,
+    data: appointments,
   });
 });
 export const getTodayAppointments = CatchError(
