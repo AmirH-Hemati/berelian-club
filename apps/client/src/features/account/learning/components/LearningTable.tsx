@@ -167,8 +167,8 @@ export default function LearningTable() {
         </TableBody>
       </Table>
       <PaginationControls
-        page={pagination.page}
-        totalPages={pagination.totalPages}
+        page={pagination?.page || 1}
+        totalPages={pagination?.totalPages || 1}
       />
     </div>
   );

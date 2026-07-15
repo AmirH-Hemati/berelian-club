@@ -32,7 +32,6 @@ export default function RequestsTable() {
   const { requests, pagination, isLoading, isError, refetch } = useRequests();
   const { deleteRequest, isDeleting } = useDeleteRequest();
   if (isLoading) return <TableSkeleton />;
-  console.log("loop");
   return (
     <div className="border border-border py-1 rounded-lg! flex flex-col gap-4">
       <Table>

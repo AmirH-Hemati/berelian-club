@@ -9,7 +9,7 @@ export const createRequest = async (newRequest: CreateRequestTypes) => {
 };
 export const getRequests = async (query: GetRequestsParams) => {
   const params = buildQueryParams(query);
-  const { data } = await axiosInstance.get(`/requests?${params}`);
+  const { data } = await axiosInstance.get(`/requests/myRequests?${params}`);
 
   return data;
 };

@@ -10,6 +10,7 @@ import {
   getAppointment,
   getAppointments,
   getTodayAppointments,
+  getUserAppointments,
   rejectAppointment,
   setAppointmentUserId,
 } from "../controllers/appointments.controllers.js";
@@ -25,6 +26,8 @@ router
     setAppointmentUserId,
     createAppointment,
   );
+
+router.get("/myAppointments", getUserAppointments);
 
 router.delete("/:id", deleteAppointment);
 // restrit for only admin

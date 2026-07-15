@@ -12,7 +12,9 @@ export const createAppointment = async (
 
 export const getAppointments = async (query: GetRequestsParams) => {
   const params = buildQueryParams(query);
-  const { data } = await axiosInstance.get(`/appointments?${params}`);
+  const { data } = await axiosInstance.get(
+    `/appointments/myAppointments?${params}`,
+  );
 
   return data;
 };

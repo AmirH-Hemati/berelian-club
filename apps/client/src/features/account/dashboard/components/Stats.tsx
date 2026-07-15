@@ -56,7 +56,9 @@ export default function Stats() {
                 </p>
 
                 <div className="flex items-center justify-center lg:justify-start gap-1">
-                  <span className="text-500 font-semibold ">{item.value}</span>
+                  <span className="text-500 font-semibold ">
+                    {item.value || 0}
+                  </span>
 
                   <span className="text-muted-foreground text-200 text-center">
                     {item.suffix}

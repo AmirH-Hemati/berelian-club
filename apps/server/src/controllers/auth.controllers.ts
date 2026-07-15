@@ -106,9 +106,9 @@ export const handleVerifyOtp = CatchError(async (req, res, next) => {
 
   const cookieOption: CookieOptions = {
     expires: thirtyDaysFromNow(),
-    secure: true,
+    secure: false,
     httpOnly: true,
-    sameSite: "none",
+    sameSite: "lax",
   };
   res.cookie("token", token, cookieOption);
   return res.status(200).json({

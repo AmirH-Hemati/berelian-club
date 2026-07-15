@@ -67,7 +67,7 @@ export const setUserIdToParams = (
 };
 
 export const getUserRequests = CatchError(async (req, res, next) => {
-  const { id } = req.params;
+  const id = (req.user as UserDocument)._id;
   const requests = await RequestModel.find({ user: id }).limit(10);
   if (!requests) {
     throw new AppError("درخواستی یافت نشد", 404);
@@ -78,6 +78,8 @@ export const getUserRequests = CatchError(async (req, res, next) => {
     data: requests,
   });
 });
+
+
 
 export const getTodayRequests = CatchError(
   async (req: Request, res: Response) => {

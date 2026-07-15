@@ -28,7 +28,7 @@ router
     createRequest,
   );
 router.use(protectedRoute);
-router.get("/myRequests", setUserIdToParams, getUserRequests);
+router.get("/myRequests", getUserRequests);
 
 // restrit for only admin
 // restrictTo("admin"),

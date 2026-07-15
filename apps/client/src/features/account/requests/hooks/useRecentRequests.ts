@@ -6,11 +6,12 @@ export function useRecentRequests() {
   const {
     data: requests,
     isLoading,
-    error,
+    isError,
+    refetch,
   } = useQuery({
     queryKey: ["myRequests"],
     queryFn: getRecentMyRequests,
   });
 
-  return { requests, isLoading, error };
+  return { requests, isLoading, isError, refetch };
 }

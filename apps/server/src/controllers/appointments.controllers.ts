@@ -11,6 +11,7 @@ import { AppError } from "../utils/AppError.js";
 import AppointmentModel, {
   type appointmentDocument,
 } from "../models/appointment.model.js";
+import type { UserDocument } from "../models/user.model.js";
 
 export const setAppointmentUserId = (
   req: Request,
@@ -71,7 +72,18 @@ export const completeAppointment = CatchError(async (req, res, NextRequest) => {
     data: request,
   });
 });
+export const getUserAppointments = CatchError(async (req, res, next) => {
+  const id = (req.user as UserDocument)._id;
+  const requests = await AppointmentModel.find({ user: id }).limit(10);
+  if (!requests) {
+    throw new AppError("جلسه مشاوره ای یافت نشد", 404);
+  }
 
+  res.status(200).json({
+    status: "success",
+    data: requests,
+  });
+});
 export const getTodayAppointments = CatchError(
   async (req: Request, res: Response) => {
     const startOfDay = new Date();

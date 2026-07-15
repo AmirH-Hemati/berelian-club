@@ -17,8 +17,8 @@ export function useMyFiles() {
   });
 
   return {
-    files: data.data ?? [],
-    pagination: data.pagination ?? null,
+    files: data?.data ?? [],
+    pagination: data?.pagination ?? null,
     isLoading,
     isError,
     refetch,
