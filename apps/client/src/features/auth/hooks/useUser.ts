@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCurrentUser } from "../services/authServices";
 import { useAuthStore } from "@/components/providers/authStore";
+import { useEffect } from "react";
 export function useUser() {
-  const auth = useAuthStore();
+  const status = useAuthStore((auth) => auth.status);
   const {
     data: user,
     isLoading,
@@ -12,8 +13,14 @@ export function useUser() {
     queryFn: getCurrentUser,
     queryKey: ["user"],
     retry: false,
-    enabled: auth.status === "unknown",
+    enabled: status !== "unAuthenticated",
   });
+
+  useEffect(() => {
+    if (user) {
+      useAuthStore.getState().login();
+    }
+  }, [user]);
 
   return { user, isLoading, isError, refetch };
 }
