@@ -104,11 +104,13 @@ export const handleVerifyOtp = CatchError(async (req, res, next) => {
     },
   );
 
+  console.log("appEnv varaiable", process.env.APP_ENV === "production");
+
   const cookieOption: CookieOptions = {
     expires: thirtyDaysFromNow(),
-    secure: process.env.APP_ENV === "production",
+    secure: true,
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: "none",
   };
   res.cookie("token", token, cookieOption);
   return res.status(200).json({
@@ -119,9 +121,9 @@ export const handleVerifyOtp = CatchError(async (req, res, next) => {
 
 export const logout = (req: Request, res: Response, next: NextFunction) => {
   res.clearCookie("token", {
-    secure: process.env.APP_ENV === "production",
+    secure: true,
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: "none",
   });
   res.status(200).json({
     status: "success",
