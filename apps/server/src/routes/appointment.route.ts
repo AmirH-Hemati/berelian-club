@@ -14,6 +14,7 @@ import {
   rejectAppointment,
   setAppointmentUserId,
 } from "../controllers/appointments.controllers.js";
+import { convertDateFields } from "../middlewares/convertDateFields.js";
 
 const router = express.Router();
 
@@ -21,6 +22,7 @@ router
   .route("/")
   .get(getAppointments)
   .post(
+    convertDateFields(["appointmentDate"]),
     validateZod(createAppointmentSchema),
     protectedRoute,
     setAppointmentUserId,
