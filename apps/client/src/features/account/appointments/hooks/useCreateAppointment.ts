@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { createAppointment as createAppointmentApi } from "../services/appointmentsService";
+import { toast } from "react-toastify";
 
 export function useCreateAppointment() {
   const queryClient = useQueryClient();
