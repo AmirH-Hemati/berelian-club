@@ -6,7 +6,7 @@ export default function HeroSection() {
   return (
     <section>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 items-center">
-        <div className="space-y-6 text-center md:text-right">
+        <div className="space-y-6 flex flex-col items-center lg:items-start">
           <h1 className="text-700 font-black tracking-tight leading-tight">
             سرمایه‌گذاری شما،
             <br />
@@ -28,7 +28,7 @@ export default function HeroSection() {
             <Link href="/auth">وورد به پنل اختصاصی</Link>
           </Button>
 
-          <div className="flex items-center gap-6 text-sm text-muted-foreground pt-2">
+          <div className="flex items-center gap-6  text-muted-foreground pt-2">
             <div>
               <span className="text-500 font-bold  block">۱۲+</span>
               <span>سال تجربه</span>
