@@ -86,12 +86,12 @@ export const columns: ColumnDef<AppointmentType>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link href={`/users/${appointment?.user?._id}`}>
-                مشاهده جزیات کاربر
+                مشاهده جزئیات کاربر
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href={`/appointments/${appointment._id}`}>
-                مشاهده جزیات مشاوره
+                مشاهده جزئیات مشاوره
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem

@@ -10,6 +10,7 @@ import {
 import CatchError from "../utils/catchAsync.js";
 import { AppError } from "../utils/AppError.js";
 import type { UserDocument } from "../models/user.model.js";
+import { ApiFeatures } from "../utils/ApiFeatures.js";
 
 export const setRequestUserId = (
   req: Request,
@@ -68,7 +69,14 @@ export const setUserIdToParams = (
 
 export const getUserRequests = CatchError(async (req, res, next) => {
   const id = (req.user as UserDocument)._id;
-  const requests = await RequestModel.find({ user: id }).limit(10);
+  const features = new ApiFeatures(RequestModel.find({ user: id }), req.query)
+    .filter()
+    .search()
+    .sort()
+    .fields();
+  const { total, limit, page, totalPages } = await features.pagination();
+
+  const requests = await features.query;
   if (!requests) {
     throw new AppError("درخواستی یافت نشد", 404);
   }
@@ -76,10 +84,14 @@ export const getUserRequests = CatchError(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: requests,
+    pagination: {
+      totalPages,
+      total,
+      limit,
+      page,
+    },
   });
 });
-
-
 
 export const getTodayRequests = CatchError(
   async (req: Request, res: Response) => {

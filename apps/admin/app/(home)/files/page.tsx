@@ -12,7 +12,7 @@ export default function Page() {
 
   return (
     <div className="overflow-auto space-y-4 mt-4">
-      <div className="flex items-center justify-between">
+      <div className="flex gap-2 md:items-center md:justify-between flex-col md:flex-row">
         <h1 className="font-semibold text-500">مدیریت فایل ها</h1>
         <AddNewFile />
       </div>

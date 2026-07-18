@@ -15,6 +15,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { sidebarItems } from "@/lib/constants/sidebarItems";
 import { cn } from "@/lib/utils";
@@ -26,13 +27,17 @@ import { useLogout } from "../auth/hooks/useLogout";
 export function AppSidebar() {
   const pathName = usePathname();
   const { logout, isLogouting } = useLogout();
+  const { setOpenMobile } = useSidebar();
+  const handleNavigation = () => {
+    setOpenMobile(false);
+  };
   return (
     <Sidebar side="right" collapsible="icon">
       {/* sidebar Header */}
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton asChild onClick={handleNavigation}>
               <Link href="/account">
                 <Gem />
                 <span className="text-400 font-bold ">
@@ -52,6 +57,7 @@ export function AppSidebar() {
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuButton
+                  onClick={handleNavigation}
                   asChild
                   className={cn(
                     " h-10",
@@ -85,7 +91,7 @@ export function AppSidebar() {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent>
-                <DropdownMenuItem asChild>
+                <DropdownMenuItem asChild onClick={handleNavigation}>
                   <Link
                     className="flex items-center gap-2"
                     href="/account/profile"

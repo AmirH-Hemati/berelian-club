@@ -1,15 +1,15 @@
 import {
-  LayoutDashboardIcon,
-  UserIcon,
-  ClipboardListIcon,
-  CalendarClockIcon,
-  BookOpenTextIcon,
+  LayoutDashboard,
+  UserCircle,
+  ClipboardList,
+  CalendarClock,
+  BookOpen,
 } from "lucide-react";
 
 export const sidebarItems = [
-  { label: "داشبورد", icon: LayoutDashboardIcon, href: "" },
-  { label: "پروفایل شخصی", icon: UserIcon, href: "/profile" },
-  { label: "درخواست‌ها", icon: ClipboardListIcon, href: "/requests" },
-  { label: "رزرو مشاوره", icon: CalendarClockIcon, href: "/appointments" },
-  { label: "محتوای آموزشی", icon: BookOpenTextIcon, href: "/learning" },
+  { label: "داشبورد", icon: LayoutDashboard, href: "" },
+  { label: "پروفایل شخصی", icon: UserCircle, href: "/profile" },
+  { label: "درخواست‌ها", icon: ClipboardList, href: "/requests" },
+  { label: "رزرو مشاوره", icon: CalendarClock, href: "/appointments" },
+  { label: "محتوای آموزشی", icon: BookOpen, href: "/learning" },
 ];

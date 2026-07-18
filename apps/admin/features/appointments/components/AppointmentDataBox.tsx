@@ -126,46 +126,44 @@ export default function AppointmentDataBox({ appointment }: Props) {
       </CardContent>
 
       <Separator />
-      <CardFooter className="md:mr-auto">
-        <div className="flex gap-2 w-full">
+      <CardFooter className="flex gap-2 w-full justify-end">
+        <Button
+          onClick={() => rejectAppointment(appointment._id)}
+          disabled={isPending2}
+          variant="destructive"
+          className="w-1/2 md:w-fit"
+        >
+          <XCircle className="size-4" />
+          رد درخواست
+        </Button>
+        {(appointment.status === "pending" ||
+          appointment.status === "cancelled") && (
           <Button
-            onClick={() => rejectAppointment(appointment._id)}
-            disabled={isPending2}
-            variant="destructive"
-            className=" text-xs sm:text-sm"
+            onClick={() => approveAppointment(appointment._id)}
+            disabled={isPending}
+            className="w-1/2 md:w-fit"
           >
-            <XCircle className="size-4" />
-            رد درخواست
+            <CheckCircle className="size-4" />
+            تایید جلسه
           </Button>
-          {(appointment.status === "pending" ||
-            appointment.status === "cancelled") && (
-            <Button
-              onClick={() => approveAppointment(appointment._id)}
-              disabled={isPending}
-              className=" text-xs sm:text-sm"
-            >
-              <CheckCircle className="size-4" />
-              تایید جلسه
-            </Button>
-          )}
-          {appointment.status === "approved" && (
-            <Button
-              onClick={() => completeAppointment(appointment._id)}
-              disabled={isPending}
-              className=" text-xs sm:text-sm"
-            >
-              <Check className="size-4" />
-              جلسه انجام شد
-            </Button>
-          )}
-          {appointment.status === "completed" && (
-            <SessionReportDialog
-              appointmentId={appointment._id}
-              userName={`${appointment.user.firstName} ${appointment.user.lastName}`}
-              userId={appointment.user._id}
-            />
-          )}
-        </div>
+        )}
+        {appointment.status === "approved" && (
+          <Button
+            onClick={() => completeAppointment(appointment._id)}
+            disabled={isPending}
+            className="w-1/2 md:w-fit"
+          >
+            <Check className="size-4" />
+            جلسه انجام شد
+          </Button>
+        )}
+        {appointment.status === "completed" && (
+          <SessionReportDialog
+            appointmentId={appointment._id}
+            userName={`${appointment.user.firstName} ${appointment.user.lastName}`}
+            userId={appointment.user._id}
+          />
+        )}
       </CardFooter>
     </Card>
   );

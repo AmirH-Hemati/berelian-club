@@ -21,11 +21,17 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
+  useSidebar,
 } from "./ui/sidebar";
 import { useLogout } from "@/features/authentication/hooks/useLogout";
 
 export default function AppSidebar() {
   const { logout, isLogouting } = useLogout();
+  const { setOpenMobile } = useSidebar();
+
+  function handleNavigation() {
+    setOpenMobile(false);
+  }
 
   return (
     <Sidebar
@@ -38,7 +44,7 @@ export default function AppSidebar() {
       <SidebarHeader className="py-4 ">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton asChild onClick={handleNavigation}>
               <Link href="/">
                 <Gem />
                 <span className="text-lg font-bold ">پنل ادمین برلیان</span>
@@ -58,7 +64,7 @@ export default function AppSidebar() {
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild onClick={handleNavigation}>
                     <Link href={data.href}>
                       <data.icon />
                       {data.label}
@@ -84,16 +90,6 @@ export default function AppSidebar() {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent>
-                <DropdownMenuItem asChild>
-                  <Link
-                    className="flex items-center gap-2"
-                    href="/account/profile"
-                  >
-                    <User />
-                    پروفایل
-                  </Link>
-                </DropdownMenuItem>
-
                 <DropdownMenuItem
                   disabled={isLogouting}
                   onClick={() => logout()}

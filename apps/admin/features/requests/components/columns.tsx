@@ -88,13 +88,13 @@ export const columns: ColumnDef<RequestType>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link href={`/users/${request?.user?._id}`}>
-                مشاهده جزیات کاربر
+                مشاهده جزئیات کاربر
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link href={`/requests/${request._id}`}>
                 {" "}
-                مشاهده جزیات درخواست
+                مشاهده جزئیات درخواست
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem

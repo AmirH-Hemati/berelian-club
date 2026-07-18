@@ -46,7 +46,7 @@ export const rejectAppointment = CatchError(async (req, res, NextRequest) => {
   }
 
   if (request.status === "completed") {
-    throw new AppError("این درخواست قبلا تایید شده است", 400);
+    throw new AppError("این درخواست قبلا تکمیل شده است", 400);
   }
   request.status = "cancelled";
   await request.save();

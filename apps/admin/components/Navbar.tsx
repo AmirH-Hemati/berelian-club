@@ -66,13 +66,6 @@ export default function Navbar() {
             </DropdownMenuTrigger>
           )}
           <DropdownMenuContent className=" w-44" sideOffset={15}>
-            <DropdownMenuItem>
-              <Link href="/account/profile" className="flex items-center gap-2">
-                <User />
-                پروفایل
-              </Link>
-            </DropdownMenuItem>
-
             <DropdownMenuItem
               variant="destructive"
               disabled={isLogouting}

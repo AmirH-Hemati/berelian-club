@@ -17,8 +17,8 @@ import { createUserSchema, CreateUserInputTypes, UserType } from "@repo/schema";
 import { useCreateUser } from "../hooks/useCreateUser";
 import { useUpdateUser } from "../hooks/useUpdateUser";
 
-type Props = { user?: UserType };
-export function CreateUserForm({ user }: Props) {
+type Props = { user?: UserType; onCloseDialog: () => void };
+export function CreateUserForm({ user, onCloseDialog }: Props) {
   const { createUser, isCreating } = useCreateUser();
   const { updateUser, isUpdating } = useUpdateUser();
   const editId = user?._id || "";
@@ -50,10 +50,20 @@ export function CreateUserForm({ user }: Props) {
 
   const handleSubmit = (values: CreateUserInputTypes) => {
     if (isEditSession) {
-      updateUser({ id: editId, data: values });
+      updateUser(
+        { id: editId, data: values },
+        {
+          onSuccess: () => {
+            onCloseDialog();
+          },
+        },
+      );
     } else {
-      console.log(values);
-      createUser(values);
+      createUser(values, {
+        onSuccess: () => {
+          onCloseDialog();
+        },
+      });
     }
   };
 
@@ -152,7 +162,7 @@ export function CreateUserForm({ user }: Props) {
         </div>
 
         <div className="flex gap-3 pt-4 mr-auto">
-          <Button type="button" variant="outline" size="lg">
+          <Button type="button" variant="outline" size="lg" onClick={onCloseDialog}>
             انصراف
           </Button>
           <Button type="submit" size="lg" disabled={isWorking}>

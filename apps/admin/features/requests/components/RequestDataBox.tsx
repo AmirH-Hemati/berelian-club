@@ -90,26 +90,24 @@ export default function RequestDataBox({ request }: Props) {
         </div>
       </CardContent>
       <Separator />
-      <CardFooter className=" md:mr-auto">
-        <div className="flex gap-2 w-full">
-          <Button
-            onClick={() => rejectRequest(request._id)}
-            disabled={isPending2}
-            variant="destructive"
-            className="w-1/2 text-xs sm:text-sm"
-          >
-            <XCircle />
-            رد درخواست
-          </Button>
-          <Button
-            onClick={() => approveRequest(request._id)}
-            disabled={isPending}
-            className="w-1/2 text-xs sm:text-sm"
-          >
-            <CheckCircle />
-            تایید درخواست
-          </Button>
-        </div>
+      <CardFooter className="flex gap-2 justify-end w-full">
+        <Button
+          onClick={() => rejectRequest(request._id)}
+          disabled={isPending2}
+          variant="destructive"
+          className="w-1/2 md:w-fit  "
+        >
+          <XCircle />
+          رد درخواست
+        </Button>
+        <Button
+          onClick={() => approveRequest(request._id)}
+          disabled={isPending}
+          className="w-1/2 md:w-fit "
+        >
+          <CheckCircle />
+          تایید درخواست
+        </Button>
       </CardFooter>
     </Card>
   );

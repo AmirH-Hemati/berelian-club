@@ -26,7 +26,10 @@ import CustomDatePicker from "./CustomDatePicker";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createAppointmentSchema, createAppointmentTypes } from "@repo/schema";
 import { useCreateAppointment } from "../hooks/useCreateAppointment";
+import { useState } from "react";
 export default function AddNewAppointment() {
+  const [open, setOpen] = useState(false);
+
   const { createAppointment, isCreating } = useCreateAppointment();
   const form = useForm<createAppointmentTypes>({
     resolver: zodResolver(createAppointmentSchema),
@@ -37,11 +40,15 @@ export default function AddNewAppointment() {
     },
   });
   const handleSubmit = (values: createAppointmentTypes) => {
-    createAppointment(values);
+    createAppointment(values, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>ثبت مشاوره جدید</Button>
       </DialogTrigger>

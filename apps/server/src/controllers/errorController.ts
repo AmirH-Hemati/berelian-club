@@ -68,9 +68,9 @@ export const errorController = (
   err.statusCode = err.statusCode || 500;
   err.status = err.status || "error";
 
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.APP_ENV === "development") {
     sendErrorDev(res, err);
-  } else if (process.env.NODE_ENV === "production") {
+  } else if (process.env.APP_ENV === "production") {
     if (err.code === 11000) err = handelDuplicateFieldsDb(err);
     if (err.name === "JsonWebTokenError") err = handleJWTError();
     if (err.name === "TokenExpiredError") err = handleJWTExpiredError();

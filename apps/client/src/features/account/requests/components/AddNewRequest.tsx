@@ -24,8 +24,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createRequestSchema, CreateRequestTypes } from "@repo/schema";
 import { Controller, useForm } from "react-hook-form";
 import { useCreateRequest } from "../hooks/useCreateRequest";
+import { useState } from "react";
 
 export default function AddNewRequest() {
+  const [open, setOpen] = useState(false);
   const { createRequest, isCreating } = useCreateRequest();
   const form = useForm<CreateRequestTypes>({
     resolver: zodResolver(createRequestSchema),
@@ -36,10 +38,14 @@ export default function AddNewRequest() {
   });
 
   function handleSubmit(values: CreateRequestTypes) {
-    createRequest(values);
+    createRequest(values, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
   }
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>ثبت درخواست جدید</Button>
       </DialogTrigger>

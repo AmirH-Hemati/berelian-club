@@ -45,7 +45,7 @@ export default function NotificationsDropdown() {
         <Button variant="outline" size="icon" className="relative">
           <Bell className="size-4" />
           {notifications?.unreadCount > 0 && (
-            <Badge className="absolute -top-2 -right-2 h-5 min-w-5 px-1.5 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white text-100">
+            <Badge className="absolute -top-2 -right-2 h-5 w-5  flex items-center justify-center bg-red-500  text-white! text-100">
               {notifications?.unreadCount > 99
                 ? "99+"
                 : notifications?.unreadCount}

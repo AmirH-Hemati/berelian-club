@@ -1,15 +1,41 @@
 import {
-  ClockArrowDown,
-  FilesIcon,
-  LayoutDashboardIcon,
-  SaudiRiyal,
+  CalendarClock,
+  ClipboardCheck,
+  FileText,
+  FolderOpen,
+  LayoutDashboard,
   Users,
 } from "lucide-react";
+
 export const sidebarData = [
-  { label: "داشبورد", icon: LayoutDashboardIcon, href: "/" },
-  { label: "کاربران", icon: Users, href: "/users" },
-  { label: "مشاوره ها", icon: ClockArrowDown, href: "/appointments" },
-  { label: "درخواست ها", icon: SaudiRiyal, href: "/requests" },
-  { label: "فایل ها", icon: FilesIcon, href: "/files" },
-  { label: "پیگیری گزارشات", icon: FilesIcon, href: "/followUps" },
+  {
+    label: "داشبورد",
+    icon: LayoutDashboard,
+    href: "/",
+  },
+  {
+    label: "کاربران",
+    icon: Users,
+    href: "/users",
+  },
+  {
+    label: "مشاوره‌ها",
+    icon: CalendarClock,
+    href: "/appointments",
+  },
+  {
+    label: "درخواست‌ها",
+    icon: FileText,
+    href: "/requests",
+  },
+  {
+    label: "فایل‌ها",
+    icon: FolderOpen,
+    href: "/files",
+  },
+  {
+    label: "پیگیری گزارشات",
+    icon: ClipboardCheck,
+    href: "/followUps",
+  },
 ];

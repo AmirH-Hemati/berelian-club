@@ -1,15 +1,8 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { useUser } from "@/features/auth/hooks/useUser";
 import Dashboard from "@/features/home/components/Dashboard";
-import Link from "next/link";
-import { Spinner } from "./ui/spinner";
-import { User } from "lucide-react";
-import { Dialog, DialogTrigger } from "./ui/dialog";
-import Login from "@/features/auth/components/Login";
+
+import LoginHeroButton from "./LoginHeroButton";
 
 export default function HeroSection() {
-  const { user, isLoading } = useUser();
   return (
     <section>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 items-center">
@@ -26,25 +19,7 @@ export default function HeroSection() {
             ابزارهای اختصاصی، تحلیل‌های به‌روز و امتیازات ویژه در کنار تیم
             حرفه‌ای ما، مسیر رشد مالی شما را هموار می‌کند.
           </p>
-
-          {isLoading ? (
-            <Spinner />
-          ) : user ? (
-            <Button
-              asChild
-              size="lg"
-              className="gap-2 px-8 shadow-lg shadow-primary/20"
-            >
-              <Link href="/account">وورد به پنل اختصاصی</Link>
-            </Button>
-          ) : (
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button>وورد به پنل اختصاصی</Button>
-              </DialogTrigger>
-              <Login />
-            </Dialog>
-          )}
+          <LoginHeroButton />
 
           <div className="flex items-center gap-6  text-muted-foreground pt-2">
             <div>

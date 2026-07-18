@@ -16,7 +16,7 @@ export default function ProfileHeader({ user }: Props) {
   }
   return (
     <Card>
-      <CardContent className="flex flex-col gap-2 md:flex-row ">
+      <CardContent className="flex flex-col items-start gap-2 md:flex-row ">
         <Avatar className="w-14 h-14">
           <AvatarImage
             src={`http://localhost:5000/images/users/${user?.photo}`}

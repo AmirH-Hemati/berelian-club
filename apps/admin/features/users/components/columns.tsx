@@ -24,8 +24,10 @@ export const columns: ColumnDef<UserType>[] = [
       const user = row.original;
       return (
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage src={user?.photo || ""} />
+          <AvatarFallback>
+            {user?.firstName[0] + user?.lastName[0]}
+          </AvatarFallback>
         </Avatar>
       );
     },

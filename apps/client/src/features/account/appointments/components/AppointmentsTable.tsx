@@ -85,7 +85,7 @@ export default function AppointmentsTable() {
                 <TableCell className="font-medium">
                   <Typebadge type={appointment.type} types={typesMap} />
                 </TableCell>
-                <TableCell>{convertDate(appointment.createdAt)}</TableCell>
+                <TableCell>{convertDate(appointment.appointmentDate)}</TableCell>
                 <TableCell>
                   <StatusBadge status={appointment.status} />
                 </TableCell>

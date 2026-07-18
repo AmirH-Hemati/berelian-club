@@ -34,11 +34,11 @@ export default function ContractStatus({ user }: Props) {
         </div>
 
         <div className="space-y-2">
-          <div className="flex justify-between text-300">
-            <span className="text-muted-foreground"> سپری شده</span>
-            <span className="font-medium text-primary">۶۷٪</span>
+          <div className="flex justify-between">
+            <span className=" text-muted-foreground">سپری شده</span>
+            <span>{user?.contractProgress}%</span>
           </div>
-          <Progress value={67} />
+          <Progress value={user?.contractProgress} />
           <div className="flex justify-between text-200 text-muted-foreground">
             <span>پایان</span>
             <span>{user.contractDaysRemaining} روز باقی‌مانده</span>
