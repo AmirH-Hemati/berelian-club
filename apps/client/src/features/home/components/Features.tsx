@@ -1,14 +1,12 @@
 "use client";
 
+import Spiral from "@/../public/spiral-arrow.svg";
+import { ActiveProvider } from "@/components/Active.provider";
 import DetailsComponent from "@/features/home/components/Details";
 import SubtitleSection from "@/features/home/components/SubtitleSection";
 import TitleSection from "@/features/home/components/TitleSection";
 import Image from "next/image";
-import { ActiveProvider } from "@/components/Active.provider";
-import shadow from "@/../public/shadow.svg";
-import page from "@/../public/dashboardPage.png";
-import Spiral from "@/../public/spiral-arrow.svg";
-import Styles from "./test.module.css";
+import ScreenShots from "./ScreenShots";
 
 export function FeatureSlider() {
   return (
@@ -18,12 +16,9 @@ export function FeatureSlider() {
           <TitleSection />
           <SubtitleSection />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2  mt-20 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2  mt-20 gap-6">
           <DetailsComponent />
-          <section className={Styles.test}>
-            <Image className={Styles.shadow} src={shadow} alt="test1" />
-            <Image className={Styles.image} src={page} alt="test2" />
-          </section>
+          <ScreenShots />
         </div>
         <Image
           src={Spiral}

@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { useUpdateQueryParams } from "@/hooks/useUpdateQueryParams";
-import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginationControlsProps {
@@ -11,8 +10,8 @@ interface PaginationControlsProps {
 }
 
 export function PaginationControls({
-  page=1,
-  totalPages=1,
+  page = 1,
+  totalPages = 1,
 }: PaginationControlsProps) {
   const updateQueryParams = useUpdateQueryParams();
 

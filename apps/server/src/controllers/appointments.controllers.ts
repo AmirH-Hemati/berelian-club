@@ -72,6 +72,7 @@ export const completeAppointment = CatchError(async (req, res, NextRequest) => {
     data: request,
   });
 });
+
 export const getUserAppointments = CatchError(async (req, res, next) => {
   const id = (req.user as UserDocument)._id;
   const appointments = await AppointmentModel.find({ user: id }).limit(10);
@@ -84,6 +85,7 @@ export const getUserAppointments = CatchError(async (req, res, next) => {
     data: appointments,
   });
 });
+
 export const getTodayAppointments = CatchError(
   async (req: Request, res: Response) => {
     const startOfDay = new Date();
