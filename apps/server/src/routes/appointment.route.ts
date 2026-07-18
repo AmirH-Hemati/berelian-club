@@ -27,7 +27,7 @@ router
     createAppointment,
   );
 
-router.get("/myAppointments", getUserAppointments);
+router.get("/myAppointments", protectedRoute, getUserAppointments);
 
 router.delete("/:id", deleteAppointment);
 // restrit for only admin
