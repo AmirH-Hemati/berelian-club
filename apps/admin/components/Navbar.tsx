@@ -3,7 +3,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, Moon, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -11,13 +11,14 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
-// import { useLogout } from "@/features/authentication/hooks/useLogout";
+import { useLogout } from "@/features/authentication/hooks/useLogout";
+import { useUser } from "@/features/authentication/hooks/useUser";
+import Spinner from "./Spinner";
 export default function Navbar() {
+  const { user, isLoading } = useUser();
   const { setTheme } = useTheme();
-  // const { logout, isPending } = useLogout();
-  // function handelLogout() {
-  //   logout();
-  // }
+  const { logout, isLogouting } = useLogout();
+
   return (
     <nav className="flex items-center justify-between p-4 sticky top-0 bg-background z-10">
       {/* left */}
@@ -27,8 +28,6 @@ export default function Navbar() {
       {/* right*/}
 
       <div className="flex items-center gap-2 md:gap-4">
-        {/* searchBar */}
-        {/* <SearchFilter /> */}
         {/* theme */}
 
         <DropdownMenu>
@@ -54,12 +53,18 @@ export default function Navbar() {
 
         {/* account information */}
         <DropdownMenu>
-          <DropdownMenuTrigger className="cursor-pointer">
-            <Avatar>
-              <AvatarImage src="https://avatars.githubusercontent.com/u/1486366" />
-              <AvatarFallback>pr</AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <DropdownMenuTrigger className="cursor-pointer">
+              <Avatar>
+                <AvatarImage src={user?.photo || ""} />
+                <AvatarFallback>
+                  {user?.firstName[0] + user?.lastName[0]}
+                </AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+          )}
           <DropdownMenuContent className=" w-44" sideOffset={15}>
             <DropdownMenuItem>
               <Link href="/account/profile" className="flex items-center gap-2">
@@ -68,7 +73,11 @@ export default function Navbar() {
               </Link>
             </DropdownMenuItem>
 
-            <DropdownMenuItem variant="destructive">
+            <DropdownMenuItem
+              variant="destructive"
+              disabled={isLogouting}
+              onClick={() => logout()}
+            >
               <LogOut />
               خروج از حساب کاربری
             </DropdownMenuItem>

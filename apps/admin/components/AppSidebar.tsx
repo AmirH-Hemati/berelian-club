@@ -22,13 +22,11 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from "./ui/sidebar";
+import { useLogout } from "@/features/authentication/hooks/useLogout";
 
 export default function AppSidebar() {
-  // const { logout, isPending } = useLogout();
+  const { logout, isLogouting } = useLogout();
 
-  // function handelLogout() {
-  //   logout();
-  // }
   return (
     <Sidebar
       collapsible="icon"
@@ -97,6 +95,8 @@ export default function AppSidebar() {
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
+                  disabled={isLogouting}
+                  onClick={() => logout()}
                   variant="destructive"
                   className="w-52"
                 >

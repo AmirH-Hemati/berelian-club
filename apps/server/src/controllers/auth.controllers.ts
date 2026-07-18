@@ -115,7 +115,7 @@ export const handleVerifyOtp = CatchError(async (req, res, next) => {
   res.cookie("token", token, cookieOption);
   return res.status(200).json({
     message: "خوش آمدید",
-    data: { token },
+    data: { token, user },
   });
 });
 

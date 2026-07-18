@@ -13,6 +13,5 @@ export function useRecentAppointments() {
     queryFn: getRecentAppointments,
   });
 
-  console.log(data.data);
   return { appointments: data.data ?? [], isLoading, isError, refetch };
 }
