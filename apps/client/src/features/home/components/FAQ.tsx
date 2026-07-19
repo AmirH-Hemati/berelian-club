@@ -1,7 +1,5 @@
-// app/components/home/FAQ.tsx
 "use client";
 
-import React from "react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -63,15 +61,18 @@ export default function FAQ() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+      <div className="columns-1 lg:columns-2 ">
         {faqs.map((faq) => {
           return (
             <Collapsible
               key={faq.id}
-              className="rounded-md data-[state=open]:bg-muted "
+              className="rounded-md data-[state=open]:bg-muted break-inside-avoid mb-3"
             >
               <CollapsibleTrigger asChild>
-                <Button variant="ghost" className="group w-full py-6 px-3 bg-secondary/50">
+                <Button
+                  variant="ghost"
+                  className="group w-full py-6 px-3 bg-secondary/50"
+                >
                   {faq.question}
 
                   <ChevronDown
