@@ -61,14 +61,14 @@
 :root,
 :root.light {
   --fz-100: clamp(0.5rem, 0.58rem + 0.2vw, 0.75rem);
-  --fz-200: clamp(0.65rem, 0.4929rem + 0.4762vw, 0.85rem);
-  --fz-300: clamp(0.75rem, 0.6429rem + 0.4762vw, 1rem);
-  --fz-400: clamp(1rem, 0.8929rem + 0.4762vw, 1.25rem);
-  --fz-500: clamp(1.25rem, 1.1429rem + 0.4762vw, 1.5rem);
-  --fz-600: clamp(1.5rem, 1.2857rem + 0.9524vw, 2rem);
-  --fz-700: clamp(1.75rem, 1.4286rem + 1.4286vw, 2.5rem);
-  --fz-800: clamp(2.5rem, 1.8571rem + 2.8571vw, 4rem);
-  --fz-900: clamp(3rem, 1.7143rem + 5.7143vw, 6rem);
+  --fz-200: clamp(0.65rem, 0.49rem + 0.48vw, 0.875rem);
+  --fz-300: clamp(0.75rem, 0.64rem + 0.48vw, 1rem);
+  --fz-400: clamp(1rem, 0.89rem + 0.48vw, 1.25rem);
+  --fz-500: clamp(1.25rem, 1.14rem + 0.48vw, 1.5rem);
+  --fz-600: clamp(1.5rem, 1.3rem + 0.9vw, 2rem);
+  --fz-700: clamp(1.875rem, 1.55rem + 1.2vw, 2.625rem);
+  --fz-800: clamp(2.25rem, 1.85rem + 1.8vw, 3.5rem);
+  --fz-900: clamp(3rem, 2.4rem + 2.8vw, 5rem);
 
   --radius: 0.625rem;
   --card: oklch(1 0 0);

@@ -15,7 +15,7 @@
 
 @media (max-width: 639px) {
   .test {
-    grid-template-columns: [image-start] 1rem [shadow-start] 1fr [image-end] 0.5rem [shadow-end];
+    grid-template-columns: [image-start] 1rem [shadow-start] 1fr [image-end] 0.75rem [shadow-end];
     grid-template-rows: [shadow-start] 0.25rem [image-start] 1fr [shadow-end] 0.5rem [image-end];
   }
 }
