@@ -24,6 +24,7 @@ import { useCompleteAppointment } from "../hooks/useCompleteAppointment";
 import { useRejectAppointment } from "../hooks/useRejectAppointment";
 import SessionReportDialog from "./SessionReportDialog";
 import { AppointmentType } from "@repo/schema";
+import AdminRescheduleAppointment from "./AdminAddNewAppointment";
 
 type Props = { appointment: AppointmentType };
 export default function AppointmentDataBox({ appointment }: Props) {
@@ -44,7 +45,12 @@ export default function AppointmentDataBox({ appointment }: Props) {
               تاریخ ثبت درخواست مشاوره: {formatDate(appointment.createdAt)}
             </span>
           </div>
-          <StatusBadge status={appointment.status} />
+          <AdminRescheduleAppointment
+            appointmentId={appointment._id}
+            userName={`${appointment.user.firstName} ${appointment.user.lastName}`}
+            currentDate={appointment.appointmentDate}
+            status={appointment.status}
+          />
         </div>
 
         <div className="flex items-center gap-2">

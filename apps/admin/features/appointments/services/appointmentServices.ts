@@ -1,6 +1,7 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { buildQueryParams, GetRequestsParams } from "@/utils/buildQueryParams";
 import { SessionReportFormValues, SessionReportType } from "@repo/schema";
+import { RescheduleParams } from "../hooks/useRescheduleAppointment";
 
 export async function getAppointments(qeury: GetRequestsParams) {
   const params = buildQueryParams(qeury);
@@ -25,6 +26,7 @@ export const deleteAppointment = async (appointmentId: string) => {
 
   return data.data;
 };
+
 export async function getRecentAppointments() {
   const { data } = await axiosInstance.get("/appointments");
   return data;

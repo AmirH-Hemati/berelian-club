@@ -12,12 +12,13 @@ import {
   getTodayAppointments,
   getUserAppointments,
   rejectAppointment,
+  rescheduleAppointment,
   setAppointmentUserId,
 } from "../controllers/appointments.controllers.js";
 import { convertDateFields } from "../middlewares/convertDateFields.js";
 
 const router = express.Router();
-
+router.use(protectedRoute);
 router
   .route("/")
   .get(getAppointments)
@@ -38,6 +39,8 @@ router.get("/today", getTodayAppointments);
 router.patch("/:id/approve", approveAppointment);
 router.patch("/:id/reject", rejectAppointment);
 router.patch("/:id/complete", completeAppointment);
+router.patch("/:id/reschedule", rescheduleAppointment);
+
 router.route("/:id").get(getAppointment);
 
 // .patch(updateRequest).delete(deleteRequest);

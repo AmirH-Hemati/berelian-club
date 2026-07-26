@@ -12,6 +12,7 @@ import AppointmentModel, {
   type appointmentDocument,
 } from "../models/appointment.model.js";
 import type { UserDocument } from "../models/user.model.js";
+import NotificationModel from "../models/notification.model.js";
 
 export const setAppointmentUserId = (
   req: Request,
@@ -37,25 +38,42 @@ export const approveAppointment = CatchError(async (req, res, NextRequest) => {
     data: request,
   });
 });
+export const rejectAppointment = CatchError(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { reason } = req.body;
 
-export const rejectAppointment = CatchError(async (req, res, NextRequest) => {
-  const { id } = req.params;
-  const request = await AppointmentModel.findById(id);
-  if (!request) {
-    throw new AppError("جلسه مشاوره ای یافت نشد", 404);
-  }
+    const appointment = await AppointmentModel.findById(id);
+    if (!appointment) {
+      throw new AppError("جلسه مشاوره یافت نشد", 404);
+    }
 
-  if (request.status === "completed") {
-    throw new AppError("این درخواست قبلا تکمیل شده است", 400);
-  }
-  request.status = "cancelled";
-  await request.save();
-  res.status(200).json({
-    status: "success",
-    message: "جلسه مشاوره با موفقیت کنسل شد",
-    data: request,
-  });
-});
+    if (
+      appointment.status === "completed" ||
+      appointment.status === "cancelled"
+    ) {
+      throw new AppError("این جلسه قبلاً به پایان رسیده یا کنسل شده است", 400);
+    }
+
+    appointment.status = "cancelled";
+    appointment.cancellationReason = reason || "کنسل شده توسط ادمین";
+    appointment.cancelledBy = (req.user as UserDocument)._id;
+    await appointment.save();
+
+    await NotificationModel.create({
+      user: appointment.user,
+      title: "کنسل شدن جلسه مشاوره",
+      message: `جلسه مشاوره شما کنسل شد.${reason ? `\nدلیل: ${reason}` : ""}`,
+      type: "reminder",
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: "جلسه با موفقیت کنسل شد",
+      data: appointment,
+    });
+  },
+);
 
 export const completeAppointment = CatchError(async (req, res, NextRequest) => {
   const { id } = req.params;
@@ -72,6 +90,46 @@ export const completeAppointment = CatchError(async (req, res, NextRequest) => {
     data: request,
   });
 });
+
+export const rescheduleAppointment = CatchError(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { newDate, reason } = req.body;
+    console.log(id)
+    const appointment = await AppointmentModel.findById(id);
+    if (!appointment) {
+      throw new AppError("جلسه مشاوره یافت نشد", 404);
+    }
+
+    if (appointment.status !== "approved" && appointment.status !== "pending") {
+      throw new AppError("این جلسه قابل تغییر زمان نیست", 400);
+    }
+
+    const newAppointmentDate = new Date(newDate);
+    if (newAppointmentDate <= new Date()) {
+      throw new AppError("تاریخ جدید باید در آینده باشد", 400);
+    }
+
+    appointment.appointmentDate = newAppointmentDate;
+    appointment.rescheduleReason =
+      reason || "زمان جلسه مشاوره توسط ادمین تغییر کرد";
+    appointment.rescheduledBy = (req.user as UserDocument)._id;
+    await appointment.save();
+
+    await NotificationModel.create({
+      user: appointment.user,
+      title: "تغییر زمان مشاوره",
+      message: `زمان جلسه مشاوره شما به ${newAppointmentDate.toLocaleDateString("fa-IR")} تغییر یافت.${reason ? `\nدلیل: ${reason}` : ""}`,
+      type: "reminder",
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: "زمان جلسه با موفقیت تغییر یافت",
+      data: appointment,
+    });
+  },
+);
 
 export const getUserAppointments = CatchError(async (req, res, next) => {
   const id = (req.user as UserDocument)._id;

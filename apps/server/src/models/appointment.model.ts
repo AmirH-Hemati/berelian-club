@@ -7,6 +7,10 @@ export interface appointmentDocument extends mongoose.Document {
   status: "pending" | "approved" | "cancelled" | "completed";
   type: "online" | "phone";
   meetingLink: string;
+  cancellationReason?: string;
+  rescheduleReason?: string;
+  cancelledBy?: mongoose.Types.ObjectId;
+  rescheduledBy?: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -40,6 +44,26 @@ const appointmentSchema = new mongoose.Schema<appointmentDocument>(
       enum: ["pending", "approved", "cancelled", "completed"],
       default: "pending",
       required: true,
+    },
+    cancellationReason: {
+      type: String,
+      default: null,
+      trim: true,
+    },
+    rescheduleReason: {
+      type: String,
+      default: null,
+      trim: true,
+    },
+    cancelledBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    rescheduledBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
     },
   },
   { timestamps: true },
