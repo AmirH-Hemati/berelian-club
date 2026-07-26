@@ -25,6 +25,7 @@ import { useRejectAppointment } from "../hooks/useRejectAppointment";
 import SessionReportDialog from "./SessionReportDialog";
 import { AppointmentType } from "@repo/schema";
 import AdminRescheduleAppointment from "./AdminAddNewAppointment";
+import { RejectAppointmentDialog } from "./RejectAppointmentDialog";
 
 type Props = { appointment: AppointmentType };
 export default function AppointmentDataBox({ appointment }: Props) {
@@ -133,15 +134,7 @@ export default function AppointmentDataBox({ appointment }: Props) {
 
       <Separator />
       <CardFooter className="flex gap-2 w-full justify-end">
-        <Button
-          onClick={() => rejectAppointment(appointment._id)}
-          disabled={isPending2}
-          variant="destructive"
-          className="w-1/2 md:w-fit"
-        >
-          <XCircle className="size-4" />
-          رد درخواست
-        </Button>
+        <RejectAppointmentDialog appointmentId={appointment._id}/>
         {(appointment.status === "pending" ||
           appointment.status === "cancelled") && (
           <Button
