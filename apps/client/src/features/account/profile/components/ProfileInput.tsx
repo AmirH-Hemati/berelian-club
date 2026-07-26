@@ -16,6 +16,7 @@ interface ProfileInputProps<T extends FieldValues> {
   label: string;
   icon: LucideIcon;
   type?: string;
+  disabled?: boolean;
 }
 
 export function ProfileInput<T extends FieldValues>({
@@ -24,6 +25,7 @@ export function ProfileInput<T extends FieldValues>({
   label,
   icon: Icon,
   type = "text",
+  disabled = false,
 }: ProfileInputProps<T>) {
   return (
     <Controller
@@ -42,6 +44,7 @@ export function ProfileInput<T extends FieldValues>({
               {...field}
               id={field.name}
               aria-invalid={fieldState.invalid}
+              disabled={disabled}
             />
           </InputGroup>
 

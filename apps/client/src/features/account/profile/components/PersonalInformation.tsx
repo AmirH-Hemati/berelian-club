@@ -13,18 +13,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { Button } from "@/components/ui/button";
-
 import { FieldGroup } from "@/components/ui/field";
 import { updateMeSchema, updateMeTypes, UserType } from "@repo/schema";
 import { useEffect } from "react";
 import CustomDatePicker from "../../appointments/components/CustomDatePicker";
-import { useUpdateMe } from "../hooks/useUpdateMe";
 import { ProfileInput } from "./ProfileInput";
 
 type Props = { user: UserType };
 export default function PersonalInformation({ user }: Props) {
-  const { updateMe, isUpdating } = useUpdateMe();
   const form = useForm<updateMeTypes>({
     resolver: zodResolver(updateMeSchema),
 
@@ -50,9 +46,6 @@ export default function PersonalInformation({ user }: Props) {
       });
     }
   }, [user, form]);
-  const onSubmit = (values: updateMeTypes) => {
-    updateMe(values);
-  };
 
   return (
     <Card>
@@ -63,10 +56,7 @@ export default function PersonalInformation({ user }: Props) {
       </CardHeader>
 
       <CardContent>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 flex flex-col"
-        >
+        <form className="space-y-6 flex flex-col">
           <FieldGroup>
             <div className="grid gap-4 md:grid-cols-2">
               <ProfileInput
@@ -74,6 +64,7 @@ export default function PersonalInformation({ user }: Props) {
                 name="firstName"
                 label="نام"
                 icon={User}
+                
               />
 
               <ProfileInput
@@ -112,14 +103,6 @@ export default function PersonalInformation({ user }: Props) {
               />
             </div>
           </FieldGroup>
-          <Button
-            type="submit"
-            disabled={isUpdating}
-            className="mr-auto"
-            size="sm"
-          >
-            ذخیره تغییرات
-          </Button>
         </form>
       </CardContent>
     </Card>
