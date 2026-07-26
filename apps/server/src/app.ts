@@ -9,14 +9,16 @@ import fileRoutes from "./routes/file.route.js";
 import userFiles from "./routes/userFile.route.js";
 import sessionReportRoutes from "./routes/sessionReport.routes.js";
 import followUpsRoutes from "./routes/followUp.route.js";
+import conversationsRoutes from "./routes/conversation.route.js";
+import messagesRoutes from "./routes/message.routes.js";
 import cors from "cors";
 import morgan from "morgan";
 import cookiePraser from "cookie-parser";
 import { errorController } from "./controllers/errorController.js";
 import { AppError } from "./utils/AppError.js";
 import path from "path";
-const app = express();
 
+const app = express();
 // throw new Error("this is error");
 
 app.use(
@@ -43,7 +45,7 @@ app.use(express.static(path.join(process.cwd(), "/public")));
 app.use(express.json());
 
 app.use(cookiePraser());
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
 
 app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/users", userRoutes);
@@ -55,6 +57,8 @@ app.use("/api/v1/files", fileRoutes);
 app.use("/api/v1/userFiles", userFiles);
 app.use("/api/v1/sessionReports", sessionReportRoutes);
 app.use("/api/v1/followUps", followUpsRoutes);
+app.use("/api/v1/conversations", conversationsRoutes);
+app.use("/api/v1/messages", messagesRoutes);
 
 app.use((req, res, next) => {
   next(new AppError(`مسیر ${req.originalUrl} پیدا نشد`, 404));

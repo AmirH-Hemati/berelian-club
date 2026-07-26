@@ -7,8 +7,9 @@ import QueryProvider from "@/components/providers/QueryProvider";
 import { ToastContainer } from "react-toastify";
 import { cn } from "@/lib/utils";
 import { DirectionProvider } from "@/components/ui/direction";
+import { SocketProvider } from "@/features/chats/components/SocketProvider";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const vazirmatn = Vazirmatn({ subsets: ["arabic"] });
 
@@ -23,34 +24,41 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fa" dir="rtl" suppressHydrationWarning className={cn("font-sans", inter.variable)}>
+    <html
+      lang="fa"
+      dir="rtl"
+      suppressHydrationWarning
+      className={cn("font-sans", inter.variable)}
+    >
       <body
         className={`${vazirmatn.className} antialiased `}
         suppressHydrationWarning
       >
         <DirectionProvider dir="rtl">
           <QueryProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {children}
+            <SocketProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                {children}
 
-              <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick={false}
-                rtl={true}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-              />
-            </ThemeProvider>
+                <ToastContainer
+                  position="top-right"
+                  autoClose={5000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick={false}
+                  rtl={true}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="light"
+                />
+              </ThemeProvider>
+            </SocketProvider>
           </QueryProvider>
         </DirectionProvider>
       </body>

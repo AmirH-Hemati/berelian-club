@@ -1,7 +1,7 @@
 import "dotenv/config.js";
-import app from "./app.js";
 import mongoose from "mongoose";
 import ReminderEngine from "./services/reminder/ReminderEngine.js";
+import { server } from "./utils/setupSocket.js";
 
 let DATABSE_URI = "";
 if (process.env.APP_ENV === "development") {
@@ -20,7 +20,7 @@ mongoose
 
 const port = process.env.PORT || 5000;
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`server listen on port ${port}`);
   ReminderEngine.start();
 });

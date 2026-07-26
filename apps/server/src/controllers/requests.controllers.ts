@@ -11,6 +11,8 @@ import CatchError from "../utils/catchAsync.js";
 import { AppError } from "../utils/AppError.js";
 import type { UserDocument } from "../models/user.model.js";
 import { ApiFeatures } from "../utils/ApiFeatures.js";
+import { ConversationModel } from "../models/conversation.model.js";
+import NotificationModel from "../models/notification.model.js";
 
 export const setRequestUserId = (
   req: Request,
@@ -23,6 +25,7 @@ export const setRequestUserId = (
 
 export const approveRequest = CatchError(async (req, res, NextRequest) => {
   const { id } = req.params;
+  const adminId = (req.user as UserDocument)._id;
   const request = await RequestModel.findById(id);
   if (!request) {
     throw new AppError("درخواستی یافت نشد", 404);
@@ -31,12 +34,34 @@ export const approveRequest = CatchError(async (req, res, NextRequest) => {
   if (request.status !== "pending") {
     throw new AppError("این درخواست قبلا بررسی شده است", 400);
   }
+
   request.status = "approved";
   await request.save();
+  let conversation = await ConversationModel.findOne({ request: id });
+  if (!conversation) {
+    conversation = await ConversationModel.create({
+      participants: [request.user._id, adminId],
+      request: id?.toString(),
+      isActive: true,
+    });
+  } else {
+    conversation.isActive = true;
+    await conversation.save();
+  }
+  await NotificationModel.create({
+    user: request.user._id,
+    title: "درخواست شما تایید شد",
+    message: `درخواست ${request.type} شما تایید شد. برای ادامه گفتگو وارد چت شوید.`,
+    type: "reminder",
+  });
+
   res.status(200).json({
     status: "success",
-    message: "درخواست با موفقیت تایید شد",
-    data: request,
+    message: "درخواست با موفقیت تایید شد و چت فعال گردید",
+    data: {
+      request,
+      conversation,
+    },
   });
 });
 export const rejectRequest = CatchError(async (req, res, NextRequest) => {
