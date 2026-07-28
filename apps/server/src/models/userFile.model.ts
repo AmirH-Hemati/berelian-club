@@ -1,9 +1,10 @@
 import mongoose, { Query } from "mongoose";
 
 export interface UserFileDocument extends mongoose.Document {
-  user: mongoose.Types.ObjectId;
+  user?: mongoose.Types.ObjectId;
   file: mongoose.Types.ObjectId;
   sentBy: mongoose.Types.ObjectId;
+  targetRole?: "investor";
   createdAt: Date;
   updatedAt: Date;
 }
@@ -13,7 +14,7 @@ const userFileSchema = new mongoose.Schema<UserFileDocument>(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      default: null,
       index: true,
     },
     file: {
@@ -26,6 +27,10 @@ const userFileSchema = new mongoose.Schema<UserFileDocument>(
       ref: "User",
       required: true,
     },
+    targetRole: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -33,6 +38,7 @@ const userFileSchema = new mongoose.Schema<UserFileDocument>(
 );
 
 userFileSchema.index({ user: 1, file: 1 });
+userFileSchema.index({ targetRole: 1 });
 
 userFileSchema.pre<Query<UserFileDocument, UserFileDocument[]>>(
   /^find/,

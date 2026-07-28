@@ -7,6 +7,7 @@ import { AppError } from "../utils/AppError.js";
 import path from "path";
 import fs from "fs";
 import { ApiFeatures } from "../utils/ApiFeatures.js";
+import UserModel from "../models/user.model.js";
 
 export const sendFileToUser = CatchError(
   async (req: Request, res: Response) => {
@@ -31,10 +32,58 @@ export const sendFileToUser = CatchError(
   },
 );
 
+export const sendFileToAllInvestors = CatchError(
+  async (req: Request, res: Response) => {
+    const { fileId } = req.body;
+
+    const file = await FileModel.findById(fileId);
+    if (!file) {
+      throw new AppError("فایل یافت نشد", 404);
+    }
+
+    const existingGlobalFile = await UserFileModel.findOne({
+      file: fileId,
+      targetRole: "investor",
+    });
+
+    if (existingGlobalFile) {
+      throw new AppError(
+        "این فایل قبلاً برای همه سرمایه‌گذاران ارسال شده است",
+        400,
+      );
+    }
+
+    const userFile = await UserFileModel.create({
+      file: fileId,
+      sentBy: (req.user as UserDocument)._id,
+      targetRole: "investor",
+    });
+
+    const investorsCount = await UserModel.countDocuments({
+      role: "investor",
+      isActive: true,
+    });
+
+    res.status(201).json({
+      status: "success",
+      message: `فایل برای ${investorsCount} سرمایه‌گذار ارسال شد`,
+      data: {
+        file: file.originalName,
+        targetRole: "investor",
+        investorsCount,
+      },
+    });
+  },
+);
+
 export const getUserFiles = CatchError(async (req: Request, res: Response) => {
+  const user = req.user as UserDocument;
   const features = new ApiFeatures(
     UserFileModel.find({
-      user: (req.user as UserDocument)._id,
+      $or: [
+        { user: user._id },
+        { targetRole: user.role === "investor" ? "investor" : null },
+      ],
     }),
     req.query,
   )
