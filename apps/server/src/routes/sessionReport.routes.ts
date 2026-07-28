@@ -7,13 +7,19 @@ import {
 } from "../controllers/sessionReport.controllers.js";
 import { validateZod } from "../middlewares/validateZod.js";
 import { sessionReportSchema } from "@repo/schema";
+import { convertDateFields } from "../middlewares/convertDateFields.js";
 
 const router = express.Router();
 
 router.use(protectedRoute);
 
 /// restrict for only admin
-router.post("/", validateZod(sessionReportSchema), createSessionReport);
+router.post(
+  "/",
+  convertDateFields(["followUpDate"]),
+  validateZod(sessionReportSchema),
+  createSessionReport,
+);
 router.get("/:appointmentId", getSessionReport);
 
 router.route("/:id").delete(deleteSessionReport);

@@ -75,8 +75,8 @@ export const deleteSessionReport = CatchError(async (req, res) => {
     throw new AppError("گزارشی با آیدی مشخص شده پیدا نشد", 404);
   }
 
-  const followUp = await FollowUpModel.findOneAndDelete({
-    sessionReport: id,
+  await FollowUpModel.findOneAndDelete({
+    sessionReport: sessionReport._id,
   });
 
   res.status(204).json({

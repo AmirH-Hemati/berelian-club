@@ -49,6 +49,8 @@ export default function SessionReportDialog({
   const form = useForm<SessionReportFormValues>({
     resolver: zodResolver(sessionReportSchema),
     defaultValues: {
+      appointment: appointmentId,
+      userId: userId,
       summary: "",
       result: "pending",
       resultDescription: "",
@@ -62,7 +64,14 @@ export default function SessionReportDialog({
   const needFollowUp = form.watch("needFollowUp");
 
   function onSubmit(values: SessionReportFormValues) {
-    createSessionReport({ ...values, appointment: appointmentId, userId });
+    createSessionReport(
+      { ...values, appointment: appointmentId, userId },
+      {
+        onSuccess: () => {
+          setOpen(false);
+        },
+      },
+    );
   }
 
   return (

@@ -29,7 +29,7 @@ type Props = {
 };
 export default function SessionReportCard({ appointmentId }: Props) {
   const { sessionReport: report, isLoading } = useSessionReport(appointmentId);
-  const { deleteSessionReport, isDeleting } = useDeleteReportSession();
+  const { deleteSessionReport, isDeleting } = useDeleteReportSession(appointmentId);
 
   if (isLoading) return <Spinner />;
 

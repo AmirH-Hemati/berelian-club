@@ -95,7 +95,6 @@ export const rescheduleAppointment = CatchError(
   async (req: Request, res: Response) => {
     const { id } = req.params;
     const { newDate, reason } = req.body;
-    console.log(id)
     const appointment = await AppointmentModel.findById(id);
     if (!appointment) {
       throw new AppError("جلسه مشاوره یافت نشد", 404);
