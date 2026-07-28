@@ -1,6 +1,6 @@
-import Spinner from "@/components/Spinner";
+import PageSpinner from "@/components/PageSpinner";
 import React from "react";
 
 export default function loading() {
-  return <Spinner />;
+  return <PageSpinner />;
 }

@@ -10,7 +10,7 @@ import {
 
 import { useRouter } from "next/navigation";
 
-import Spinner from "@/components/Spinner";
+import Spinner from "@/components/PageSpinner";
 import { useRequest } from "@/features/requests/hooks/useRequest";
 import StatusBadge from "@/features/requests/components/StatusBadge";
 import { ArrowRight } from "lucide-react";

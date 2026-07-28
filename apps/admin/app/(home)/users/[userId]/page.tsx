@@ -8,7 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-import Spinner from "@/components/Spinner";
+import Spinner from "@/components/PageSpinner";
 import UserDataBox from "@/features/users/components/UserDataBox";
 import { useGetUser } from "@/features/users/hooks/useGetUser";
 import ContractStatus from "@/features/users/components/ContractStatus";

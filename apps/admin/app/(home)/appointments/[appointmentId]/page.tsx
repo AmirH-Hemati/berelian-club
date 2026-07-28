@@ -8,7 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-import Spinner from "@/components/Spinner";
+import Spinner from "@/components/PageSpinner";
 import AppointmentDataBox from "@/features/appointments/components/AppointmentDataBox";
 import { useAppointment } from "@/features/appointments/hooks/useAppointment";
 import { Button } from "@/components/ui/button";

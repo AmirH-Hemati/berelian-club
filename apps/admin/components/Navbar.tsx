@@ -13,7 +13,7 @@ import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
 import { useLogout } from "@/features/authentication/hooks/useLogout";
 import { useUser } from "@/features/authentication/hooks/useUser";
-import Spinner from "./Spinner";
+import { Spinner } from "./ui/spinner";
 export default function Navbar() {
   const { user, isLoading } = useUser();
   const { setTheme } = useTheme();
