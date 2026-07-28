@@ -86,6 +86,11 @@ export const columns: ColumnDef<RequestType>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>فعالیت ها </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            {request.status == "approved" && (
+              <DropdownMenuItem asChild>
+                <Link href={`/chat/${request._id}`}>گفتگو </Link>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem asChild>
               <Link href={`/users/${request?.user?._id}`}>
                 مشاهده جزئیات کاربر
@@ -93,7 +98,6 @@ export const columns: ColumnDef<RequestType>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link href={`/requests/${request._id}`}>
-                {" "}
                 مشاهده جزئیات درخواست
               </Link>
             </DropdownMenuItem>

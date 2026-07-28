@@ -2,7 +2,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CalendarOff, PhoneCall } from "lucide-react";
 
-import Spinner from "@/components/Spinner";
+import Spinner from "@/components/PageSpinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import StatusBadge from "@/features/requests/components/StatusBadge";

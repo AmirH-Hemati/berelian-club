@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { FileText, Clock, User, XCircle } from "lucide-react";
 import { formatDate } from "@/utils/helper";
 import { useSessionReport } from "../hooks/useSessionReport";
-import Spinner from "@/components/Spinner";
+import Spinner from "@/components/PageSpinner";
 import { Button } from "@/components/ui/button";
 import { useDeleteReportSession } from "../hooks/useDeleteReportSession";
 

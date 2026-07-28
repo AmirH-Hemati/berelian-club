@@ -76,9 +76,6 @@ export default function AddNewRequest() {
                   </SelectTrigger>
 
                   <SelectContent>
-                    <SelectItem value="consultation">
-                      مشاوره با مدیر سبد
-                    </SelectItem>
                     <SelectItem value="renew_contract">
                       تمدید قرارداد
                     </SelectItem>

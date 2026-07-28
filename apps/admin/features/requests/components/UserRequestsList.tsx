@@ -9,7 +9,7 @@ import {
   UserRound,
 } from "lucide-react";
 
-import Spinner from "@/components/Spinner";
+import Spinner from "@/components/PageSpinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDate } from "@/utils/helper";

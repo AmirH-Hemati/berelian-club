@@ -6,7 +6,6 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import StatusBadge from "@/features/requests/components/StatusBadge";
 import Typebadge from "@/features/requests/components/Typebadge";
 import { useApproveRequest } from "@/features/requests/hooks/useApproveRequest";
 import { useRejectRequest } from "@/features/requests/hooks/useRejectRequest";
@@ -16,10 +15,12 @@ import {
   CheckCircle,
   Clock,
   FileText,
+  MessagesSquare,
   Phone,
   User,
   XCircle,
 } from "lucide-react";
+import Link from "next/link";
 type Props = { request: RequestType };
 export default function RequestDataBox({ request }: Props) {
   const { approveRequest, isPending } = useApproveRequest();
@@ -34,7 +35,14 @@ export default function RequestDataBox({ request }: Props) {
               تاریخ ثبت درخواست : {formatDate(request.createdAt)}
             </span>
           </div>
-          <StatusBadge status={request.status} />
+
+          {request.status === "approved" && (
+            <Link href={`/chat/${request._id}`}>
+              <Button variant="outline" size="sm" className="gap-2">
+                <MessagesSquare /> گفتگو
+              </Button>
+            </Link>
+          )}
         </div>
 
         <Typebadge type={request.type} />

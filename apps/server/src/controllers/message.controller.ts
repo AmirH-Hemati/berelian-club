@@ -5,6 +5,7 @@ import { AppError } from "../utils/AppError.js";
 import { ConversationModel } from "../models/conversation.model.js";
 import { MessageModel } from "../models/message.model.js";
 import { getReceiverSocketId, io } from "../utils/setupSocket.js";
+import { FileModel } from "../models/file.model.js";
 
 export const sendMessage = CatchError(async (req: Request, res: Response) => {
   const { conversationId } = req.params;
@@ -85,3 +86,43 @@ export const getMessages = CatchError(async (req: Request, res: Response) => {
     data: messages,
   });
 });
+
+export const sendFileMessage = CatchError(
+  async (req: Request, res: Response) => {
+    const { conversationId } = req.params;
+    const { receiverId, fileId } = req.body;
+    const senderId = (req.user as UserDocument)._id;
+    const file = await FileModel.findById(fileId);
+    if (!file) {
+      throw new AppError("فایل یافت نشد", 404);
+    }
+
+    const conversation = await ConversationModel.findById(conversationId);
+    if (!conversation) {
+      throw new AppError("مکالمه یافت نشد", 404);
+    }
+
+    const message = await MessageModel.create({
+      conversation: conversationId?.toString(),
+      sender: senderId,
+      receiver: receiverId,
+      content: file.originalName,
+      type: "file",
+      file: file._id,
+      isRead: false,
+    });
+
+    conversation.lastMessage = message._id;
+    await conversation.save();
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(`conv-${conversationId as string}`).emit("newMessage", message);
+    }
+
+    res.status(201).json({
+      status: "success",
+      data: message,
+    });
+  },
+);

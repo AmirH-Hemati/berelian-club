@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Query } from "mongoose";
 
 export interface MessageDocument extends mongoose.Document {
   conversation: mongoose.Types.ObjectId;
@@ -6,7 +6,7 @@ export interface MessageDocument extends mongoose.Document {
   receiver: mongoose.Types.ObjectId;
   content: string;
   type: "text" | "file";
-  fileId?: mongoose.Types.ObjectId;
+  file?: mongoose.Types.ObjectId;
   isRead: boolean;
   readAt?: Date;
   createdAt: Date;
@@ -41,7 +41,7 @@ const messageSchema = new mongoose.Schema<MessageDocument>(
       enum: ["text", "file"],
       default: "text",
     },
-    fileId: {
+    file: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "File",
       default: null,
@@ -54,6 +54,12 @@ const messageSchema = new mongoose.Schema<MessageDocument>(
   { timestamps: true },
 );
 
+messageSchema.pre<Query<MessageDocument, MessageDocument>>(
+  /^find/,
+  function (e) {
+    this.populate("file").populate("sender", "firstName lastName");
+  },
+);
 messageSchema.index({ conversation: 1, createdAt: -1 });
 
 export const MessageModel = mongoose.model<MessageDocument>(

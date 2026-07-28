@@ -1,9 +1,11 @@
 export function formatDate(date: string | Date) {
   return new Date(date).toLocaleDateString("fa-IR");
 }
+
 export function formatToman(value: number) {
   return new Intl.NumberFormat("fa-IR").format(value) + " تومان ";
 }
+
 export function formatTime(time: string | Date) {
   return new Date(time).toLocaleDateString("fa-IR");
 }
@@ -17,3 +19,11 @@ export function formatFileSize(bytes: number): string {
 
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 }
+
+export const formatTimeOnly = (date: Date | string) => {
+  const d = new Date(date);
+  return d.toLocaleTimeString("fa-IR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};

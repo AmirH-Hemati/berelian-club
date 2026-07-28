@@ -1,6 +1,6 @@
 "use client";
 
-import Spinner from "@/components/Spinner";
+import Spinner from "@/components/PageSpinner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +25,7 @@ import {
   FileTextIcon,
   ImageIcon,
   Loader2,
+  Paperclip,
   Search,
   Send,
   VideoIcon,
@@ -33,18 +34,29 @@ import { useState } from "react";
 import { useFiles } from "../hooks/useFiles";
 import { useSendFileToUser } from "../hooks/useSendFileToUser";
 import { PaginationControls } from "./PaginationControls";
+import { useSendFileToChat } from "@/features/chats/hooks/useSendFileToChat";
 
 type Props = {
   userId: string;
   userName: string;
+  iconChat?: boolean;
+  conversationId?: string;
 };
-
-export function SendFileModal({ userId, userName }: Props) {
+export function SendFileModal({
+  userId,
+  userName,
+  iconChat = false,
+  conversationId = "",
+}: Props) {
   const [open, setOpen] = useState(false);
   const [selectedFileId, setSelectedFileId] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
   const { files, pagination, isLoading } = useFiles();
   const { sendFile, isSending } = useSendFileToUser();
+  const { sendFile: sendFileToChat, isSending: isSending2 } =
+    useSendFileToChat();
+
+  const isWorking = isSending || isSending2;
 
   const getFileIcon = (fileType: string) => {
     switch (fileType) {
@@ -73,14 +85,31 @@ export function SendFileModal({ userId, userName }: Props) {
   };
 
   function handleSendFile() {
-    sendFile(
-      { userId, fileId: selectedFileId },
-      {
-        onSettled: () => {
-          setOpen(false);
+    if (iconChat) {
+      sendFileToChat(
+        {
+          conversationId,
+          receiverId: userId,
+          fileId: selectedFileId,
         },
-      },
-    );
+        {
+          onSuccess: () => {
+            setOpen(false);
+            setSelectedFileId("");
+          },
+        },
+      );
+    } else {
+      sendFile(
+        { userId, fileId: selectedFileId },
+        {
+          onSettled: () => {
+            setOpen(false);
+            setSelectedFileId("");
+          },
+        },
+      );
+    }
   }
   if (isLoading) return <Spinner />;
 
@@ -89,10 +118,16 @@ export function SendFileModal({ userId, userName }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="secondary" className="w-full sm:w-fit">
-          <FilesIcon />
-          ارسال فایل
-        </Button>
+        {iconChat ? (
+          <Button variant="ghost" size="icon" className="shrink-0 size-9 mb-1">
+            <Paperclip className="size-4" />
+          </Button>
+        ) : (
+          <Button size="sm" variant="secondary" className="w-full sm:w-fit">
+            <FilesIcon />
+            ارسال فایل
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent
         style={{ scrollbarWidth: "thin" }}
@@ -203,9 +238,9 @@ export function SendFileModal({ userId, userName }: Props) {
           <Button variant="outline">انصراف</Button>
           <Button
             onClick={handleSendFile}
-            disabled={!selectedFileId || isSending}
+            disabled={!selectedFileId || isWorking}
           >
-            {isSending ? (
+            {isWorking ? (
               <Loader2 className="size-4 ml-2 animate-spin" />
             ) : (
               <Send className="size-4 ml-2" />

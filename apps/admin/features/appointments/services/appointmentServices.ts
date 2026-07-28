@@ -37,12 +37,20 @@ export const approveAppointment = async (appointmentsId: string) => {
   );
   return data.data;
 };
-export const rejectAppointment = async (appointmentsId: string) => {
+
+export const rejectAppointment = async (
+  appointmentId: string,
+  rejectionReason: string,
+) => {
   const { data } = await axiosInstance.patch(
-    `/appointments/${appointmentsId}/reject`,
+    `/appointments/${appointmentId}/reject`,
+    {
+      rejectionReason,
+    },
   );
   return data.data;
 };
+
 export const completeAppointment = async (appointmentsId: string) => {
   const { data } = await axiosInstance.patch(
     `/appointments/${appointmentsId}/complete`,

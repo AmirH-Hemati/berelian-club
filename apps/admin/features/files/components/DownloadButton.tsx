@@ -28,8 +28,7 @@ export default function DownloadButton({ fileId, originalName }: Props) {
   }
   return (
     <Button variant="ghost" onClick={handleDownloadButton}>
-      <DownloadIcon className="size-4 ml-2" />
-      دانلود فایل
+      <DownloadIcon className="size-4 " />
     </Button>
   );
 }

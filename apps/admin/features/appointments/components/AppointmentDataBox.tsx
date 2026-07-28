@@ -6,8 +6,8 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import StatusBadge from "@/features/requests/components/StatusBadge";
 import { formatDate } from "@/utils/helper";
+import { AppointmentType } from "@repo/schema";
 import {
   Calendar,
   Check,
@@ -16,23 +16,19 @@ import {
   FileText,
   Phone,
   User,
-  Video,
-  XCircle,
+  Video
 } from "lucide-react";
 import { useApproveAppointment } from "../hooks/useApproveAppointment";
 import { useCompleteAppointment } from "../hooks/useCompleteAppointment";
-import { useRejectAppointment } from "../hooks/useRejectAppointment";
-import SessionReportDialog from "./SessionReportDialog";
-import { AppointmentType } from "@repo/schema";
 import AdminRescheduleAppointment from "./AdminAddNewAppointment";
 import { RejectAppointmentDialog } from "./RejectAppointmentDialog";
+import SessionReportDialog from "./SessionReportDialog";
 
 type Props = { appointment: AppointmentType };
 export default function AppointmentDataBox({ appointment }: Props) {
   const isOnline = appointment.type === "online";
   const isPhone = appointment.type === "phone";
   const { approveAppointment, isPending } = useApproveAppointment();
-  const { rejectAppointment, isPending: isPending2 } = useRejectAppointment();
   const { completeAppointment, isPending: isPending3 } =
     useCompleteAppointment();
 
