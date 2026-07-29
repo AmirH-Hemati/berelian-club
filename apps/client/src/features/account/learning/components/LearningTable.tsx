@@ -81,7 +81,7 @@ export default function LearningTable() {
         <TableBody>
           {isError && (
             <TableRow>
-              <TableCell colSpan={5} className="py-10">
+              <TableCell colSpan={5}>
                 <div className="flex flex-col items-center justify-center gap-3 ">
                   <CircleAlert className="size-8 text-destructive" />
 
@@ -138,9 +138,10 @@ export default function LearningTable() {
                 <TableCell>
                   {file?.sentBy?.firstName + " " + file?.sentBy?.lastName}
                 </TableCell>
-                <TableCell>
+
+                <TableCell className="">
                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild className=" w-full mr-auto">
+                    <DropdownMenuTrigger asChild className=" ">
                       <Button variant="ghost" size="icon">
                         <MoreHorizontalIcon />
                         <span className="sr-only">باز کردن منو</span>

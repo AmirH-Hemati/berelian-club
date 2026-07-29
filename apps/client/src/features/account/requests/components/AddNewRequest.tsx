@@ -32,7 +32,7 @@ export default function AddNewRequest() {
   const form = useForm<CreateRequestTypes>({
     resolver: zodResolver(createRequestSchema),
     defaultValues: {
-      type: "consultation",
+      type: "renew_contract",
       description: "",
     },
   });

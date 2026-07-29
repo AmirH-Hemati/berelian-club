@@ -98,7 +98,9 @@ export default function RequestsTable() {
                     <DropdownMenuContent align="end">
                       {request.status == "approved" && (
                         <DropdownMenuItem asChild>
-                          <Link href={`/chat/${request._id}`}>گفتگو </Link>
+                          <Link href={`/account/chat/${request._id}`}>
+                            گفتگو
+                          </Link>
                         </DropdownMenuItem>
                       )}
                       <DropdownMenuItem asChild>

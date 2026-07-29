@@ -8,13 +8,13 @@ type Props = { children: ReactNode };
 export default function Layout({ children }: Props) {
   return (
     <SocketProvider>
-    <SidebarProvider dir="rtl">
-      <AppSidebar />
-      <main className="max-w-5xl w-full p-4 mx-auto">
-        <Navbar />
-        <div>{children}</div>
-      </main>
-    </SidebarProvider>
+      <SidebarProvider dir="rtl">
+        <AppSidebar />
+        <main className="max-w-5xl w-full p-4 mx-auto ">
+          <Navbar />
+          {children}
+        </main>
+      </SidebarProvider>
     </SocketProvider>
   );
 }
