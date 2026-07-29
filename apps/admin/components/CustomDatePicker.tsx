@@ -27,12 +27,12 @@ export default function CustomDatePicker<T extends FieldValues>({
         render={({ field, fieldState }) => (
           <div className="grid ">
             <label
-              htmlFor="datePicker"
+              htmlFor={name}
               className=" h-9 gap-1 flex items-center w-full  rounded-md border border-input bg-transparent/50 py-1 px-2.5 text-base sm:text-sm shadow-xs focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               <Calendar />
               <DatePicker
-                id="datePicker"
+                id={name}
                 calendar={persian}
                 locale={persian_fa}
                 inputClass="border-none flex-1  outline-none"

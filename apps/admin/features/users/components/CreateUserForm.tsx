@@ -7,15 +7,36 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import CustomDatePicker from "@/components/CustomDatePicker";
 import { FormField } from "@/components/FormField";
-import { Banknote, CreditCard, IdCard, Mail, Phone, User } from "lucide-react";
+import {
+  Banknote,
+  CreditCard,
+  IdCard,
+  Mail,
+  Phone,
+  Shield,
+  User,
+} from "lucide-react";
 
-import { createUserSchema, CreateUserInputTypes, UserType } from "@repo/schema";
+import {
+  createUserSchema,
+  CreateUserInputTypes,
+  UserType,
+  updateUserSchema,
+} from "@repo/schema";
 import { useCreateUser } from "../hooks/useCreateUser";
 import { useUpdateUser } from "../hooks/useUpdateUser";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type Props = { user?: UserType; onCloseDialog: () => void };
 export function CreateUserForm({ user, onCloseDialog }: Props) {
@@ -32,6 +53,7 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
           birthDate: new Date(user?.birthDate || ""),
           contractStartDate: new Date(user?.contractStartDate || ""),
           contractEndDate: new Date(user?.contractEndDate || ""),
+          role: user?.role || "investor",
         }
       : {
           firstName: "amir",
@@ -44,6 +66,7 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
           birthDate: new Date(),
           contractStartDate: new Date(),
           contractEndDate: new Date(),
+          role: "investor",
           // new Date().setFullYear(new Date().getFullYear() + 1),
         },
   });
@@ -142,6 +165,43 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
             label="تاریخ پایان قرارداد"
           />
         </div>
+        <div>
+          <Controller
+            name="role"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor="role">نقش کاربر</FieldLabel>
+                <Select
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="انتخاب نقش کاربر" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="admin">
+                      <div className="flex items-center gap-2">
+                        <Shield className="size-4 text-red-500" />
+                        <span>ادمین</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="investor">
+                      <div className="flex items-center gap-2">
+                        <User className="size-4 text-blue-500" />
+                        <span>سرمایه‌گذار</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
@@ -162,7 +222,12 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
         </div>
 
         <div className="flex gap-3 pt-4 mr-auto">
-          <Button type="button" variant="outline" size="lg" onClick={onCloseDialog}>
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            onClick={onCloseDialog}
+          >
             انصراف
           </Button>
           <Button type="submit" size="lg" disabled={isWorking}>

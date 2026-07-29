@@ -7,7 +7,9 @@ import { AppError } from "../utils/AppError.js";
 export const getMyNotifications = CatchError(
   async (req: Request, res: Response) => {
     const userId = (req.user as UserDocument)._id;
-    const notifications = await NotificationModel.find({ user: userId });
+    const notifications = await NotificationModel.find({ user: userId }).sort({
+      createdAt: 1,
+    });
     const unreadCount = await NotificationModel.countDocuments({
       user: userId,
       isRead: false,

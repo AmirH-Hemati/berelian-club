@@ -71,7 +71,7 @@ export default function AdminRescheduleAppointment({
     );
   };
 
-  if (status !== "approved" && status !== "pending") {
+  if (status == "completed" || status == "cancelled") {
     return null;
   }
 
