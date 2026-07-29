@@ -43,6 +43,4 @@ router.patch("/:id/reject", rejectAppointment);
 router.patch("/:id/complete", completeAppointment);
 router.patch("/:id/reschedule", rescheduleAppointment);
 
-// .patch(updateRequest).delete(deleteRequest);
-
 export default router;

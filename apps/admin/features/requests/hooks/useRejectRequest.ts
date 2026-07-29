@@ -6,7 +6,13 @@ export const useRejectRequest = () => {
   const queryClient = useQueryClient();
 
   const { mutate: rejectRequest, isPending } = useMutation({
-    mutationFn: rejectRequestApi,
+    mutationFn: ({
+      requestId,
+      rejectionReason,
+    }: {
+      requestId: string;
+      rejectionReason: string;
+    }) => rejectRequestApi(requestId, rejectionReason),
     onSuccess: () => {
       toast.success("درخواست با موفقیت رد شد");
       queryClient.invalidateQueries({ queryKey: ["requests"] });

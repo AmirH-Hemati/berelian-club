@@ -44,7 +44,7 @@ export const rejectAppointment = async (
   const { data } = await axiosInstance.patch(
     `/appointments/${appointmentId}/reject`,
     {
-      rejectionReason,
+      reason: rejectionReason,
     },
   );
   return data.data;

@@ -4,13 +4,12 @@ export interface RequestDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;
   description: string;
   type:
-    | "consultation"
-    | "renew_contract"
-    | "increase_capital"
-    | "decrease_capital";
+    "consultation" | "renew_contract" | "increase_capital" | "decrease_capital";
   status: "pending" | "approved" | "cancelled";
   createdAt: Date;
   updatedAt: Date;
+  cancellationReason: string;
+  cancelledBy: mongoose.Types.ObjectId;
 }
 const requestSchema = new mongoose.Schema<RequestDocument>(
   {
@@ -38,6 +37,16 @@ const requestSchema = new mongoose.Schema<RequestDocument>(
       enum: ["pending", "approved", "cancelled"],
       default: "pending",
       required: true,
+    },
+    cancellationReason: {
+      type: String,
+      default: null,
+      trim: true,
+    },
+    cancelledBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
     },
   },
   { timestamps: true },

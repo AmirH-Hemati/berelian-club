@@ -21,6 +21,7 @@ import {
   XCircle,
 } from "lucide-react";
 import Link from "next/link";
+import { RejectRequestDialog } from "./RejectRequestDialog";
 type Props = { request: RequestType };
 export default function RequestDataBox({ request }: Props) {
   const { approveRequest, isPending } = useApproveRequest();
@@ -99,15 +100,7 @@ export default function RequestDataBox({ request }: Props) {
       </CardContent>
       <Separator />
       <CardFooter className="flex gap-2 justify-end w-full">
-        <Button
-          onClick={() => rejectRequest(request._id)}
-          disabled={isPending2}
-          variant="destructive"
-          className="w-1/2 md:w-fit  "
-        >
-          <XCircle />
-          رد درخواست
-        </Button>
+        <RejectRequestDialog requestId={request._id} />
         <Button
           onClick={() => approveRequest(request._id)}
           disabled={isPending}

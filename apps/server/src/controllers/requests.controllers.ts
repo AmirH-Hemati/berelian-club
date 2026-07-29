@@ -66,6 +66,7 @@ export const approveRequest = CatchError(async (req, res, NextRequest) => {
 });
 export const rejectRequest = CatchError(async (req, res, NextRequest) => {
   const { id } = req.params;
+  const { reason } = req.body;
   const request = await RequestModel.findById(id);
   if (!request) {
     throw new AppError("درخواستی یافت نشد", 404);
@@ -74,11 +75,15 @@ export const rejectRequest = CatchError(async (req, res, NextRequest) => {
   if (request.status !== "pending") {
     throw new AppError("این درخواست قبلا بررسی شده است", 400);
   }
+
   request.status = "cancelled";
+  request.cancellationReason = reason || "کنسل شده توسط ادمین";
+  request.cancelledBy = (req.user as UserDocument)._id;
+
   await request.save();
   res.status(200).json({
     status: "success",
-    message: "درخواست با موفقیت رد شد",
+    message: "درخواست با موفقیت کنسل شد",
     data: request,
   });
 });

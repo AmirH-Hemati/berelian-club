@@ -32,8 +32,13 @@ export const approveRequest = async (requestId: string) => {
   const { data } = await axiosInstance.patch(`/requests/${requestId}/approve`);
   return data.data;
 };
-export const rejectRequest = async (requestId: string) => {
-  const { data } = await axiosInstance.patch(`/requests/${requestId}/reject`);
+export const rejectRequest = async (
+  requestId: string,
+  rejectionReason: string,
+) => {
+  const { data } = await axiosInstance.patch(`/requests/${requestId}/reject`, {
+    reason: rejectionReason,
+  });
   return data.data;
 };
 
