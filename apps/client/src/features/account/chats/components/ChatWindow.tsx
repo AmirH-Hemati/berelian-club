@@ -1,113 +1,163 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { formatFileSize, formatTimeOnly } from "@/utils/helper";
+import { FileIcon, MessageCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useGetConversationMessages } from "../hooks/useGetConversationMessages";
-import useSendMessage from "../hooks/useSendMessage";
-import { useSocket } from "./SocketProvider";
-import { useUser } from "@/features/auth/hooks/useUser";
-import { convertDate } from "@/utils/helper";
+import { useJoinConversation } from "../hooks/useJoinConversation";
+import { useNewMessages } from "../hooks/useNewMessage";
+import InputMessage from "./InputMessage";
+import { UserType } from "@repo/schema";
+import DownloadButton from "../../learning/components/DownloadButton";
 
 interface ChatWindowProps {
   conversationId: string;
+  currentUser: UserType;
 }
 
-export function ChatWindow({ conversationId }: ChatWindowProps) {
-  const { joinConversion } = useSocket();
-  const { user, isLoading: isLoading2 } = useUser();
-  const [newMessage, setNewMessage] = useState("");
-  const messageEndRef = useRef<HTMLDivElement>(null);
+export function ChatWindow({ conversationId, currentUser }: ChatWindowProps) {
+  const [isAtBottom, setIsAtBottom] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
   const { messages, isLoading } = useGetConversationMessages(conversationId);
-  const { sendMessage, isPending } = useSendMessage(conversationId);
+
+  useJoinConversation(conversationId);
+  useNewMessages(conversationId);
 
   useEffect(() => {
-    joinConversion(conversationId);
-  }, [conversationId, joinConversion]);
-
-  useEffect(() => {
-    if (messageEndRef.current) {
-      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current && isAtBottom) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, []);
+  }, [messages, isAtBottom]);
 
-  const handleSend = () => {
-    if (!newMessage.trim() || isPending) return;
-    sendMessage(newMessage);
+  const groupMessagesByDate = (messages: any[]) => {
+    if (!messages) return [];
+    const groups: any[] = [];
+    let currentDate = "";
+
+    messages.forEach((msg) => {
+      const date = new Date(msg.createdAt).toLocaleDateString("fa-IR");
+      if (date !== currentDate) {
+        currentDate = date;
+        groups.push({ date, messages: [msg] });
+      } else {
+        groups[groups.length - 1].messages.push(msg);
+      }
+    });
+    return groups;
   };
 
-  if (isLoading || isLoading2) {
+  if (isLoading) {
     return (
-      <div className="text-center text-muted-foreground">
-        در حال بارگذاری...
+      <div className="flex-1 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="size-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+          <p className="text-sm text-muted-foreground">در حال بارگذاری...</p>
+        </div>
       </div>
     );
   }
 
+  const groupedMessages = groupMessagesByDate(messages);
+
   return (
-    <div className="flex flex-col h-100 border rounded-lg">
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-3">
+    <div className="flex flex-col h-full overflow-hidden bg-linear-to-b from-background to-muted/10">
+      <ScrollArea className="flex-1 p-4  overflow-auto">
+        <div className="space-y-6">
           {messages?.length === 0 ? (
-            <div className="text-center text-muted-foreground py-10">
-              پیامی وجود ندارد. اولین پیام را ارسال کنید.
+            <div className="flex flex-col items-center justify-center text-center">
+              <div className="size-24 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                <MessageCircle className="size-12 text-primary/40" />
+              </div>
+              <h3 className="font-semibold text-xl">شروع گفتگو</h3>
+              <p className="text-sm text-muted-foreground max-w-sm mt-2">
+                اولین پیام را ارسال کنید و گفتگو را شروع کنید.
+              </p>
             </div>
           ) : (
-            messages?.map((msg: any) => {
-              const isOwn = msg.sender._id === user._id;
-              return (
-                <div
-                  key={msg._id}
-                  className={`flex ${isOwn ? "justify-end" : "justify-start"}`}
-                >
-                  <div
-                    className={`max-w-[70%] p-3 rounded-lg ${
-                      isOwn ? "bg-primary text-primary-foreground" : "bg-muted"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <Avatar className="size-6">
-                        <AvatarFallback className="text-xs">
-                          {msg.sender.firstName?.[0] || "U"}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="text-xs font-medium">
-                        {msg.sender.firstName} {msg.sender.lastName}
-                      </span>
-                      <span className="text-xs opacity-70">
-                        {convertDate(msg.createdAt)}
-                      </span>
-                    </div>
-                    <p className="text-sm wrap-break-word">{msg.content}</p>
-                  </div>
+            groupedMessages.map((group, groupIndex) => (
+              <div key={groupIndex} className="space-y-3">
+                <div className="flex items-center justify-center">
+                  <span className="text-200 text-muted-foreground bg-muted/50 px-3 py-1 rounded-full">
+                    {group.date === new Date().toLocaleDateString("fa-IR")
+                      ? "امروز"
+                      : group.date ===
+                          new Date(Date.now() - 86400000).toLocaleDateString(
+                            "fa-IR",
+                          )
+                        ? "دیروز"
+                        : group.date}
+                  </span>
                 </div>
-              );
-            })
+
+                {group.messages.map((msg: any, index: number) => {
+                  const isOwn = msg.sender._id === currentUser?._id;
+
+                  return (
+                    <div
+                      key={msg._id}
+                      className={cn(
+                        "flex animate-in fade-in slide-in-from-bottom-2 duration-200",
+                        isOwn ? "justify-start" : "justify-end",
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "max-w-[65%] p-3.5 rounded-2xl shadow-sm",
+                          isOwn
+                            ? "bg-primary text-primary-foreground rounded-br-none"
+                            : "bg-secondary text-secondary-foreground  border rounded-bl-none",
+                        )}
+                      >
+                        {msg.type === "file" && msg.file ? (
+                          <div className="flex items-center gap-3 cursor-pointer rounded-xl">
+                            <FileIcon className="size-6" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium truncate">
+                                {msg.file.originalName}
+                              </p>
+                              <p className="text-xs opacity-70">
+                                {formatFileSize(msg.file.size)}
+                              </p>
+                            </div>
+                            <DownloadButton
+                              fileId={msg.file._id}
+                              originalName={msg.file.originalName}
+                            />
+                          </div>
+                        ) : (
+                          <p className="text-300 wrap-break-word whitespace-pre-wrap leading-relaxed">
+                            {msg.content}
+                          </p>
+                        )}
+
+                        <div
+                          className={cn(
+                            "flex items-center gap-1.5 mt-1.5",
+                            isOwn ? "justify-start" : "justify-end",
+                          )}
+                        >
+                          <span className="text-100 opacity-60">
+                            {formatTimeOnly(msg.createdAt)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ))
           )}
         </div>
-
-        <div ref={messageEndRef} />
+        <div ref={messagesEndRef} />
       </ScrollArea>
 
-      <div className="flex items-center gap-2 p-3 border-t">
-        <Input
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          placeholder="پیام خود را بنویسید..."
-          disabled={isPending}
-        />
-        <Button
-          size="icon"
-          onClick={handleSend}
-          disabled={!newMessage.trim() || isPending}
-        >
-          <Send className="size-4" />
-        </Button>
-      </div>
+      <InputMessage
+        conversationId={conversationId}
+        setIsAtBottom={setIsAtBottom}
+      />
     </div>
   );
 }

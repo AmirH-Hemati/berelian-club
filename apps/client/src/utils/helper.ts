@@ -10,3 +10,11 @@ export function formatFileSize(bytes: number): string {
 
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 }
+
+export const formatTimeOnly = (date: Date | string) => {
+  const d = new Date(date);
+  return d.toLocaleTimeString("fa-IR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};

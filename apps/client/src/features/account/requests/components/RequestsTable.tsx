@@ -87,15 +87,20 @@ export default function RequestsTable() {
                   <StatusBadge status={request.status} />
                 </TableCell>
 
-                <TableCell>
+                <TableCell className="flex">
                   <DropdownMenu>
-                    <DropdownMenuTrigger className=" w-full mr-auto" asChild>
+                    <DropdownMenuTrigger className="mx-auto" asChild>
                       <Button variant="ghost" size="icon" className="  ">
                         <MoreHorizontalIcon />
                         <span className="sr-only">باز کردن منو</span>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
+                      {request.status == "approved" && (
+                        <DropdownMenuItem asChild>
+                          <Link href={`/chat/${request._id}`}>گفتگو </Link>
+                        </DropdownMenuItem>
+                      )}
                       <DropdownMenuItem asChild>
                         <Link href={`requests/${request._id}`}>
                           مشاهده جزئیات

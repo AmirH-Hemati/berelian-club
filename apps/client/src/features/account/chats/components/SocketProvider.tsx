@@ -1,80 +1,64 @@
 "use client";
-import { useQueryClient } from "@tanstack/react-query";
-import React, {
+
+import {
   createContext,
-  ReactNode,
-  RefObject,
   useContext,
   useEffect,
   useRef,
+  ReactNode,
+  useState,
 } from "react";
-import { Socket, io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 type SocketContextType = {
-  socket: RefObject<Socket | null> | null;
-  joinConversion: (conversationId: string) => void;
+  socket: Socket | null;
+  isConnected: boolean;
 };
+
 const SocketContext = createContext<SocketContextType>({
   socket: null,
-  joinConversion: () => {},
+  isConnected: false,
 });
 
-type Props = { children: ReactNode };
-
-function SocketProvider({ children }: Props) {
+export function SocketProvider({ children }: { children: ReactNode }) {
   const socketRef = useRef<Socket | null>(null);
-  const queryClient = useQueryClient();
+  const [isConnected, setIsConnected] = useState(false);
+
   useEffect(() => {
+    if (socketRef.current?.connected) return;
+
     const socket = io(
       process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5000",
       {
         withCredentials: true,
+        transports: ["websocket"],
+        reconnection: true,
       },
     );
 
     socketRef.current = socket;
 
-    socket.on("newMessage", (newMessage) => {
-      queryClient.setQueryData(
-        ["messages", newMessage.conversation],
-        (oldMessages: any[] = []) => {
-          const exists = oldMessages.some((m) => m._id === newMessage._id);
-          if (exists) return oldMessages;
-          return [...oldMessages, newMessage];
-        },
-      );
-    });
-
-    socket.on("connect", () => {
+    socketRef.current.on("connect", () => {
       console.log("✅ Socket connected");
+      setIsConnected(true);
     });
 
-    socket.on("disconnect", () => {
+    socketRef.current.on("disconnect", () => {
       console.log("❌ Socket disconnected");
+      setIsConnected(false);
     });
 
     return () => {
-      socket.disconnect();
+      socketRef.current?.disconnect();
       socketRef.current = null;
     };
-  }, [queryClient]);
-
-  function joinConversion(conversationId: string) {
-    const socket = socketRef.current;
-    if (!socket) return;
-    socket?.emit("join-conversation", conversationId);
-  }
+  }, []);
 
   return (
-    <SocketContext.Provider value={{ socket: socketRef, joinConversion }}>
+    <SocketContext.Provider value={{ socket: socketRef.current, isConnected }}>
       {children}
     </SocketContext.Provider>
   );
 }
 
-function useSocket() {
-  const context = useContext(SocketContext);
-  return context;
-}
-
-export { useSocket, SocketProvider };
+export const useSocket = () => useContext(SocketContext);
