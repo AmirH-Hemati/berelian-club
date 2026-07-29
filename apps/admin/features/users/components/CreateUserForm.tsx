@@ -147,7 +147,39 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
           placeholder="example@gmail.com"
           icon={Mail}
         />
-
+        <Controller
+          name="role"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="role">نقش کاربر</FieldLabel>
+              <Select
+                value={field.value}
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="انتخاب نقش کاربر" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="admin">
+                    <div className="flex items-center gap-2">
+                      <Shield className="size-4 text-red-500" />
+                      <span>ادمین</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="investor">
+                    <div className="flex items-center gap-2">
+                      <User className="size-4 text-blue-500" />
+                      <span>سرمایه‌گذار</span>
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <CustomDatePicker
             control={form.control}
@@ -163,43 +195,6 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
             control={form.control}
             name="contractEndDate"
             label="تاریخ پایان قرارداد"
-          />
-        </div>
-        <div>
-          <Controller
-            name="role"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="role">نقش کاربر</FieldLabel>
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="انتخاب نقش کاربر" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="admin">
-                      <div className="flex items-center gap-2">
-                        <Shield className="size-4 text-red-500" />
-                        <span>ادمین</span>
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="investor">
-                      <div className="flex items-center gap-2">
-                        <User className="size-4 text-blue-500" />
-                        <span>سرمایه‌گذار</span>
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
           />
         </div>
 

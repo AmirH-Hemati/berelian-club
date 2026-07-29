@@ -28,6 +28,9 @@ export const createUserSchema = z.object({
     .string()
     .nonempty("شماره شبا کاربر نمیتواند خالی باشد")
     .regex(/^IR[0-9]{24}$/, "شماره شبا باید با IR شروع شود و ۲۶ رقم باشد"),
+  role: z
+    .enum(["admin", "investor"])
+    .nonoptional("نقش کاربر نمیتواند خالی باشد")
 });
 
 export const updateUserSchema = createUserSchema.partial();
