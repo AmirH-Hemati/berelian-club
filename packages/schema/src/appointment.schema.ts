@@ -26,6 +26,10 @@ export interface AppointmentType extends createAppointmentTypes {
   status: "pending" | "approved" | "completed" | "cancelled";
   type: "online" | "phone";
   meetingLink?: string;
+  cancellationReason?: string;
+  rescheduleReason?: string;
+  cancelledBy?: { firstName: string; lastName: string };
+  rescheduledBy?: { firstName: string; lastName: string };
   createdAt: Date;
   updatedAt: Date;
 }

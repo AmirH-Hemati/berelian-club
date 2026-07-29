@@ -49,7 +49,7 @@ export default function Page() {
               >
                 <ArrowRight className="size-5" />
               </Button>
-              <h1 className="font-bold text-2xl my-5">درخواست</h1>
+              <h1 className="font-bold text-500 my-5">مشاوره</h1>
             </div>
             <StatusBadge status={appointment.status} />
           </div>
