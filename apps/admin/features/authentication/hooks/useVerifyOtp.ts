@@ -10,9 +10,9 @@ export function useVerifyOtp() {
     mutationFn: ({ phoneNumber, otp }: verifyOtpTypes) =>
       verifyOtpApi({ phoneNumber, otp }),
     onSuccess: (data) => {
-      if (data?.user?.role !== "investor") {
+      if (data?.user?.role !== "admin") {
         router.push("/login");
-        toast.success("دسترسی شما غیر مجاز است");
+        toast.error("دسترسی شما غیر مجاز است");
       } else {
         toast.success("خوش امدید ...");
         router.push("/");

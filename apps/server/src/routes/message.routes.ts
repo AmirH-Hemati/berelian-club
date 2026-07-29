@@ -1,5 +1,8 @@
 import express from "express";
-import { protectedRoute } from "../controllers/auth.controllers.js";
+import {
+  protectedRoute,
+  restrictTo,
+} from "../controllers/auth.controllers.js";
 import {
   getMessages,
   sendFileMessage,
@@ -10,9 +13,9 @@ const router = express.Router();
 
 router.use(protectedRoute);
 
-router.post("/:conversationId", sendMessage);
-router.post("/:conversationId/file", sendFileMessage);
-
 router.get("/:conversationId", getMessages);
+
+router.post("/:conversationId", sendMessage);
+router.post("/:conversationId/file", restrictTo("admin"), sendFileMessage);
 
 export default router;

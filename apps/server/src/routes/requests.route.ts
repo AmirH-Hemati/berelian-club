@@ -9,33 +9,33 @@ import {
   approveRequest,
   rejectRequest,
   getUserRequests,
-  setUserIdToParams,
   getTodayRequests,
 } from "../controllers/requests.controllers.js";
-import { protectedRoute } from "../controllers/auth.controllers.js";
+import {
+  protectedRoute,
+  restrictTo,
+} from "../controllers/auth.controllers.js";
 import { validateZod } from "../middlewares/validateZod.js";
 import { createRequestSchema } from "@repo/schema";
 
 const router = express.Router();
+router.use(protectedRoute);
 
 router
   .route("/")
-  .get(getRequests)
-  .post(
-    validateZod(createRequestSchema),
-    protectedRoute,
-    setRequestUserId,
-    createRequest,
-  );
-router.use(protectedRoute);
-router.get("/myRequests", getUserRequests);
+  .get(restrictTo("admin"), getRequests)
+  .post(validateZod(createRequestSchema), setRequestUserId, createRequest);
 
+router.get("/myRequests", getUserRequests);
+router.get("/:id", getRequest);
 // restrit for only admin
-// restrictTo("admin"),
+
+router.use(restrictTo("admin"));
+
 router.get("/today", getTodayRequests);
 router.get("/userRequests/:id/", getUserRequests);
 router.patch("/:id/approve", approveRequest);
 router.patch("/:id/reject", rejectRequest);
-router.route("/:id").get(getRequest).patch(updateRequest).delete(deleteRequest);
+router.route("/:id").patch(updateRequest).delete(deleteRequest);
 
 export default router;

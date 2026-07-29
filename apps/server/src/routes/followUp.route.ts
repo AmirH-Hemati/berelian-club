@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { protectedRoute } from "../controllers/auth.controllers.js";
+import {
+  protectedRoute,
+  restrictTo,
+} from "../controllers/auth.controllers.js";
 import {
   completeFollowUp,
   deleteFollowUp,
@@ -11,6 +14,7 @@ import {
 const router = Router();
 
 router.use(protectedRoute);
+router.use(restrictTo("admin"));
 
 router.get("/", getAllFollowUps);
 

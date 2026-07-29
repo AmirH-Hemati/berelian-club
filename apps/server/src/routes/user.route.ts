@@ -9,12 +9,12 @@ import {
 import { validateZod } from "../middlewares/validateZod.js";
 
 import { createUserSchema, updateUserSchema } from "@repo/schema";
-import { protectedRoute } from "../controllers/auth.controllers.js";
 import { convertDateFields } from "../middlewares/convertDateFields.js";
+import { protectedRoute, restrictTo } from "../controllers/auth.controllers.js";
 const router = express.Router();
 
-// router.use(protectedRoute);
-// restrictTo("admin")
+router.use(protectedRoute);
+router.use(restrictTo("admin"));
 
 router
   .route("/")

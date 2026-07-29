@@ -158,7 +158,7 @@ export const setUserId = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-export const restricetTo = (...roles: ["investor", "admin"]) => {
+export const restrictTo = (...roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
       return next(new AppError("شما وارد نشده‌اید", 401));

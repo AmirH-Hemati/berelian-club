@@ -1,5 +1,5 @@
 import express from "express";
-import { protectedRoute } from "../controllers/auth.controllers.js";
+import { protectedRoute, restrictTo } from "../controllers/auth.controllers.js";
 import {
   createSessionReport,
   deleteSessionReport,
@@ -11,9 +11,9 @@ import { convertDateFields } from "../middlewares/convertDateFields.js";
 
 const router = express.Router();
 
-router.use(protectedRoute);
-
 /// restrict for only admin
+router.use(protectedRoute);
+router.use(restrictTo("admin"));
 router.post(
   "/",
   convertDateFields(["followUpDate"]),

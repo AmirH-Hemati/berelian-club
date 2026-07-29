@@ -15,6 +15,7 @@ import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { UserType } from "@repo/schema";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 export const columns: ColumnDef<UserType>[] = [
   {
@@ -60,15 +61,7 @@ export const columns: ColumnDef<UserType>[] = [
       const role = row.getValue("role");
 
       return (
-        <div
-          className={cn(
-            `p-1 rounded-md w-max text-xs`,
-            role === "user" && "bg-green-500/40",
-            role === "admin" && "bg-red-500/40",
-          )}
-        >
-          {role as string}
-        </div>
+        <Badge variant="secondary">{role === "admin" ? "ادمین" : ("سرمایه گذار" as string)}</Badge>
       );
     },
   },

@@ -39,7 +39,9 @@ export default function AccountInformation({ user }: Props) {
           <div className="flex items-center gap-1 text-sm bg-muted/30 rounded-lg px-3 py-2.5">
             <Shield className="size-4 text-muted-foreground " />
             <span className="text-300 text-muted-foreground">نقش:</span>
-            <span>{user.role}</span>
+            <span>
+              {user.role === "admin" ? "ادمین" : ("سرمایه گذار" as string)}
+            </span>
           </div>
 
           <div className="flex items-center gap-1 text-sm bg-muted/30 rounded-lg px-3 py-2.5">

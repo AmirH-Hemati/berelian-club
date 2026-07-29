@@ -17,7 +17,7 @@ export function useUser() {
 
   useEffect(() => {
     if (isLoading) return;
-    if (user?.role !== "investor") {
+    if (user?.role !== "admin") {
       router.replace("/login");
     }
   }, [isLoading, user]);

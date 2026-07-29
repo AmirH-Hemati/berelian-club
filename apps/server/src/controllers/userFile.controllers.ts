@@ -20,7 +20,7 @@ export const sendFileToUser = CatchError(
 
     const userFile = await UserFileModel.create({
       user: userId,
-      file: fileId,
+      file: file._id,
       sentBy: (req.user as UserDocument)._id,
     });
 

@@ -1,7 +1,7 @@
 import express from "express";
 import { createAppointmentSchema } from "@repo/schema";
 import { validateZod } from "../middlewares/validateZod.js";
-import { protectedRoute } from "../controllers/auth.controllers.js";
+import { protectedRoute, restrictTo } from "../controllers/auth.controllers.js";
 import {
   approveAppointment,
   completeAppointment,
@@ -21,27 +21,27 @@ const router = express.Router();
 router.use(protectedRoute);
 router
   .route("/")
-  .get(getAppointments)
+  .get(restrictTo("admin"), getAppointments)
   .post(
     convertDateFields(["appointmentDate"]),
     validateZod(createAppointmentSchema),
-    protectedRoute,
     setAppointmentUserId,
     createAppointment,
   );
 
-router.get("/myAppointments", protectedRoute, getUserAppointments);
+router.get("/today", restrictTo("admin"), getTodayAppointments);
+router.get("/myAppointments", getUserAppointments);
 
 router.delete("/:id", deleteAppointment);
-// restrit for only admin
+router.route("/:id").get(getAppointment);
 
-router.get("/today", getTodayAppointments);
+// restrit for only admin
+router.use(restrictTo("admin"));
+
 router.patch("/:id/approve", approveAppointment);
 router.patch("/:id/reject", rejectAppointment);
 router.patch("/:id/complete", completeAppointment);
 router.patch("/:id/reschedule", rescheduleAppointment);
-
-router.route("/:id").get(getAppointment);
 
 // .patch(updateRequest).delete(deleteRequest);
 

@@ -1,5 +1,5 @@
 import express from "express";
-import { protectedRoute } from "../controllers/auth.controllers.js";
+import { protectedRoute, restrictTo } from "../controllers/auth.controllers.js";
 import {
   downloadFileById,
   getAllFiles,
@@ -14,6 +14,7 @@ router.use(protectedRoute);
 // router.get("/download/:id", downloadFile);
 
 // restrictTo("admin")
+router.use(restrictTo("admin"));
 router.route("/").get(getAllFiles).post(upload.single("file"), uploadFile);
 router.get("/downloadById/:id", downloadFileById);
 // router.route("/:id").delete(deleteFile);
