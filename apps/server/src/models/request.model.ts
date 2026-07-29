@@ -8,8 +8,8 @@ export interface RequestDocument extends mongoose.Document {
   status: "pending" | "approved" | "cancelled";
   createdAt: Date;
   updatedAt: Date;
-  cancellationReason: string;
-  cancelledBy: mongoose.Types.ObjectId;
+  cancellationReason?: string;
+  cancelledBy?: mongoose.Types.ObjectId;
 }
 const requestSchema = new mongoose.Schema<RequestDocument>(
   {
@@ -56,6 +56,13 @@ requestSchema.pre<Query<RequestDocument, RequestDocument>>(
   /^find/,
   function () {
     this.populate("user");
+  },
+);
+
+requestSchema.pre<Query<RequestDocument, RequestDocument>>(
+  /^find/,
+  function () {
+    this.populate("cancelledBy", "firstName lastName");
   },
 );
 

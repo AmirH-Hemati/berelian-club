@@ -26,11 +26,10 @@ export interface RequestType extends CreateRequestTypes {
   _id: string;
   user: UserType;
   type:
-    | "consultation"
-    | "renew_contract"
-    | "increase_capital"
-    | "decrease_capital";
+    "consultation" | "renew_contract" | "increase_capital" | "decrease_capital";
   status: "pending" | "approved" | "completed" | "cancelled";
+  cancellationReason?: string;
+  cancelledBy?: { firstName: string; lastName: string };
   createdAt: Date;
   updatedAt: Date;
 }
