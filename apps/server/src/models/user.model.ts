@@ -2,7 +2,7 @@ import type { CreateUserInputTypes } from "@repo/schema";
 import mongoose from "mongoose";
 
 export interface UserDocument extends mongoose.Document, CreateUserInputTypes {
-  role: "admin" | "portfolio_manager" | "marketer" | "investor";
+  role: "admin" | "investor";
   isActive: boolean;
   contractDaysRemaining: number;
   contractStatus: string;
@@ -62,7 +62,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
     },
     role: {
       type: String,
-      enum: ["admin", "portfolio_manager", "marketer", "investor"],
+      enum: ["admin", "investor"],
       default: "investor",
       required: true,
     },

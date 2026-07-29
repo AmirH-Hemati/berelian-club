@@ -158,6 +158,20 @@ export const setUserId = (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
+export const restricetTo = (...roles: ["investor", "admin"]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return next(new AppError("شما وارد نشده‌اید", 401));
+    }
+
+    if (!roles.includes(req.user.role)) {
+      return next(new AppError("شما دسترسی به این بخش ندارید", 403));
+    }
+
+    next();
+  };
+};
+
 export const updateMe = CatchError(async (req, res, next) => {
   const forbiddenFields = ["role", "isActive", "createdAt", "_id", "password"];
 
