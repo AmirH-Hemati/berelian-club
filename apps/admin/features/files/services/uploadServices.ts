@@ -21,6 +21,7 @@ export async function getFiles(query: GetRequestsParams) {
 
   return data;
 }
+
 export async function sendFile({
   fileId,
   userId,
@@ -32,12 +33,7 @@ export async function sendFile({
   return data.data;
 }
 
-export async function getFile(fileId: string) {
-  const { data } = await axiosInstance.get(`/files/${fileId}`);
-  return data.data;
-}
-
-export const deleteRequest = async (requestId: string) => {
-  const { data } = await axiosInstance.delete(`/requests/${requestId}`);
+export const deleteFile = async (fileId: string) => {
+  const { data } = await axiosInstance.delete(`/files/${fileId}`);
   return data.data;
 };

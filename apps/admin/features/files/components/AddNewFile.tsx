@@ -14,11 +14,12 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { uploadFileSchema, uploadFileTypes } from "@repo/schema";
 import { Upload } from "lucide-react";
-import React, { useEffect } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useUploadFile } from "../hooks/useUploadFile";
 
 export default function AddNewFile() {
+  const [open, setOpen] = useState(false);
   const { uploadFile, isUploading } = useUploadFile();
   const form = useForm<uploadFileTypes>({
     resolver: zodResolver(uploadFileSchema),
@@ -29,11 +30,15 @@ export default function AddNewFile() {
   function handleSendFile(values: uploadFileTypes) {
     const formData = new FormData();
     formData.append("file", values.file);
-    uploadFile(formData);
+    uploadFile(formData, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
           <Upload className="size-4 ml-2" />
@@ -73,7 +78,11 @@ export default function AddNewFile() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" type="button">
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => setOpen(false)}
+            >
               انصراف
             </Button>
             <Button type="submit" disabled={isUploading}>

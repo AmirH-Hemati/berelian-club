@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import DownloadButton from "./DownloadButton";
 import { ColumnDef } from "@tanstack/react-table";
+import { useDeleteFile } from "../hooks/useDeleteFile";
 
 const getFileIcon = (fileType: string) => {
   switch (fileType) {
@@ -115,6 +116,7 @@ export const columns: ColumnDef<FileType>[] = [
     id: "actions",
     header: "عملیات",
     cell: ({ row }) => {
+      const { deleteFile, isDeleting } = useDeleteFile();
       const file = row.original;
       return (
         <DropdownMenu>
@@ -141,7 +143,11 @@ export const columns: ColumnDef<FileType>[] = [
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem className="text-red-600 focus:text-red-600">
+            <DropdownMenuItem
+              onClick={() => deleteFile(file._id)}
+              disabled={isDeleting}
+              className="text-red-600 focus:text-red-600"
+            >
               <Trash2Icon className="size-4 ml-2" />
               حذف فایل
             </DropdownMenuItem>
