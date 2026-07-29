@@ -20,14 +20,12 @@ export default function ChatPage() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)] max-w-4xl mx-auto">
-      {/* هدر چت */}
       <ChatHeader otherUser={otherUser} onBack={() => window.history.back()} />
 
-      {/* پنجره چت */}
       <ChatWindow
         conversationId={conversation?._id}
         otherUserId={otherUser?._id}
-        currentUserId={user?._id}
+        currentUser={user}
         otherUserName={otherUser?.firstName + otherUser?.lastName}
       />
     </div>

@@ -10,17 +10,18 @@ import { useGetConversationMessages } from "../hooks/useGetConversationMessages"
 import { useJoinConversation } from "../hooks/useJoinConversation";
 import { useNewMessages } from "../hooks/useNewMessage";
 import InputMessage from "./InputMessage";
+import { UserType } from "@repo/schema";
 
 interface ChatWindowProps {
   conversationId: string;
   otherUserId: string;
-  currentUserId: string;
+  currentUser: UserType;
   otherUserName: string;
 }
 
 export function ChatWindow({
   conversationId,
-  currentUserId,
+  currentUser,
   otherUserId,
   otherUserName,
 }: ChatWindowProps) {
@@ -99,7 +100,7 @@ export function ChatWindow({
                 </div>
 
                 {group.messages.map((msg: any, index: number) => {
-                  const isOwn = msg.sender._id === currentUserId;
+                  const isOwn = msg.sender._id === currentUser?._id;
 
                   return (
                     <div
@@ -165,6 +166,7 @@ export function ChatWindow({
         setIsAtBottom={setIsAtBottom}
         otherUserId={otherUserId}
         otherUserName={otherUserName}
+        currentUserRole={currentUser?.role}
       />
     </div>
   );

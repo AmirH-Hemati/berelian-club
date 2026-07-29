@@ -11,12 +11,14 @@ type Props = {
   conversationId: string;
   otherUserId: string;
   otherUserName: string;
+  currentUserRole: string;
 };
 export default function InputMessage({
   setIsAtBottom,
   conversationId,
   otherUserId,
   otherUserName,
+  currentUserRole,
 }: Props) {
   const [newMessage, setNewMessage] = useState("");
   const { sendMessage, isPending } = useSendMessage(conversationId);
@@ -33,12 +35,14 @@ export default function InputMessage({
   return (
     <div className="p-3 border-t bg-background/95 backdrop-blur ">
       <div className="flex items-end gap-2">
-        <SendFileModal
-          userId={otherUserId}
-          userName={otherUserName}
-          conversationId={conversationId}
-          iconChat
-        />
+        {currentUserRole === "admin" && (
+          <SendFileModal
+            userId={otherUserId}
+            userName={otherUserName}
+            conversationId={conversationId}
+            iconChat
+          />
+        )}
         <Textarea
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
