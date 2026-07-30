@@ -1,10 +1,14 @@
 "use client";
 
+import { EmptyState } from "@/components/EmptyState";
 import Spinner from "@/components/PageSpinner";
+import { Button } from "@/components/ui/button";
 import { useUser } from "@/features/authentication/hooks/useUser";
 import { ChatHeader } from "@/features/chats/components/ChatHeader";
 import { ChatWindow } from "@/features/chats/components/ChatWindow";
 import { useConversation } from "@/features/chats/hooks/useConversation";
+import { MessageCircle } from "lucide-react";
+import Link from "next/link";
 
 export default function ChatPage() {
   const { user, isLoading: userLoading } = useUser();
@@ -13,7 +17,21 @@ export default function ChatPage() {
   if (isLoading || userLoading) {
     return <Spinner />;
   }
-
+  if (!conversation) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-8rem)]">
+        <EmptyState
+          icon={MessageCircle}
+          title="چتی وجود ندارد"
+          description="هنوز هیچ گفتگویی شروع نشده است. پس از تایید درخواست، میتوانید با پشتیبانی گفتگو کنید."
+        >
+          <Button asChild>
+            <Link href="/requests">مشاهده درخواست‌ها</Link>
+          </Button>
+        </EmptyState>
+      </div>
+    );
+  }
   const otherUser = conversation?.participants?.find(
     (p: any) => p._id !== user?._id,
   );
