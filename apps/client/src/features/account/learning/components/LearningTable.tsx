@@ -116,23 +116,23 @@ export default function LearningTable() {
               <TableRow key={file._id}>
                 <TableCell className="font-medium flex items-center gap-3">
                   <div className="bg-muted/50 rounded-lg p-2">
-                    {getFileIcon(file.file.fileType)}
+                    {getFileIcon(file?.file?.fileType)}
                   </div>
                   <div className="flex flex-col">
                     <span
                       className="text-200 font-medium max-w-50 truncate"
-                      title={file.file.originalName}
+                      title={file?.file?.originalName}
                     >
-                      {file.file.originalName}
+                      {file?.file?.originalName}
                     </span>
                     <span className="text-100 text-muted-foreground">
-                      {formatFileSize(file.file.size)}
+                      {formatFileSize(file?.file?.size)}
                     </span>
                   </div>
                 </TableCell>
-                <TableCell>{convertDate(file.createdAt)}</TableCell>
+                <TableCell>{convertDate(file?.createdAt)}</TableCell>
                 <TableCell>
-                  {getFileTypeBadge(file.file.fileType, file.file.mimeType)}
+                  {getFileTypeBadge(file?.file?.fileType, file?.file?.mimeType)}
                 </TableCell>
 
                 <TableCell>
@@ -150,8 +150,8 @@ export default function LearningTable() {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem asChild>
                         <DownloadButton
-                          fileId={file.file._id}
-                          originalName={file.file.originalName}
+                          fileId={file?.file?._id}
+                          originalName={file?.file?.originalName}
                         />
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />

@@ -17,6 +17,7 @@ import Typebadge from "./Typebadge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useDeleteRequest } from "../hooks/useDeleteRequest";
 import { RequestType } from "@repo/schema";
+import { DeleteRequestDialog } from "./DeleteRequestDialog";
 
 export const columns: ColumnDef<RequestType>[] = [
   {
@@ -101,12 +102,8 @@ export const columns: ColumnDef<RequestType>[] = [
                 مشاهده جزئیات درخواست
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem
-              disabled={isDeleting}
-              variant="destructive"
-              onClick={() => deleteRequest(request._id)}
-            >
-              حذف درخواست
+            <DropdownMenuItem variant="destructive" asChild>
+              <DeleteRequestDialog requestId={request._id} />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

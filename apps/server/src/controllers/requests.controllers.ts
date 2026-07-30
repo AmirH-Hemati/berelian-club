@@ -13,6 +13,7 @@ import type { UserDocument } from "../models/user.model.js";
 import { ApiFeatures } from "../utils/ApiFeatures.js";
 import { ConversationModel } from "../models/conversation.model.js";
 import NotificationModel from "../models/notification.model.js";
+import { MessageModel } from "../models/message.model.js";
 
 export const setRequestUserId = (
   req: Request,
@@ -151,4 +152,34 @@ export const getRequest = getOne<RequestDocument>(RequestModel);
 export const getRequests = getAll<RequestDocument>(RequestModel);
 export const createRequest = createOne<RequestDocument>(RequestModel);
 export const updateRequest = updateOne<RequestDocument>(RequestModel);
-export const deleteRequest = deleteOne<RequestDocument>(RequestModel);
+
+export const deleteRequest = CatchError(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const userId = (req.user as UserDocument)._id;
+  const isAdmin = (req.user as UserDocument).role === "admin";
+
+  const request = await RequestModel.findById(id);
+  if (!request) {
+    throw new AppError("درخواست یافت نشد", 404);
+  }
+
+  if (!isAdmin && request.user.toString() !== userId.toString()) {
+    throw new AppError("شما دسترسی به این درخواست ندارید", 403);
+  }
+
+  const conversation = await ConversationModel.findOne({ request: id });
+
+  if (conversation) {
+    await Promise.all([
+      MessageModel.deleteMany({ conversation: conversation._id }),
+      ConversationModel.findByIdAndDelete(conversation._id),
+    ]);
+  }
+
+  await RequestModel.findByIdAndDelete(id);
+
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});

@@ -7,6 +7,7 @@ import { FileModel, type FileDocument } from "../models/file.model.js";
 import { getAll } from "./handlerFactory.js";
 import { AppError } from "../utils/AppError.js";
 import path from "path";
+import UserFileModel from "../models/userFile.model.js";
 
 export const uploadFile = CatchError(async (req: Request, res: Response) => {
   if (!req.file) {
@@ -55,12 +56,14 @@ export const deleteFile = CatchError(async (req: Request, res: Response) => {
   if (!file) {
     throw new AppError("فایل یافت نشد", 404);
   }
-
   if (fs.existsSync(file.path)) {
     fs.unlinkSync(file.path);
   }
 
-  await file.deleteOne();
+  await Promise.all([
+    FileModel.findByIdAndDelete(file._id),
+    UserFileModel.deleteMany({ file: file._id }),
+  ]);
 
   res.status(204).json({
     status: "success",

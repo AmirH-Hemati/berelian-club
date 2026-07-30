@@ -11,10 +11,7 @@ import {
   getUserRequests,
   getTodayRequests,
 } from "../controllers/requests.controllers.js";
-import {
-  protectedRoute,
-  restrictTo,
-} from "../controllers/auth.controllers.js";
+import { protectedRoute, restrictTo } from "../controllers/auth.controllers.js";
 import { validateZod } from "../middlewares/validateZod.js";
 import { createRequestSchema } from "@repo/schema";
 
@@ -28,14 +25,15 @@ router
 
 router.get("/myRequests", getUserRequests);
 router.get("/:id", getRequest);
-// restrit for only admin
+router.delete("/:id", deleteRequest);
 
+// restrit for only admin
 router.use(restrictTo("admin"));
 
 router.get("/today", getTodayRequests);
 router.get("/userRequests/:id/", getUserRequests);
 router.patch("/:id/approve", approveRequest);
 router.patch("/:id/reject", rejectRequest);
-router.route("/:id").patch(updateRequest).delete(deleteRequest);
+router.route("/:id").patch(updateRequest);
 
 export default router;
