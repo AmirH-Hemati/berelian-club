@@ -7,6 +7,7 @@ import { ChatHeader } from "@/features/account/chats/components/ChatHeader";
 import { ChatWindow } from "@/features/account/chats/components/ChatWindow";
 import { useConversation } from "@/features/account/chats/hooks/useConversation";
 import { useUser } from "@/features/auth/hooks/useUser";
+
 import { MessageCircle } from "lucide-react";
 import Link from "next/link";
 
@@ -26,7 +27,7 @@ export default function ChatPage() {
           description="هنوز هیچ گفتگویی شروع نشده است. پس از تایید درخواست، میتوانید با پشتیبانی گفتگو کنید."
         >
           <Button asChild>
-            <Link href="/account/requests">مشاهده درخواست‌ها</Link>
+            <Link href="/requests">مشاهده درخواست‌ها</Link>
           </Button>
         </EmptyState>
       </div>
@@ -38,9 +39,21 @@ export default function ChatPage() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)] max-w-4xl mx-auto">
-      <ChatHeader otherUser={otherUser} onBack={() => window.history.back()} />
+      <ChatHeader
+        conversationId={conversation._id}
+        isActive={conversation.isActive}
+        otherUser={otherUser}
+        onBack={() => window.history.back()}
+        requestId={conversation.request}
+      />
 
-      <ChatWindow conversationId={conversation?._id} currentUser={user} />
+      <ChatWindow
+        conversationId={conversation?._id}
+        otherUserId={otherUser?._id}
+        currentUser={user}
+        isActive={conversation.isActive}
+        otherUserName={otherUser?.firstName + otherUser?.lastName}
+      />
     </div>
   );
 }

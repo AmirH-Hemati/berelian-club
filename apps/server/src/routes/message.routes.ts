@@ -1,8 +1,5 @@
 import express from "express";
-import {
-  protectedRoute,
-  restrictTo,
-} from "../controllers/auth.controllers.js";
+import { protectedRoute, restrictTo } from "../controllers/auth.controllers.js";
 import {
   getMessages,
   sendFileMessage,

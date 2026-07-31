@@ -8,13 +8,19 @@ import useSendMessage from "../hooks/useSendMessage";
 type Props = {
   setIsAtBottom: (isAtBottom: boolean) => void;
   conversationId: string;
+
+  isActive: boolean;
 };
-export default function InputMessage({ setIsAtBottom, conversationId }: Props) {
+export default function InputMessage({
+  setIsAtBottom,
+  conversationId,
+  isActive,
+}: Props) {
   const [newMessage, setNewMessage] = useState("");
   const { sendMessage, isPending } = useSendMessage(conversationId);
 
   const handleSend = () => {
-    if (!newMessage.trim() || isPending) return;
+    if (!newMessage.trim() || isPending || !isActive) return;
     sendMessage(newMessage, {
       onSettled: () => {
         setNewMessage("");
@@ -43,7 +49,7 @@ export default function InputMessage({ setIsAtBottom, conversationId }: Props) {
         <Button
           size="icon"
           onClick={handleSend}
-          disabled={!newMessage.trim() || isPending}
+          disabled={!newMessage.trim() || isPending || !isActive}
           className="shrink-0 size-9 mb-1 bg-primary hover:bg-primary/90"
         >
           <Send className="size-4" />

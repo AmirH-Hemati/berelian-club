@@ -12,6 +12,7 @@ type Props = {
   otherUserId: string;
   otherUserName: string;
   currentUserRole: string;
+  isActive: boolean;
 };
 export default function InputMessage({
   setIsAtBottom,
@@ -19,6 +20,7 @@ export default function InputMessage({
   otherUserId,
   otherUserName,
   currentUserRole,
+  isActive,
 }: Props) {
   const [newMessage, setNewMessage] = useState("");
   const { sendMessage, isPending } = useSendMessage(conversationId);
@@ -61,7 +63,7 @@ export default function InputMessage({
         <Button
           size="icon"
           onClick={handleSend}
-          disabled={!newMessage.trim() || isPending}
+          disabled={!newMessage.trim() || isPending || !isActive}
           className="shrink-0 size-9 mb-1 bg-primary hover:bg-primary/90"
         >
           <Send className="size-4" />

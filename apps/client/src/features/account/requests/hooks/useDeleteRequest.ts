@@ -1,18 +1,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteRequest as deleteRequestApi } from "../services/requestsService";
 import { toast } from "react-toastify";
-export function useDeleteRequest() {
-  const qeuryClient = useQueryClient();
+
+export const useDeleteRequest = () => {
+  const queryClient = useQueryClient();
+
   const { mutate: deleteRequest, isPending: isDeleting } = useMutation({
     mutationFn: deleteRequestApi,
     onSuccess: () => {
-      toast.success("درخواست شما با موفقیت حذف شد");
-      qeuryClient.invalidateQueries({ queryKey: ["requests"] });
+      toast.success("درخواست با موفقیت رد شد");
+      queryClient.invalidateQueries({ queryKey: ["requests"] });
+      queryClient.invalidateQueries({ queryKey: ["conversation"] });
     },
-    onError: (err: any) => {
-      toast.error(err.response.data.message);
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || "خطا در تایید درخواست");
     },
   });
 
   return { deleteRequest, isDeleting };
-}
+};

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Query } from "mongoose";
 
 export interface ConversationDocument extends mongoose.Document {
   participants: mongoose.Types.ObjectId[];
@@ -40,6 +40,15 @@ const conversationSchema = new mongoose.Schema<ConversationDocument>(
     },
   },
   { timestamps: true },
+);
+
+conversationSchema.pre<Query<ConversationDocument, ConversationDocument>>(
+  /^find/,
+  function () {
+    this.populate("participants", "firstName lastName phoneNumber").populate(
+      "lastMessage",
+    );
+  },
 );
 
 export const ConversationModel = mongoose.model<ConversationDocument>(

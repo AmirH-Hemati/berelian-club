@@ -2,15 +2,25 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, MoreVertical, Phone, Video } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
+import { ChatMenu } from "./ChatMenu";
 
 interface ChatHeaderProps {
   otherUser: any;
   onBack: () => void;
+  conversationId: string;
+  requestId: string;
+  isActive: boolean;
 }
 
-export function ChatHeader({ otherUser, onBack }: ChatHeaderProps) {
+export function ChatHeader({
+  otherUser,
+  onBack,
+  conversationId,
+  requestId,
+  isActive,
+}: ChatHeaderProps) {
   const { isOnline } = useOnlineStatus(otherUser?._id);
 
   return (
@@ -43,9 +53,11 @@ export function ChatHeader({ otherUser, onBack }: ChatHeaderProps) {
       </div>
 
       <div className="flex items-center gap-1">
-        <Button variant="ghost" size="icon">
-          <MoreVertical className="size-5" />
-        </Button>
+        <ChatMenu
+          requestId={requestId}
+          conversationId={conversationId}
+          isActive={isActive}
+        />
       </div>
     </div>
   );

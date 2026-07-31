@@ -10,6 +10,7 @@ export const useDeleteRequest = () => {
     onSuccess: () => {
       toast.success("درخواست با موفقیت رد شد");
       queryClient.invalidateQueries({ queryKey: ["requests"] });
+      queryClient.invalidateQueries({ queryKey: ["conversation"] });
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || "خطا در تایید درخواست");

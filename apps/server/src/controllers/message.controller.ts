@@ -18,7 +18,7 @@ export const sendMessage = CatchError(async (req: Request, res: Response) => {
   }
 
   const isParticipant = conversation.participants.some(
-    (p: any) => p.toString() === senderId.toString(),
+    (p: any) => p._id.toString() === senderId.toString(),
   );
   if (!isParticipant) {
     throw new AppError("شما دسترسی به این مکالمه ندارید", 403);
@@ -29,7 +29,7 @@ export const sendMessage = CatchError(async (req: Request, res: Response) => {
   }
 
   const receiverId = conversation.participants.find(
-    (p) => p.toString() !== senderId.toString(),
+    (p) => p._id.toString() !== senderId.toString(),
   );
 
   if (!receiverId) {
@@ -39,7 +39,7 @@ export const sendMessage = CatchError(async (req: Request, res: Response) => {
   const message = await MessageModel.create({
     conversation: conversationId?.toString(),
     sender: senderId,
-    receiver: receiverId,
+    receiver: receiverId._id,
     content: content.trim(),
     type: "text",
     isRead: false,
@@ -50,7 +50,8 @@ export const sendMessage = CatchError(async (req: Request, res: Response) => {
   conversation.lastMessage = message._id;
   await conversation.save();
 
-  const receiverSocketId = getReceiverSocketId(receiverId.toString());
+  const receiverSocketId = getReceiverSocketId(receiverId._id.toString());
+  console.log(receiverSocketId);
   if (receiverSocketId) {
     io.to(`conv-${conversationId as string}`).emit("newMessage", message);
   }
@@ -70,7 +71,7 @@ export const getMessages = CatchError(async (req: Request, res: Response) => {
   }
   const user = req.user as UserDocument;
   const isParticipant = conversation.participants.some(
-    (p) => p.toString() === user._id.toString(),
+    (p) => p._id.toString() === user._id.toString(),
   );
   if (!isParticipant && user.role !== "admin") {
     throw new AppError("شما دسترسی به این مکالمه ندارید", 403);

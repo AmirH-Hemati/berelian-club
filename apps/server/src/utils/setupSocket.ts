@@ -29,16 +29,26 @@ io.on("connection", (socket) => {
 
   socket.on("join-conversation", (conversationId) => {
     socket.join(`conv-${conversationId}`);
+    // console.log(
+    //   new Date().toLocaleString("fa-IR"),
+    //   `✅ User ${socket.user.firstName} join conv-${conversationId}`,
+    // );
   });
 
   socket.on("leave-conversation", (conversationId) => {
     socket.leave(`conv-${conversationId}`);
-    console.log(`❌ User ${socket.userId} left conv-${conversationId}`);
+    // console.log(
+    //   new Date().toLocaleString("fa-IR"),
+    //   `❌ User ${socket.user.firstName} left conv-${conversationId}`,
+    // );
   });
 
   socket.on("disconnect", () => {
     delete usersSocket[userId];
-    console.log(`❌ User disconnected: ${userId}`);
+    // console.log(
+    //   new Date().toLocaleString("fa-IR"),
+    //   `❌ User disconnected: ${userId}`,
+    // );
 
     io.emit("onlineUsers", Object.keys(usersSocket));
   });

@@ -14,10 +14,19 @@ import DownloadButton from "../../learning/components/DownloadButton";
 
 interface ChatWindowProps {
   conversationId: string;
+  otherUserId: string;
   currentUser: UserType;
+  otherUserName: string;
+  isActive: boolean;
 }
 
-export function ChatWindow({ conversationId, currentUser }: ChatWindowProps) {
+export function ChatWindow({
+  conversationId,
+  currentUser,
+  otherUserId,
+  otherUserName,
+  isActive,
+}: ChatWindowProps) {
   const [isAtBottom, setIsAtBottom] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -155,8 +164,12 @@ export function ChatWindow({ conversationId, currentUser }: ChatWindowProps) {
       </ScrollArea>
 
       <InputMessage
+        isActive={isActive}
         conversationId={conversationId}
         setIsAtBottom={setIsAtBottom}
+        otherUserId={otherUserId}
+        otherUserName={otherUserName}
+        currentUserRole={currentUser?.role}
       />
     </div>
   );

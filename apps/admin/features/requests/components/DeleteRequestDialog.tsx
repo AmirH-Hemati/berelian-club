@@ -42,7 +42,7 @@ export function DeleteRequestDialog({ requestId }: DeleteRequestDialogProps) {
             className="w-full flex justify-start"
           >
             <Trash2 className="size-4" />
-            حذف
+            حذف درخواست
           </Button>
         </AlertDialogTrigger>
 

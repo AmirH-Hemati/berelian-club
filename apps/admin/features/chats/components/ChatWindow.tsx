@@ -17,6 +17,7 @@ interface ChatWindowProps {
   otherUserId: string;
   currentUser: UserType;
   otherUserName: string;
+  isActive: boolean;
 }
 
 export function ChatWindow({
@@ -24,6 +25,7 @@ export function ChatWindow({
   currentUser,
   otherUserId,
   otherUserName,
+  isActive,
 }: ChatWindowProps) {
   const [isAtBottom, setIsAtBottom] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -162,6 +164,7 @@ export function ChatWindow({
       </ScrollArea>
 
       <InputMessage
+        isActive={isActive}
         conversationId={conversationId}
         setIsAtBottom={setIsAtBottom}
         otherUserId={otherUserId}

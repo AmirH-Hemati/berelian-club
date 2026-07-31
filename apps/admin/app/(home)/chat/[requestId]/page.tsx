@@ -38,12 +38,19 @@ export default function ChatPage() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)] max-w-4xl mx-auto">
-      <ChatHeader otherUser={otherUser} onBack={() => window.history.back()} />
+      <ChatHeader
+        conversationId={conversation._id}
+        isActive={conversation.isActive}
+        otherUser={otherUser}
+        onBack={() => window.history.back()}
+        requestId={conversation.request}
+      />
 
       <ChatWindow
         conversationId={conversation?._id}
         otherUserId={otherUser?._id}
         currentUser={user}
+        isActive={conversation.isActive}
         otherUserName={otherUser?.firstName + otherUser?.lastName}
       />
     </div>
