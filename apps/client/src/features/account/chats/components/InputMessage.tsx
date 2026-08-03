@@ -8,7 +8,6 @@ import useSendMessage from "../hooks/useSendMessage";
 type Props = {
   setIsAtBottom: (isAtBottom: boolean) => void;
   conversationId: string;
-
   isActive: boolean;
 };
 export default function InputMessage({
