@@ -21,25 +21,26 @@ import path from "path";
 const app = express();
 // throw new Error("this is error");
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      callback(null, true);
-    },
-    credentials: true,
-  }),
-);
 // app.use(
 //   cors({
-//     origin: [
-//       "http://localhost:4001",
-//       "http://localhost:4002",
-//       "https://monorepo-bashgah-moshtarian-2.onrender.com/",
-//       "https://monorepo-bashgah-moshtarian-1.onrender.com/",
-//     ],
+//     origin: (origin, callback) => {
+//       callback(null, true);
+//     },
 //     credentials: true,
 //   }),
 // );
+
+app.use(
+  cors({
+    origin: [
+      "http://localhost:4001",
+      "http://localhost:4002",
+      "https://monorepo-bashgah-moshtarian-1.onrender.com",
+      "https://monorepo-bashgah-moshtarian-2.onrender.com",
+    ],
+    credentials: true,
+  }),
+);
 
 app.use(express.static(path.join(process.cwd(), "/public")));
 app.use(express.json());
