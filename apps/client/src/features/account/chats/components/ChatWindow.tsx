@@ -167,9 +167,6 @@ export function ChatWindow({
         isActive={isActive}
         conversationId={conversationId}
         setIsAtBottom={setIsAtBottom}
-        otherUserId={otherUserId}
-        otherUserName={otherUserName}
-        currentUserRole={currentUser?.role}
       />
     </div>
   );
