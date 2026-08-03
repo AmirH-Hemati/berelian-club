@@ -104,8 +104,6 @@ export const handleVerifyOtp = CatchError(async (req, res, next) => {
     },
   );
 
-  console.log("appEnv varaiable", process.env.APP_ENV === "production");
-
   const cookieOption: CookieOptions = {
     expires: thirtyDaysFromNow(),
     secure: true,

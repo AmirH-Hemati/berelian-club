@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import type { NextFunction } from "express";
 import type { ExtendedError, Socket } from "socket.io";
 import { AppError } from "../utils/AppError.js";
 import UserModel from "../models/user.model.js";
@@ -20,7 +19,7 @@ export const authSocketMiddleware = async function (
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY as string);
 
-    if (!decoded) {
+    if (typeof decoded === "string" || !decoded || !decoded?.id) {
       return next(new AppError("Invalid token", 401));
     }
 
@@ -31,7 +30,8 @@ export const authSocketMiddleware = async function (
     }
 
     socket.user = user;
-    socket.userId = user._id;
+    socket.userId = user._id.toString();
+
     next();
   } catch (error) {
     next(new AppError("Unauthorized - Authentication failed", 401));

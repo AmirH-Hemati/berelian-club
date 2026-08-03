@@ -9,4 +9,11 @@ declare global {
   }
 }
 
+declare module "socket.io" {
+  interface Socket {
+    userId: string;
+    user: UserDocument;
+  }
+}
+
 export {};

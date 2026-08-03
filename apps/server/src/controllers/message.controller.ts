@@ -51,7 +51,6 @@ export const sendMessage = CatchError(async (req: Request, res: Response) => {
   await conversation.save();
 
   const receiverSocketId = getReceiverSocketId(receiverId._id.toString());
-  console.log(receiverSocketId);
   if (receiverSocketId) {
     io.to(`conv-${conversationId as string}`).emit("newMessage", message);
   }
