@@ -1,5 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { Alert } from "./ui/alert";
+import { Skeleton, Alert } from "@repo/ui";
 
 export function CardSkeleton({ skeletonLength = 3 }) {
   return (

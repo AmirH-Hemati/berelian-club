@@ -4,8 +4,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -16,7 +14,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar";
+} from "@repo/ui";
 import { sidebarItems } from "@/lib/constants/sidebarItems";
 import { cn } from "@/lib/utils";
 import { ChevronUp, Gem, LogOut, User, User2 } from "lucide-react";

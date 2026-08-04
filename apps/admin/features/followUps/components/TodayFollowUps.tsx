@@ -1,6 +1,6 @@
 "use client";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@repo/ui";
 import {
   AlertCircle,
   Calendar,
@@ -9,9 +9,9 @@ import {
   Clock,
 } from "lucide-react";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@repo/ui";
+import { Badge } from "@repo/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useTodayFollowUps } from "../hooks/useTodayFollowUps";

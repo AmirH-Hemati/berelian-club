@@ -1,18 +1,19 @@
 "use client";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Moon, Sun, TrendingUp, User } from "lucide-react";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import Login from "@/features/auth/components/Login";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Button,
+  Dialog,
+  DialogTrigger,
+  Spinner,
+} from "@repo/ui";
 import { useTheme } from "next-themes";
 import { useUser } from "@/features/auth/hooks/useUser";
-import { Spinner } from "@/components/ui/spinner";
 
 export default function Header() {
   const { setTheme } = useTheme();
@@ -22,7 +23,9 @@ export default function Header() {
       <div className="flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2  font-bold">
           <TrendingUp className="h-6 w-6 text-primary" />
-          <span className="md:block hidden text-300">باشگاه مشتریان برلیان</span>
+          <span className="md:block hidden text-300">
+            باشگاه مشتریان برلیان
+          </span>
         </Link>
 
         <div className="flex items-center gap-2">

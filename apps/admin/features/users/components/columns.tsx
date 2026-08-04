@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,14 +8,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@repo/ui";
 import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { UserType } from "@repo/schema";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
+import { Badge } from "@repo/ui";
 
 export const columns: ColumnDef<UserType>[] = [
   {
@@ -61,7 +61,9 @@ export const columns: ColumnDef<UserType>[] = [
       const role = row.getValue("role");
 
       return (
-        <Badge variant="secondary">{role === "admin" ? "ادمین" : ("سرمایه گذار" as string)}</Badge>
+        <Badge variant="secondary">
+          {role === "admin" ? "ادمین" : ("سرمایه گذار" as string)}
+        </Badge>
       );
     },
   },

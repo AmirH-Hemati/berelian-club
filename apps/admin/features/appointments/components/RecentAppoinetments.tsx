@@ -1,17 +1,15 @@
 "use client";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@repo/ui";
 import { CalendarOff, PhoneCall } from "lucide-react";
 
-import Spinner from "@/components/PageSpinner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@repo/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
 import StatusBadge from "@/features/requests/components/StatusBadge";
 import { formatDate } from "@/utils/helper";
 import { useRouter } from "next/navigation";
 import { useRecentAppointments } from "../hooks/useRecentAppointments";
 import { CardSkeleton } from "@/components/CardSkeleton";
 import { AppointmentType } from "@repo/schema";
-import { EmptyState } from "@/components/EmptyState";
 import { cn } from "@/lib/utils";
 import AsyncState from "@/components/AsyncState";
 

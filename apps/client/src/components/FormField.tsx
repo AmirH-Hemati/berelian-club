@@ -1,6 +1,6 @@
 "use client";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import { Field, FieldError, FieldLabel } from "./ui/field";
+import { Field, FieldError, FieldLabel } from "@repo/ui";
 import { cloneElement, ReactElement } from "react";
 
 interface FormFieldProps<T extends FieldValues> {

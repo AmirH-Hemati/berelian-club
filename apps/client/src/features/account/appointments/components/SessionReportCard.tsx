@@ -1,8 +1,14 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Badge,
+  Separator,
+  Spinner,
+} from "@repo/ui";
+
 import { FileText, Clock, User } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import { convertDate } from "@/utils/helper";
 import { useSessionReport } from "../hooks/useSessionReport";
 

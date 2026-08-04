@@ -1,7 +1,7 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
+import { ScrollArea } from "@repo/ui";
 import { formatDate, formatTime } from "@/utils/helper";
 import { Calendar, CalendarX, Clock } from "lucide-react";
 import { useTodayAppointments } from "../hooks/useTodayAppointments";
@@ -47,7 +47,7 @@ export function TodayAppointments() {
                         : "📞 مشاوره تلفنی"}
                     </p>
                     <p className="text-100 text-muted-foreground">
-                      {formatDate(item.appointmentDate)} - {" "}
+                      {formatDate(item.appointmentDate)} -{" "}
                       {formatTime(item.appointmentDate)}
                     </p>
                   </div>

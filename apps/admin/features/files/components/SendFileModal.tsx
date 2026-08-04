@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@repo/ui";
 import { useSendFileToChat } from "@/features/chats/hooks/useSendFileToChat";
 import { FilesIcon, Loader2, Paperclip, Send } from "lucide-react";
 import { useState } from "react";

@@ -1,5 +1,5 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@repo/ui";
+import { Skeleton } from "@repo/ui";
 
 type StatsSkeletonProps = {
   count?: number;

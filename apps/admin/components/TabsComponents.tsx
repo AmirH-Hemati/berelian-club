@@ -1,5 +1,5 @@
 "use client";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@repo/ui";
 import { useUpdateQueryParams } from "@/hooks/useUpdateQueryParams";
 
 import {

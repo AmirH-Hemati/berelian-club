@@ -8,9 +8,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+} from "@repo/ui";
+import { Button } from "@repo/ui";
+import { Badge } from "@repo/ui";
 import { MoreHorizontalIcon, Calendar, Clock } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/utils/helper";

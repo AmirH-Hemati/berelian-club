@@ -1,14 +1,15 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Spinner } from "@/components/ui/spinner";
+  Badge,
+  Button,
+  ScrollArea,
+  Spinner,
+} from "@repo/ui";
+
 import { cn } from "@/lib/utils";
 import { convertDate } from "@/utils/helper";
 import {

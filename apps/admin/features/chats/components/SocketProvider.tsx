@@ -28,7 +28,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     if (socketRef.current?.connected) return;
 
     const socket = io(
-      process.env.NEXT_PUBLIC_SOCKET_URL || "https://monorepo-bashgah-moshtarian.onrender.com",
+      process.env.NEXT_PUBLIC_SOCKET_URL ||
+        "https://monorepo-bashgah-moshtarian.onrender.com",
       {
         withCredentials: true,
         transports: ["websocket"],

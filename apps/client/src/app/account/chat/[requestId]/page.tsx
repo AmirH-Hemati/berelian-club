@@ -2,7 +2,7 @@
 
 import { EmptyState } from "@/components/EmptyState";
 import Spinner from "@/components/spinner/Spinner";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui";
 import { ChatHeader } from "@/features/account/chats/components/ChatHeader";
 import { ChatWindow } from "@/features/account/chats/components/ChatWindow";
 import { useConversation } from "@/features/account/chats/hooks/useConversation";

@@ -6,7 +6,7 @@ import ContractStatus from "@/features/account/dashboard/components/ContractStat
 import { useUser } from "@/features/auth/hooks/useUser";
 import Spinner from "@/components/spinner/Spinner";
 import { AlertTriangle, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui";
 
 export default function ProfilePage() {
   const { user, isLoading, isError, refetch } = useUser();

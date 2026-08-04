@@ -1,5 +1,5 @@
 "use client";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@repo/ui";
 import {
   ArrowLeft,
   FileQuestion,
@@ -10,8 +10,8 @@ import {
 } from "lucide-react";
 
 import Spinner from "@/components/PageSpinner";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@repo/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
 import { formatDate } from "@/utils/helper";
 import { useUserRequests } from "../hooks/useUserRequests";
 import StatusBadge from "./StatusBadge";

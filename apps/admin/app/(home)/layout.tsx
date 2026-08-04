@@ -1,4 +1,4 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@repo/ui";
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
 

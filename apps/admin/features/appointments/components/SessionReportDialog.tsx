@@ -6,7 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import CustomDatePicker from "@/components/CustomDatePicker";
 import { FormField } from "@/components/FormField";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui";
 import {
   Dialog,
   DialogContent,
@@ -15,17 +15,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Label } from "@/components/ui/label";
+} from "@repo/ui";
+import { Field, FieldError, FieldLabel } from "@repo/ui";
+import { Label } from "@repo/ui";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+} from "@repo/ui";
+import { Switch } from "@repo/ui";
 import { FilePenLine, Files } from "lucide-react";
 import TextareaFiled from "@/components/TextareaFiled";
 import { SessionReportFormValues, sessionReportSchema } from "@repo/schema";

@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -7,15 +6,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-
-import {
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Badge,
+} from "@repo/ui";
+
 import {
   CircleAlert,
   FileIcon,
@@ -26,7 +25,6 @@ import {
 } from "lucide-react";
 import { useMyFiles } from "../hooks/useMyFiles";
 import { convertDate, formatFileSize } from "@/utils/helper";
-import { Badge } from "@/components/ui/badge";
 import DownloadButton from "./DownloadButton";
 import { PaginationControls } from "@/components/PaginationControls";
 import { TableSkeleton } from "@/components/TableSkeleton";

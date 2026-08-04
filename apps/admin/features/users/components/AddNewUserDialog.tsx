@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@repo/ui";
+import { Dialog, DialogContent, DialogTrigger } from "@repo/ui";
 import { CreateUserForm } from "./CreateUserForm";
 import { useState } from "react";
 

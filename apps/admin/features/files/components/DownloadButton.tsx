@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui";
 import axiosInstance from "@/lib/axiosInstance";
 import { DownloadIcon } from "lucide-react";
 import React from "react";

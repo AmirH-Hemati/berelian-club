@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -7,17 +6,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-
-import { PaginationControls } from "@/components/PaginationControls";
-import { TableSkeleton } from "@/components/TableSkeleton";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Button,
+} from "@repo/ui";
+
+import { PaginationControls } from "@/components/PaginationControls";
+import { TableSkeleton } from "@/components/TableSkeleton";
+
 import { convertDate } from "@/utils/helper";
 import { RequestType } from "@repo/schema";
 import { CircleAlert, MoreHorizontalIcon } from "lucide-react";

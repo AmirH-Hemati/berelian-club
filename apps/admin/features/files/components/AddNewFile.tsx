@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui";
 import {
   Dialog,
   DialogContent,
@@ -8,9 +8,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+} from "@repo/ui";
+import { Field, FieldError, FieldLabel } from "@repo/ui";
+import { Input } from "@repo/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { uploadFileSchema, uploadFileTypes } from "@repo/schema";
 import { Upload } from "lucide-react";

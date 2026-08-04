@@ -1,14 +1,18 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Spinner } from "@/components/ui/spinner";
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Button,
+  SidebarTrigger,
+  Spinner,
+} from "@repo/ui";
+
 import { LogOut, Moon, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";

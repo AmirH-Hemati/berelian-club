@@ -11,9 +11,9 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+  FieldGroup
+} from "@repo/ui";
 
-import { FieldGroup } from "@/components/ui/field";
 import { updateMeSchema, updateMeTypes, UserType } from "@repo/schema";
 import { useEffect } from "react";
 import CustomDatePicker from "../../appointments/components/CustomDatePicker";

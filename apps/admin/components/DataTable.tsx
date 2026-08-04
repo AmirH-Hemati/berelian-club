@@ -15,11 +15,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@repo/ui";
 import { DataTablePagination } from "@/components/DataTablePagination";
 import { TableSkeleton } from "./TableSkeleton";
 import { CircleAlert } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from @repo/ui;
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

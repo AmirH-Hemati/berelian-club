@@ -1,5 +1,4 @@
 "use client";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   FileQuestion,
   FileText,
@@ -10,8 +9,16 @@ import {
 
 import AsyncState from "@/components/AsyncState";
 import { CardSkeleton } from "@/components/CardSkeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  ScrollArea,
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@repo/ui";
 import { convertDate } from "@/utils/helper";
 import { RequestType } from "@repo/schema";
 import { useRouter } from "next/navigation";

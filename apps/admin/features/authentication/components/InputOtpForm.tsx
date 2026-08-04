@@ -1,15 +1,15 @@
 import { RefreshCwIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui";
 
-import { CardFooter } from "@/components/ui/card";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { CardFooter } from "@repo/ui";
+import { Field, FieldError, FieldLabel } from "@repo/ui";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@/components/ui/input-otp";
+} from "@repo/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { otpSchema, otpSchemaTypes } from "@repo/schema";
 import { Controller, useForm } from "react-hook-form";

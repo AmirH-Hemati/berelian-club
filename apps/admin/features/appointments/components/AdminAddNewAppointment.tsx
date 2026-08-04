@@ -2,7 +2,7 @@
 
 import CustomDatePicker from "@/components/CustomDatePicker";
 import TextareaFiled from "@/components/TextareaFiled";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui";
 import {
   Dialog,
   DialogClose,
@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@repo/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarClock, Loader2 } from "lucide-react";
 import { useState } from "react";

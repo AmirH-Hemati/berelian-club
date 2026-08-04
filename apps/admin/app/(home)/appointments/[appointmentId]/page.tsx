@@ -6,12 +6,12 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+} from "@repo/ui";
 
 import Spinner from "@/components/PageSpinner";
 import AppointmentDataBox from "@/features/appointments/components/AppointmentDataBox";
 import { useAppointment } from "@/features/appointments/hooks/useAppointment";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui";
 import { ArrowRight } from "lucide-react";
 import StatusBadge from "@/features/requests/components/StatusBadge";
 import SessionReportCard from "@/features/appointments/components/SessionReportCard";

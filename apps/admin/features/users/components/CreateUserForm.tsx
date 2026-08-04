@@ -1,11 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Button } from "@repo/ui";
+import { DialogDescription, DialogHeader, DialogTitle } from "@repo/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 
@@ -29,14 +25,14 @@ import {
 } from "@repo/schema";
 import { useCreateUser } from "../hooks/useCreateUser";
 import { useUpdateUser } from "../hooks/useUpdateUser";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Field, FieldError, FieldLabel } from "@repo/ui";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@repo/ui";
 
 type Props = { user?: UserType; onCloseDialog: () => void };
 export function CreateUserForm({ user, onCloseDialog }: Props) {

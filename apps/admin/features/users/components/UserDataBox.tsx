@@ -1,6 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
+import { Separator } from "@repo/ui";
 import { SendFileModal } from "@/features/files/components/SendFileModal";
 import { UserType } from "@repo/schema";
 import { User as UserIcon } from "lucide-react";
@@ -25,31 +25,29 @@ export default function UserDataBox({ user }: Props) {
       <Separator />
 
       <CardContent className="space-y-4">
-      
-          <div className="flex items-center gap-2  ">
-            <Avatar className="size-10 ring-2 ring-primary/10">
-              <AvatarImage
-                alt="avatar user image"
-                src={`http://localhost:3000/img/users/${user.photo}`}
-                className="object-cover"
-              />
-              <AvatarFallback className="bg-primary/10 text-primary font-medium text-400">
-                {user.firstName?.[0]}
-                {user.lastName?.[0]}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h2 className="text-300 font-semibold">
-                {user.firstName} {user.lastName}
-              </h2>
-              <p className="text-100 text-muted-foreground">
-                شناسه: {user._id?.slice(-8)}
-              </p>
-            </div>
+        <div className="flex items-center gap-2  ">
+          <Avatar className="size-10 ring-2 ring-primary/10">
+            <AvatarImage
+              alt="avatar user image"
+              src={`http://localhost:3000/img/users/${user.photo}`}
+              className="object-cover"
+            />
+            <AvatarFallback className="bg-primary/10 text-primary font-medium text-400">
+              {user.firstName?.[0]}
+              {user.lastName?.[0]}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <h2 className="text-300 font-semibold">
+              {user.firstName} {user.lastName}
+            </h2>
+            <p className="text-100 text-muted-foreground">
+              شناسه: {user._id?.slice(-8)}
+            </p>
           </div>
+        </div>
 
-          <AccountInformation user={user} />
-    
+        <AccountInformation user={user} />
       </CardContent>
     </Card>
   );

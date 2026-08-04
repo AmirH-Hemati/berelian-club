@@ -4,16 +4,15 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@repo/ui";
 import { LogOut, Moon, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
-import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
-import { SidebarTrigger } from "./ui/sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
+import { Button } from "@repo/ui";
+import { SidebarTrigger } from "@repo/ui";
 import { useLogout } from "@/features/authentication/hooks/useLogout";
 import { useUser } from "@/features/authentication/hooks/useUser";
-import { Spinner } from "./ui/spinner";
+import { Spinner } from "@repo/ui";
 export default function Navbar() {
   const { user, isLoading } = useUser();
   const { setTheme } = useTheme();

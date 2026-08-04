@@ -1,6 +1,6 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Badge } from "@repo/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
+import { Progress } from "@repo/ui";
 import { formatDate } from "@/utils/helper";
 import { UserType } from "@repo/schema";
 import { FileCheck } from "lucide-react";

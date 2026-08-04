@@ -1,7 +1,12 @@
 "use client";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Badge,
+  Progress,
+} from "@repo/ui";
 import { useUser } from "@/features/auth/hooks/useUser";
 import { convertDate } from "@/utils/helper";
 import { FileCheck } from "lucide-react";

@@ -5,7 +5,7 @@ import persian_fa from "react-date-object/locales/persian_fa";
 import DatePicker from "react-multi-date-picker";
 
 import { Calendar } from "lucide-react";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Field, FieldError, FieldLabel } from "@repo/ui";
 
 type Props<T extends FieldValues> = {
   control: Control<T>;

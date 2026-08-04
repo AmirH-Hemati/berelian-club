@@ -1,12 +1,13 @@
 "use client";
 import { FormField } from "@/components/FormField";
-import { Button } from "@/components/ui/button";
-import { DialogFooter } from "@/components/ui/dialog";
+
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@/components/ui/input-group";
+  Button,
+  DialogFooter,
+} from "@repo/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { phoneSchema, phoneSchemaTypes } from "@repo/schema";
 import { Phone } from "lucide-react";

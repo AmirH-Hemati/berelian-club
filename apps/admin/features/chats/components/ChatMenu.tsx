@@ -6,8 +6,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+} from "@repo/ui";
+import { Button } from "@repo/ui";
 import { MoreVertical, XCircle, Trash2 } from "lucide-react";
 import {
   AlertDialog,
@@ -18,7 +18,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@repo/ui";
 import { useCloseConversation } from "../hooks/useCloseConversation";
 import { DeleteRequestDialog } from "@/features/requests/components/DeleteRequestDialog";
 

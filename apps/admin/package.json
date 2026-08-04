@@ -10,8 +10,9 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.2",
     "@repo/schema": "*",
+    "@repo/ui": "*",
+    "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-query": "^5.90.5",
     "@tanstack/react-table": "^8.21.3",
     "add": "^2.0.6",

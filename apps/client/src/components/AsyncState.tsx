@@ -1,8 +1,9 @@
 "use client";
 
-import { ReactNode } from "react";import { EmptyState } from "@/components/EmptyState";
+import { ReactNode } from "react";
+import { EmptyState } from "@/components/EmptyState";
 import { AlertTriangle, Inbox, LucideIcon, RefreshCw } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button } from "@repo/ui";
 
 type AsyncStateProps<T> = {
   isLoading: boolean;
