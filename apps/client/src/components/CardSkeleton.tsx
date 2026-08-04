@@ -1,6 +1,4 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Alert } from "./ui/alert";
+import { Alert, Card, CardContent, CardHeader, Skeleton } from "@repo/ui";
 
 export function CardSkeleton({ skeletonLength = 3 }) {
   return (

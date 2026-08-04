@@ -5,7 +5,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@repo/ui";
 import { useState } from "react";
 import { InputOTPForm } from "./InputOtpForm";
 import PhoneNumberComponent from "./PhoneNumberComponent";

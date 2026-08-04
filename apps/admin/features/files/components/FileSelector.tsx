@@ -8,17 +8,17 @@ import {
   VideoIcon,
   FileTextIcon,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Badge } from "@/components/ui/badge";
+import { Input } from "@repo/ui";
+import { Tabs, TabsList, TabsTrigger } from "@repo/ui";
+import { ScrollArea } from "@repo/ui";
+import { RadioGroup, RadioGroupItem } from "@repo/ui";
+import { Badge } from "@repo/ui";
 import { cn } from "@/lib/utils";
 import { formatFileSize } from "@/utils/helper";
 import { FileType } from "@repo/schema";
 import { useFiles } from "../hooks/useFiles";
 import { PaginationControls } from "./PaginationControls";
-import { Spinner } from "@/components/ui/spinner";
+import { Spinner } from "@repo/ui";
 
 interface FileSelectorProps {
   selectedFileId: string;

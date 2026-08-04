@@ -1,15 +1,20 @@
 "use client";
 import AsyncState from "@/components/AsyncState";
 import { CardSkeleton } from "@/components/CardSkeleton";
+
 import {
   Alert,
   AlertAction,
   AlertDescription,
   AlertTitle,
-} from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  ScrollArea,
+} from "@repo/ui";
+
 import { NotificationType } from "@repo/schema";
 import { Bell, Check, CheckCheck, FileQuestion } from "lucide-react";
 import { useMarkAllNotificationsAsRead } from "../../notifications/hooks/useMarkAllNotificationsAsRead";

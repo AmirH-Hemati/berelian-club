@@ -1,7 +1,7 @@
 "use client";
 import { FormField } from "@/components/FormField";
-import { Button } from "@/components/ui/button";
-import { CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@repo/ui";
+import { CardContent, CardFooter } from "@repo/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { phoneSchema, phoneSchemaTypes } from "@repo/schema";
 import { Phone } from "lucide-react";

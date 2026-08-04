@@ -1,6 +1,6 @@
 "use client";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@repo/ui";
 import DownloadButton from "@/features/files/components/DownloadButton";
 import { cn } from "@/lib/utils";
 import { formatFileSize, formatTimeOnly } from "@/utils/helper";

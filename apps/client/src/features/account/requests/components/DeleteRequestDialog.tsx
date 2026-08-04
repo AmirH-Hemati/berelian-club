@@ -11,8 +11,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+  Button,
+} from "@repo/ui";
 import { Trash2, Loader2 } from "lucide-react";
 import { useDeleteRequest } from "../hooks/useDeleteRequest";
 

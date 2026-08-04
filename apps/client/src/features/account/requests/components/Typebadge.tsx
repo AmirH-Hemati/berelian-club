@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@repo/ui";
 
 type Props<T extends Record<string, { label: string }>> = {
   types: T;

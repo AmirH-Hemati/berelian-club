@@ -1,13 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Button } from "@repo/ui";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@repo/ui";
 import { AlertCircle, RefreshCw, Home } from "lucide-react";
 import Link from "next/link";
 

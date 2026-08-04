@@ -1,6 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Button, Textarea } from "@repo/ui";
 import { Send } from "lucide-react";
 import { useState } from "react";
 import useSendMessage from "../hooks/useSendMessage";

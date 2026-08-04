@@ -9,7 +9,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+} from "@repo/ui";
 import {
   Sidebar,
   SidebarContent,
@@ -22,7 +22,7 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
   useSidebar,
-} from "./ui/sidebar";
+} from "@repo/ui";
 import { useLogout } from "@/features/authentication/hooks/useLogout";
 
 export default function AppSidebar() {

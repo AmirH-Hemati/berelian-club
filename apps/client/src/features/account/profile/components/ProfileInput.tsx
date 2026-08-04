@@ -7,8 +7,10 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@/components/ui/input-group";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+  Field,
+  FieldError,
+  FieldLabel,
+} from "@repo/ui";
 
 interface ProfileInputProps<T extends FieldValues> {
   control: Control<T>;

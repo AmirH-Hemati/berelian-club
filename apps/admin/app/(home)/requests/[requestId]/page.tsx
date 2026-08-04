@@ -6,13 +6,13 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+} from "@repo/ui";
 
 import { useRouter } from "next/navigation";
 
 import ErrorState from "@/components/ErrorState";
 import Spinner from "@/components/PageSpinner";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui";
 import RequestDataBox from "@/features/requests/components/RequestDataBox";
 import StatusBadge from "@/features/requests/components/StatusBadge";
 import { useRequest } from "@/features/requests/hooks/useRequest";

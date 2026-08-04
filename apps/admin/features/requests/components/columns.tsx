@@ -7,14 +7,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+} from "@repo/ui";
+import { Button } from "@repo/ui";
 import { MoreHorizontalIcon } from "lucide-react";
 import Link from "next/link";
 import { formatDate, formatToman } from "@/utils/helper";
 import StatusBadge from "./StatusBadge";
 import Typebadge from "./Typebadge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
 import { useDeleteRequest } from "../hooks/useDeleteRequest";
 import { RequestType } from "@repo/schema";
 import { DeleteRequestDialog } from "./DeleteRequestDialog";

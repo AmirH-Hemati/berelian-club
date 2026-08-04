@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui";
 import { useUpdateQueryParams } from "@/hooks/useUpdateQueryParams";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 

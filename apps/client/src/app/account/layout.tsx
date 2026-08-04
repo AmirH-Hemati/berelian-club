@@ -1,4 +1,4 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@repo/ui";
 import { SocketProvider } from "@/features/account/chats/components/SocketProvider";
 import Navbar from "@/features/components/Navbar";
 import { AppSidebar } from "@/features/components/Sidebar";

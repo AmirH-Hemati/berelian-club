@@ -1,9 +1,7 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button, Spinner, Dialog, DialogTrigger } from "@repo/ui";
 import { useUser } from "@/features/auth/hooks/useUser";
 import Link from "next/link";
-import { Spinner } from "./ui/spinner";
-import { Dialog, DialogTrigger } from "./ui/dialog";
 import Login from "@/features/auth/components/Login";
 
 export default function LoginHeroButton() {

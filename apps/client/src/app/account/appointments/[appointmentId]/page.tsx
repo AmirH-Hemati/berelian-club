@@ -6,9 +6,9 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+} from "@repo/ui";
+import { Button } from "@repo/ui";
+import { Spinner } from "@repo/ui";
 import SessionReportCard from "@/features/account/appointments/components/SessionReportCard";
 import UserAppointmentDataBox from "@/features/account/appointments/components/UserAppointmentDataBox";
 import { useAppointment } from "@/features/account/appointments/hooks/useAppointment";

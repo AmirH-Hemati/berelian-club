@@ -1,15 +1,12 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent, CardHeader, Separator, Button } from "@repo/ui";
 import { convertDate } from "@/utils/helper";
 import { RequestType } from "@repo/schema";
 import { CircleX, Clock, FileText, MessagesSquare, UserX } from "lucide-react";
 import { typesMap } from "../data/typesMap";
-import StatusBadge from "./StatusBadge";
 import Typebadge from "./Typebadge";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 type Props = { request: RequestType };
 export default function UserRequestDataBox({ request }: Props) {

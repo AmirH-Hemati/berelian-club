@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -8,17 +7,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-
-import { PaginationControls } from "@/components/PaginationControls";
-import { TableSkeleton } from "@/components/TableSkeleton";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Button,
+} from "@repo/ui";
+
+import { PaginationControls } from "@/components/PaginationControls";
+import { TableSkeleton } from "@/components/TableSkeleton";
 import { convertDate } from "@/utils/helper";
 import { AppointmentType } from "@repo/schema";
 import { CircleAlert, MoreHorizontalIcon } from "lucide-react";
@@ -85,7 +83,9 @@ export default function AppointmentsTable() {
                 <TableCell className="font-medium">
                   <Typebadge type={appointment.type} types={typesMap} />
                 </TableCell>
-                <TableCell>{convertDate(appointment.appointmentDate)}</TableCell>
+                <TableCell>
+                  {convertDate(appointment.appointmentDate)}
+                </TableCell>
                 <TableCell>
                   <StatusBadge status={appointment.status} />
                 </TableCell>

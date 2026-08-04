@@ -1,8 +1,13 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Badge,
+} from "@repo/ui";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { ChangeEvent } from "react";
 import { useUpdateMe } from "../hooks/useUpdateMe";
 import { UserType } from "@repo/schema";

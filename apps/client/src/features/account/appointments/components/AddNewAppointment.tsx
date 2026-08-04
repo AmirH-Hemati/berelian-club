@@ -1,7 +1,6 @@
 "use client";
 
 import { FormField } from "@/components/FormField";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -11,16 +10,18 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import {
+  Button,
+  Field,
+  FieldError,
+  FieldLabel,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+  Textarea,
+} from "@repo/ui";
+
 import { Controller, useForm } from "react-hook-form";
 import CustomDatePicker from "./CustomDatePicker";
 import { zodResolver } from "@hookform/resolvers/zod";

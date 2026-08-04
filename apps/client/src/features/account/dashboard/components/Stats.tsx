@@ -1,5 +1,5 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@repo/ui";
 import { Bell, CalendarDays, FileText, Trophy } from "lucide-react";
 import { useDashboardStats } from "../hooks/useDashboardStats";
 import { StatsSkeleton } from "@/components/StatsSkeleton";

@@ -1,7 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent, CardHeader, Separator } from "@repo/ui";
 import { convertDate } from "@/utils/helper";
 import {
   Calendar,
@@ -13,8 +12,8 @@ import {
   UserX,
   Video,
 } from "lucide-react";
-import StatusBadge from "../../requests/components/StatusBadge";
 import { AppointmentType } from "@repo/schema";
+import StatusBadge from "../../requests/components/StatusBadge";
 
 type Props = {
   appointment: AppointmentType;

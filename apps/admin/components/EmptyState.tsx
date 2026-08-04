@@ -8,7 +8,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty";
+} from "@repo/ui";
 
 interface EmptyStateProps {
   icon: LucideIcon;

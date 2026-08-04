@@ -1,7 +1,7 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
+import { Button } from "@repo/ui";
 import { ArrowRight } from "lucide-react";
 import { useOnlineStatus } from "../hooks/useOnlineStatus";
 import { ChatMenu } from "./ChatMenu";

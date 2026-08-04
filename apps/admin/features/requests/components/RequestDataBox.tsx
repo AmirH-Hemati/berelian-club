@@ -1,11 +1,6 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@repo/ui";
+import { Card, CardContent, CardFooter, CardHeader } from "@repo/ui";
+import { Separator } from "@repo/ui";
 import Typebadge from "@/features/requests/components/Typebadge";
 import { useApproveRequest } from "@/features/requests/hooks/useApproveRequest";
 import { formatDate } from "@/utils/helper";

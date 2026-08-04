@@ -1,6 +1,6 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@repo/ui";
+import { Textarea } from "@repo/ui";
 import { SendFileModal } from "@/features/files/components/SendFileModal";
 import { Send } from "lucide-react";
 import { useState } from "react";

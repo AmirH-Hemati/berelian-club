@@ -1,17 +1,11 @@
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@repo/ui";
+import { Badge } from "@repo/ui";
+import { Separator } from "@repo/ui";
 import { FileText, Clock, User, XCircle } from "lucide-react";
 import { formatDate } from "@/utils/helper";
 import { useSessionReport } from "../hooks/useSessionReport";
 import Spinner from "@/components/PageSpinner";
-import { Button } from "@/components/ui/button";
+import { Button } from "@repo/ui";
 import { useDeleteReportSession } from "../hooks/useDeleteReportSession";
 
 const resultConfig = {
@@ -29,7 +23,8 @@ type Props = {
 };
 export default function SessionReportCard({ appointmentId }: Props) {
   const { sessionReport: report, isLoading } = useSessionReport(appointmentId);
-  const { deleteSessionReport, isDeleting } = useDeleteReportSession(appointmentId);
+  const { deleteSessionReport, isDeleting } =
+    useDeleteReportSession(appointmentId);
 
   if (isLoading) return <Spinner />;
 

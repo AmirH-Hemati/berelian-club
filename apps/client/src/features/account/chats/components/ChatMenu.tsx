@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Button,
+} from "@repo/ui";
 import { MoreVertical } from "lucide-react";
 import { DeleteRequestDialog } from "../../requests/components/DeleteRequestDialog";
 

@@ -8,12 +8,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+} from "@repo/ui";
+import { Button } from "@repo/ui";
 import { MoreHorizontalIcon } from "lucide-react";
 import Link from "next/link";
 import { formatDate, formatToman } from "@/utils/helper";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
 import StatusBadge from "@/features/requests/components/StatusBadge";
 import Typebadge from "@/features/requests/components/Typebadge";
 import { useDeleteAppointment } from "../hooks/useDeleteAppointment";
