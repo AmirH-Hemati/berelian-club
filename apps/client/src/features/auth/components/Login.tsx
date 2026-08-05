@@ -22,39 +22,39 @@ export default function Login() {
     setPhoneNumber(phone);
   }
   return (
-      <DialogContent>
-        {step === "phone" ? (
-          <DialogHeader>
-            <DialogTitle className="text-xs md:text-sm font-mono">
-              ورود به حساب کاربری
-            </DialogTitle>
-            <DialogDescription className="text-xs md:text-sm">
-              شماره موبایل خود را که روی آن اکانت دارید را وارد کنید
-            </DialogDescription>
-          </DialogHeader>
-        ) : (
-          <DialogHeader>
-            <DialogTitle className="text-xs md:text-sm font-mono">
-              کد تایید خود را وارد کنید
-            </DialogTitle>
-            <DialogDescription className="text-xs md:text-sm">
-              کد تاییدی که به شماره موبایل شما ارسال کردیم را وارد کنید
-            </DialogDescription>
-          </DialogHeader>
-        )}
-        {step === "phone" && (
-          <PhoneNumberComponent
-            onChangeStep={handleChangeStep}
-            onSetPhoneNumber={handleSetPhoneNumber}
-          />
-        )}
+    <DialogContent>
+      {step === "phone" ? (
+        <DialogHeader>
+          <DialogTitle className="text-xs md:text-sm font-mono">
+            ورود به حساب کاربری
+          </DialogTitle>
+          <DialogDescription className="text-xs md:text-sm">
+            شماره موبایل خود را که روی آن اکانت دارید را وارد کنید
+          </DialogDescription>
+        </DialogHeader>
+      ) : (
+        <DialogHeader>
+          <DialogTitle className="text-xs md:text-sm font-mono">
+            کد تایید خود را وارد کنید
+          </DialogTitle>
+          <DialogDescription className="text-xs md:text-sm">
+            کد تاییدی که به شماره موبایل شما ارسال کردیم را وارد کنید
+          </DialogDescription>
+        </DialogHeader>
+      )}
+      {step === "phone" && (
+        <PhoneNumberComponent
+          onChangeStep={handleChangeStep}
+          onSetPhoneNumber={handleSetPhoneNumber}
+        />
+      )}
 
-        {step === "otp" && (
-          <InputOTPForm
-            phoneNumber={phoneNumber}
-            onChangeStep={handleChangeStep}
-          />
-        )}
-      </DialogContent>
+      {step === "otp" && (
+        <InputOTPForm
+          phoneNumber={phoneNumber}
+          onChangeStep={handleChangeStep}
+        />
+      )}
+    </DialogContent>
   );
 }

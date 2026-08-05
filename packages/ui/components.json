@@ -6,7 +6,7 @@
   "tailwind": {
     "config": "",
     "css": "",
-    "baseColor": "mist",
+    "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
   },
@@ -17,5 +17,7 @@
     "utils": "@repo/ui/lib/utils",
     "ui": "@repo/ui/components/ui",
     "lib": "@repo/ui/lib"
-  }
+  },
+  "menuColor": "default",
+  "menuAccent": "subtle"
 }
