@@ -10,6 +10,7 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@repo/api": "*",
     "@repo/schema": "*",
     "@repo/ui": "*",
     "@hookform/resolvers": "^5.2.2",

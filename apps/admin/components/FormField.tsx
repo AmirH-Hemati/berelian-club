@@ -1,7 +1,7 @@
 import { LucideIcon } from "lucide-react";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import { Field, FieldError, FieldLabel } from @repo/ui;
-import { InputGroup, InputGroupAddon, InputGroupInput } from @repo/ui;
+import { Field, FieldError, FieldLabel } from "@repo/ui";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@repo/ui";
 
 interface FormFieldProps<T extends FieldValues> {
   name: Path<T>;

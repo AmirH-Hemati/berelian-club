@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@repo/api": "*",
     "@repo/schema": "*",
     "@repo/ui": "*",
     "@hookform/resolvers": "^5.4.0",
