@@ -1,7 +1,7 @@
 "use client";
 
 import { ScrollArea } from "@repo/ui";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui";
 import { formatFileSize, formatTimeOnly } from "@/utils/helper";
 import { FileIcon, MessageCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";

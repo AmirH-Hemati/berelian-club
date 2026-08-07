@@ -13,7 +13,7 @@ import { Tabs, TabsList, TabsTrigger } from "@repo/ui";
 import { ScrollArea } from "@repo/ui";
 import { RadioGroup, RadioGroupItem } from "@repo/ui";
 import { Badge } from "@repo/ui";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui";
 import { formatFileSize } from "@/utils/helper";
 import { FileType } from "@repo/schema";
 import { useFiles } from "../hooks/useFiles";

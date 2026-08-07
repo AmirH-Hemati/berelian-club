@@ -1,5 +1,5 @@
 "use client";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   DropdownMenu,

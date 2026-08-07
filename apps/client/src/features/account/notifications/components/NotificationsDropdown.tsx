@@ -10,7 +10,7 @@ import {
   Spinner,
 } from "@repo/ui";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui";
 import { convertDate } from "@/utils/helper";
 import {
   Bell,

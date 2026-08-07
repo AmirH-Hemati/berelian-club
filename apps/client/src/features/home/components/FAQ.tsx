@@ -4,10 +4,10 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-  Button
+  Button,
 } from "@repo/ui";
 import { ChevronDown, HelpCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui";
 
 const faqs = [
   {

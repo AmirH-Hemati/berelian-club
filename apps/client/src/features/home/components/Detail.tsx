@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui";
 import Styles from "./detail.module.css";
 import { DetailType } from "./data/details";
 

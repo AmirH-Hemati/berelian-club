@@ -12,7 +12,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@repo/ui";
 import { Badge } from "@repo/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui";
 import { useRouter } from "next/navigation";
 import { useTodayFollowUps } from "../hooks/useTodayFollowUps";
 import { CardSkeleton } from "@/components/CardSkeleton";

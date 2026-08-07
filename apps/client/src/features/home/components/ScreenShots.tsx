@@ -5,7 +5,7 @@ import requestsPage from "@/../public/requests.png";
 import appointmentsPage from "@/../public/appointments.png";
 import learningPage from "@/../public/learning.png";
 import Styles from "./screenShots.module.css";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui";
 import Image from "next/image";
 import { useActive } from "@/components/Active.provider";
 

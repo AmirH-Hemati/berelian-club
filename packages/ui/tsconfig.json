@@ -6,8 +6,8 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
-      "@repo/ui/*": ["./src/*"],
-      "@repo/ui": ["./src/index.ts"]
+      "@repo/ui": ["./src/index.ts"],
+      "@repo/ui/*": ["./src/*"]
     }
   },
   "include": ["src"],

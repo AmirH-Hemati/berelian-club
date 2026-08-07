@@ -16,7 +16,7 @@ import {
   useSidebar,
 } from "@repo/ui";
 import { sidebarItems } from "@/lib/constants/sidebarItems";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui";
 import { ChevronUp, Gem, LogOut, User, User2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

@@ -8,7 +8,7 @@ import { useTodayAppointments } from "../hooks/useTodayAppointments";
 import StatusBadge from "@/features/requests/components/StatusBadge";
 import { CardSkeleton } from "@/components/CardSkeleton";
 import { AppointmentType } from "@repo/schema";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui";
 import AsyncState from "@/components/AsyncState";
 
 export function TodayAppointments() {

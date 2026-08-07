@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/providers/ThemeProviders";
 import { DirectionProvider } from "@repo/ui";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui";
 import { Vazirmatn } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "./globals.css";

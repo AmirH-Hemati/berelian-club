@@ -5,7 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { ToastContainer } from "react-toastify";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui";
 import { DirectionProvider } from "@repo/ui";
 import { SocketProvider } from "@/features/chats/components/SocketProvider";
 

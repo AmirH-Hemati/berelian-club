@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useRecentAppointments } from "../hooks/useRecentAppointments";
 import { CardSkeleton } from "@/components/CardSkeleton";
 import { AppointmentType } from "@repo/schema";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui";
 import AsyncState from "@/components/AsyncState";
 
 export const typesMap = {
