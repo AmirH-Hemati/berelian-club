@@ -13,10 +13,24 @@ import {
   uploadUserImage,
 } from "../controllers/auth.controllers.js";
 import { validateZod } from "../middlewares/validateZod.js";
+import {
+  sendOtpLimiter,
+  verifyOtpLimiter,
+} from "../middlewares/rateLimiter.js";
 const router = express.Router();
 
-router.post("/sendOtp", validateZod(phoneSchema), handleSendOtp);
-router.post("/verifyOtp", validateZod(verifyOtpSchema), handleVerifyOtp);
+router.post(
+  "/sendOtp",
+  sendOtpLimiter,
+  validateZod(phoneSchema),
+  handleSendOtp,
+);
+router.post(
+  "/verifyOtp",
+  verifyOtpLimiter,
+  validateZod(verifyOtpSchema),
+  handleVerifyOtp,
+);
 
 router.use(protectedRoute);
 router.patch("/updateMe", uploadUserImage, resizeUserImage, updateMe);

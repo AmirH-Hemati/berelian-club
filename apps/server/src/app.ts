@@ -17,6 +17,7 @@ import cookiePraser from "cookie-parser";
 import { errorController } from "./controllers/errorController.js";
 import { AppError } from "./utils/AppError.js";
 import path from "path";
+import { generalLimiter } from "./middlewares/rateLimiter.js";
 
 const app = express();
 // throw new Error("this is error");
@@ -47,6 +48,8 @@ app.use(express.json());
 
 app.use(cookiePraser());
 // app.use(morgan("dev"));
+
+app.use("/api", generalLimiter);
 
 app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/users", userRoutes);

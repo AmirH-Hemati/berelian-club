@@ -64,6 +64,22 @@ export const handleSendOtp = CatchError(async (req, res, next) => {
   if (!user) {
     throw new AppError("حساب کاربری متناسب با شماره موبایل موجود نیست", 404);
   }
+  
+  const existingVerification = await VerificationModel.findOne({
+    phoneNumber,
+    isUsed: false,
+    expiresAt: { $gt: new Date() },
+  });
+
+  if (existingVerification) {
+    const remainingSeconds = Math.ceil(
+      (existingVerification.expiresAt.getTime() - Date.now()) / 1000,
+    );
+    throw new AppError(
+      `کد تایید قبلی هنوز معتبر است. ${remainingSeconds} ثانیه دیگر می‌توانید درخواست مجدد دهید.`,
+      429,
+    );
+  }
   const verification = await VerificationModel.create({ phoneNumber });
   const verificationCode = verification.generateVerificationCode();
   await verification.save();
