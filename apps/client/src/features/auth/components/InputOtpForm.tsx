@@ -1,5 +1,6 @@
-import { RefreshCwIcon } from "lucide-react";
+"use client";
 
+import { RefreshCwIcon } from "lucide-react";
 import {
   InputOTP,
   InputOTPGroup,
@@ -16,9 +17,21 @@ import { Step } from "./Login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { otpSchema, otpSchemaTypes } from "@repo/schema";
 import { useVerifyOtp } from "../hooks/useVerifyOtp";
+import { TimerButton } from "./TimerButton";
 
-type Props = { onChangeStep: (step: Step) => void; phoneNumber: string };
-export function InputOTPForm({ onChangeStep, phoneNumber }: Props) {
+type Props = {
+  onChangeStep: (step: Step) => void;
+  phoneNumber: string;
+  timer: number;
+  onResetTimer: () => void;
+};
+
+export function InputOTPForm({
+  onChangeStep,
+  phoneNumber,
+  timer,
+  onResetTimer,
+}: Props) {
   const { verifyOtp, isVerifingCode } = useVerifyOtp();
   const form = useForm<otpSchemaTypes>({
     resolver: zodResolver(otpSchema),
@@ -30,6 +43,7 @@ export function InputOTPForm({ onChangeStep, phoneNumber }: Props) {
   function handleSubmit(values: otpSchemaTypes) {
     verifyOtp({ ...values, phoneNumber });
   }
+
   return (
     <form onSubmit={form.handleSubmit(handleSubmit)}>
       <Controller
@@ -39,10 +53,11 @@ export function InputOTPForm({ onChangeStep, phoneNumber }: Props) {
           <Field className="space-y-1" data-invalid={fieldState.invalid}>
             <div className="flex items-center justify-between">
               <FieldLabel htmlFor="otp-verification">کد تایید</FieldLabel>
-              <Button variant="outline" size="xs">
-                <RefreshCwIcon />
-                ارسال مجدد کد
-              </Button>
+              <TimerButton
+                timer={timer}
+                phoneNumber={phoneNumber}
+                onResetTimer={onResetTimer}
+              />
             </div>
             <div className="flex justify-center">
               <InputOTP
@@ -77,7 +92,7 @@ export function InputOTPForm({ onChangeStep, phoneNumber }: Props) {
           <Button type="submit" className="w-full" disabled={isVerifingCode}>
             تایید و ورود
           </Button>
-          <div className=" flex-wrap flex gap-2 text-muted-foreground text-xs">
+          <div className="flex-wrap flex gap-2 text-muted-foreground text-xs">
             شماره همراه خود را اشتباه وارد کرده اید؟{" "}
             <p
               className="text-xs text-primary underline cursor-pointer"

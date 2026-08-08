@@ -32,9 +32,12 @@ export default function PhoneNumberComponent({
   });
 
   function handleSubmit(values: phoneSchemaTypes) {
-    sendCode(values.phoneNumber);
     onSetPhoneNumber(values.phoneNumber);
-    onChangeStep("otp");
+    sendCode(values.phoneNumber, {
+      onSuccess: () => {
+        onChangeStep("otp");
+      },
+    });
   }
   return (
     <form onSubmit={form.handleSubmit(handleSubmit)} className="py-2">
