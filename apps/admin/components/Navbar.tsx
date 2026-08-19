@@ -10,8 +10,7 @@ import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
 import { Button } from "@repo/ui";
 import { SidebarTrigger } from "@repo/ui";
-import { useLogout } from "@/features/authentication/hooks/useLogout";
-import { useUser } from "@/features/authentication/hooks/useUser";
+import { useLogout, useUser } from "@repo/auth";
 import { Spinner } from "@repo/ui";
 export default function Navbar() {
   const { user, isLoading } = useUser();

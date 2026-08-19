@@ -1,5 +1,4 @@
 "use client";
-import { FormField } from "@/components/FormField";
 import {
   Dialog,
   DialogClose,
@@ -18,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
   Button,
-  Textarea,
+  TextareaFiled,
 } from "@repo/ui";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -95,13 +94,12 @@ export default function AddNewRequest() {
             )}
           />
 
-          <FormField control={form.control} label="توضیحات" name="description">
-            <Textarea
-              id="description"
-              rows={6}
-              placeholder="توضیحات درخواست خود را وارد کنید"
-            />
-          </FormField>
+          <TextareaFiled
+            label="توضیحات درخواست"
+            control={form.control}
+            name="description"
+            placeholder="توضیحات درخواست خود را وارد کنید"
+          />
 
           <DialogFooter>
             <DialogClose asChild>

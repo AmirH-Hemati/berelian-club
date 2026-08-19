@@ -1,8 +1,7 @@
 "use client";
 import { Button, Spinner, Dialog, DialogTrigger } from "@repo/ui";
-import { useUser } from "@/features/auth/hooks/useUser";
+import { useUser, LoginForm } from "@repo/auth";
 import Link from "next/link";
-import Login from "@/features/auth/components/Login";
 
 export default function LoginHeroButton() {
   const { user, isLoading } = useUser();
@@ -24,7 +23,7 @@ export default function LoginHeroButton() {
           <DialogTrigger asChild>
             <Button>وورد به پنل اختصاصی</Button>
           </DialogTrigger>
-          <Login />
+          <LoginForm />
         </Dialog>
       )}
     </>

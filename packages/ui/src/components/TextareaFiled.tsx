@@ -1,7 +1,7 @@
-import React from "react";
+"use client";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import { Field, FieldError, FieldLabel } from @repo/ui;
-import { Textarea } from @repo/ui;
+import { Field, FieldError, FieldLabel } from "./ui/field";
+import { Textarea } from "./ui/textarea";
 
 type Props<T extends FieldValues> = {
   control: Control<T>;

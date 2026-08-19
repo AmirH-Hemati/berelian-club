@@ -20,7 +20,7 @@ import { cn } from "@repo/ui";
 import { ChevronUp, Gem, LogOut, User, User2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useLogout } from "../auth/hooks/useLogout";
+import { useLogout } from "@repo/auth";
 
 export function AppSidebar() {
   const pathName = usePathname();

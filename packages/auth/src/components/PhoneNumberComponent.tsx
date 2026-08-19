@@ -27,7 +27,7 @@ export default function PhoneNumberComponent({
   const form = useForm<phoneSchemaTypes>({
     resolver: zodResolver(phoneSchema),
     defaultValues: {
-      phoneNumber: "09913199902",
+      phoneNumber: "",
     },
   });
 
@@ -40,28 +40,21 @@ export default function PhoneNumberComponent({
     });
   }
   return (
-    <form onSubmit={form.handleSubmit(handleSubmit)} className="py-2">
+    <form onSubmit={form.handleSubmit(handleSubmit)}>
       <FormField
         control={form.control}
         name="phoneNumber"
+        icon={Phone}
         label="شماره تلفن همراه"
-      >
-        <InputGroup dir="rtl">
-          <InputGroupAddon align="inline-end">
-            <Phone />
-          </InputGroupAddon>
-          <InputGroupInput
-            disabled={isSendingCode}
-            placeholder="09123456789"
-            type="tel"
-          />
-        </InputGroup>
-      </FormField>
-      <DialogFooter className="mt-4">
+        placeholder="09123456789"
+        type="tel"
+      />
+
+      <div className="-mx-4 -mb-4 flex mt-4 flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:justify-end">
         <Button type="submit" className="w-full" disabled={isSendingCode}>
           دریافت کد تایید
         </Button>
-      </DialogFooter>
+      </div>
     </form>
   );
 }

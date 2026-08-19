@@ -24,10 +24,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  TextareaFiled,
 } from "@repo/ui";
 import { Switch } from "@repo/ui";
 import { FilePenLine, Files } from "lucide-react";
-import TextareaFiled from "@/components/TextareaFiled";
 import { SessionReportFormValues, sessionReportSchema } from "@repo/schema";
 import { useCreateSessionReport } from "../hooks/useCreateSessionReport";
 

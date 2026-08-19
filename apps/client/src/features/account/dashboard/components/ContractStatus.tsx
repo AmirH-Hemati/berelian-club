@@ -7,7 +7,7 @@ import {
   Badge,
   Progress,
 } from "@repo/ui";
-import { useUser } from "@/features/auth/hooks/useUser";
+import { useUser } from "@repo/auth";
 import { convertDate } from "@/utils/helper";
 import { FileCheck } from "lucide-react";
 import { ContractStatusSkeleton } from "./ContractStatusSkeleton";

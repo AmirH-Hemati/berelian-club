@@ -1,9 +1,9 @@
-import LoginForm from "@/features/authentication/components/LoginForm";
+import { LoginPage } from "@repo/auth";
 
-export default function LoginPage() {
+export default function Page() {
   return (
     <div className="flex justify-center items-center h-screen w-full p-1 ">
-      <LoginForm />
+      <LoginPage />
     </div>
   );
 }

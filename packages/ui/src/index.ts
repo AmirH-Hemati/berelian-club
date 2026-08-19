@@ -1,3 +1,5 @@
+export { default as TextareaFiled } from "./components/TextareaFiled";
+
 export * from "./components/ui/button";
 export * from "./components/ui/accordion";
 export * from "./components/ui/alert";

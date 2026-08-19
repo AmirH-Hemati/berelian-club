@@ -1,8 +1,4 @@
 "use client";
-
-import { useState } from "react";
-import PhoneNumberComponent from "./PhoneNumberComponent";
-import { InputOTPForm } from "./InputOtpForm";
 import {
   Card,
   CardContent,
@@ -10,19 +6,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/ui";
+import LoginForm from "./Login";
+import { useState } from "react";
 
 export type Step = "phone" | "otp";
 
-export default function LoginForm() {
-  const [phoneNumber, setPhoneNumber] = useState("");
+export default function LoginPage() {
   const [step, setStep] = useState<Step>("phone");
-  function handleChangeStep(step: Step) {
-    setStep(step);
-  }
 
-  function handleSetPhoneNumber(phone: string) {
-    setPhoneNumber(phone);
-  }
   return (
     <Card className="min-w-xs ">
       {step === "phone" ? (
@@ -46,21 +37,7 @@ export default function LoginForm() {
       )}
 
       <CardContent>
-        {step === "phone" && (
-          <PhoneNumberComponent
-            onChangeStep={handleChangeStep}
-            onSetPhoneNumber={handleSetPhoneNumber}
-          />
-        )}
-      </CardContent>
-
-      <CardContent>
-        {step === "otp" && (
-          <InputOTPForm
-            phoneNumber={phoneNumber}
-            onChangeStep={handleChangeStep}
-          />
-        )}
+        <LoginForm step={step} setStep={setStep} />
       </CardContent>
     </Card>
   );

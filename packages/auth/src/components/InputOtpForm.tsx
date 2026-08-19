@@ -1,6 +1,5 @@
 "use client";
 
-import { RefreshCwIcon } from "lucide-react";
 import {
   InputOTP,
   InputOTPGroup,
@@ -26,7 +25,7 @@ type Props = {
   onResetTimer: () => void;
 };
 
-export function InputOTPForm({
+export default function InputOTPForm({
   onChangeStep,
   phoneNumber,
   timer,
@@ -87,22 +86,20 @@ export function InputOTPForm({
         )}
       />
 
-      <DialogFooter className="mt-4">
-        <div className="w-full flex flex-col gap-1">
-          <Button type="submit" className="w-full" disabled={isVerifingCode}>
-            تایید و ورود
-          </Button>
-          <div className="flex-wrap flex gap-2 text-muted-foreground text-xs">
-            شماره همراه خود را اشتباه وارد کرده اید؟{" "}
-            <p
-              className="text-xs text-primary underline cursor-pointer"
-              onClick={() => onChangeStep("phone")}
-            >
-              تغییر شماره همراه
-            </p>
-          </div>
+      <div className="-mx-4 -mb-4 mt-4 flex flex-col gap-2 rounded-b-xl border-t bg-muted/50 p-4  sm:justify-end">
+        <Button type="submit" className="w-full" disabled={isVerifingCode}>
+          تایید و ورود
+        </Button>
+        <div className="flex-wrap flex gap-2 text-muted-foreground text-100 ">
+          <p> شماره همراه خود را اشتباه وارد کرده اید؟</p>
+          <span
+            className=" text-primary underline cursor-pointer"
+            onClick={() => onChangeStep("phone")}
+          >
+            تغییر شماره همراه
+          </span>
         </div>
-      </DialogFooter>
+      </div>
     </form>
   );
 }

@@ -1,6 +1,5 @@
 "use client";
 
-// import { useLogout } from "@/features/authentication/hooks/useLogout";
 import { sidebarData } from "@/lib/constanst/SidebarItem";
 import { ChevronUp, Gem, LogOut, User, User2 } from "lucide-react";
 import Link from "next/link";
@@ -23,7 +22,7 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@repo/ui";
-import { useLogout } from "@/features/authentication/hooks/useLogout";
+import { useLogout } from "@repo/auth";
 
 export default function AppSidebar() {
   const { logout, isLogouting } = useLogout();

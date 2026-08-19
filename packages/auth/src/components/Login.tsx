@@ -1,19 +1,12 @@
 "use client";
 
-import {
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@repo/ui";
-import { useState, useEffect, useRef } from "react";
-import { InputOTPForm } from "./InputOtpForm";
+import { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
+import InputOTPForm from "./InputOtpForm";
 import PhoneNumberComponent from "./PhoneNumberComponent";
+import { Step } from "./LoginPage";
 
-export type Step = "phone" | "otp";
-
-export default function Login() {
-  const [step, setStep] = useState<Step>("phone");
+type Props = { step: string; setStep: Dispatch<SetStateAction<Step>> };
+export default function Login({ step, setStep }: Props) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otpSentAt, setOtpSentAt] = useState<Date | null>(null);
   const [timer, setTimer] = useState(120);
@@ -75,27 +68,7 @@ export default function Login() {
   }
 
   return (
-    <DialogContent>
-      {step === "phone" ? (
-        <DialogHeader>
-          <DialogTitle className="text-xs md:text-sm font-mono">
-            ورود به حساب کاربری
-          </DialogTitle>
-          <DialogDescription className="text-xs md:text-sm">
-            شماره موبایل خود را که روی آن اکانت دارید را وارد کنید
-          </DialogDescription>
-        </DialogHeader>
-      ) : (
-        <DialogHeader>
-          <DialogTitle className="text-xs md:text-sm font-mono">
-            کد تایید خود را وارد کنید
-          </DialogTitle>
-          <DialogDescription className="text-xs md:text-sm">
-            کد تاییدی که به شماره موبایل شما ارسال کردیم را وارد کنید
-          </DialogDescription>
-        </DialogHeader>
-      )}
-
+    <>
       {step === "phone" && (
         <PhoneNumberComponent
           onChangeStep={handleChangeStep}
@@ -111,6 +84,6 @@ export default function Login() {
           onResetTimer={handleResetTimer}
         />
       )}
-    </DialogContent>
+    </>
   );
 }

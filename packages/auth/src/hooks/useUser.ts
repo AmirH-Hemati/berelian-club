@@ -1,6 +1,7 @@
+"use client"
 import { useQuery } from "@tanstack/react-query";
 import { getCurrentUser } from "../services/authServices";
-import { useAuthStore } from "@/components/providers/authStore";
+import { useAuthStore } from "../store/authStore";
 import { useEffect } from "react";
 export function useUser() {
   const status = useAuthStore((auth) => auth.status);

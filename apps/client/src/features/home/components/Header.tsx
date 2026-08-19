@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Moon, Sun, TrendingUp, User } from "lucide-react";
-import Login from "@/features/auth/components/Login";
+import { LoginForm, useUser } from "@repo/auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +13,6 @@ import {
   Spinner,
 } from "@repo/ui";
 import { useTheme } from "next-themes";
-import { useUser } from "@/features/auth/hooks/useUser";
 
 export default function Header() {
   const { setTheme } = useTheme();
@@ -63,7 +62,7 @@ export default function Header() {
               <DialogTrigger asChild>
                 <Button>ورود</Button>
               </DialogTrigger>
-              <Login />
+              <LoginForm />
             </Dialog>
           )}
         </div>

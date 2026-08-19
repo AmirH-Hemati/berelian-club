@@ -1,6 +1,5 @@
 "use client";
 
-import { FormField } from "@/components/FormField";
 import {
   Dialog,
   DialogClose,
@@ -19,7 +18,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Textarea,
+  TextareaFiled,
 } from "@repo/ui";
 
 import { Controller, useForm } from "react-hook-form";
@@ -98,18 +97,13 @@ export default function AddNewAppointment() {
             )}
           />
 
-          <FormField
-            control={form.control}
+          <TextareaFiled
             label="توضیحات جهت ثبت مشاوره"
+
+            control={form.control}
             name="description"
-          >
-            <Textarea
-              id="description"
-              rows={6}
-              className="placeholder:text-xs"
-              placeholder="توضیحات درخواست خود را وارد کنید"
-            />
-          </FormField>
+            placeholder="توضیحات درخواست مشاوره خود را وارد کنید"
+          />
 
           <DialogFooter>
             <DialogClose asChild>

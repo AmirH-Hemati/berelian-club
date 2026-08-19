@@ -1,4 +1,4 @@
-import { updateMe as updateMeApi } from "@/features/auth/services/authServices";
+import { updateMe as updateMeApi } from "@repo/auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 

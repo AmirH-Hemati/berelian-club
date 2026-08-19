@@ -17,8 +17,7 @@ import { LogOut, Moon, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import NotificationsDropdown from "../account/notifications/components/NotificationsDropdown";
-import { useLogout } from "../auth/hooks/useLogout";
-import { useUser } from "../auth/hooks/useUser";
+import { useLogout, useUser } from "@repo/auth";
 
 export default function Navbar() {
   const { user, isLoading, isError } = useUser();
