@@ -12,10 +12,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Button,
+  TableSkeleton,
 } from "@repo/ui";
 
 import { PaginationControls } from "@/components/PaginationControls";
-import { TableSkeleton } from "@/components/TableSkeleton";
 
 import { convertDate } from "@/utils/helper";
 import { RequestType } from "@repo/schema";

@@ -88,7 +88,7 @@ export function FileSelector({ selectedFileId, onSelect }: FileSelectorProps) {
         </TabsList>
       </Tabs>
 
-      <ScrollArea className="h-80 border rounded-lg p-2">
+      <ScrollArea className="max-h-72 border rounded-lg p-2">
         {files?.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
             <FileIcon className="size-12 mb-2 opacity-50" />

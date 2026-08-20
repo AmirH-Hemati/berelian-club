@@ -1,19 +1,15 @@
 "use client";
-import { FormField } from "@/components/FormField";
 
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-  Button,
-  DialogFooter,
-} from "@repo/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { phoneSchema, phoneSchemaTypes } from "@repo/schema";
+import {
+  Button,
+  FormField
+} from "@repo/ui";
 import { Phone } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { Step } from "./Login";
 import { useSendOtp } from "../hooks/useSendOtp";
+import { Step } from "./Login";
 
 type Props = {
   onChangeStep: (step: Step) => void;

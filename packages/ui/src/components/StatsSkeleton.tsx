@@ -1,10 +1,11 @@
-import { Card, CardContent, Skeleton } from "@repo/ui";
+import { Card, CardContent } from "./ui/card";
+import { Skeleton } from "./ui/skeleton";
 
 type StatsSkeletonProps = {
   count?: number;
 };
 
-export function StatsSkeleton({ count = 4 }: StatsSkeletonProps) {
+export default function StatsSkeleton({ count = 4 }: StatsSkeletonProps) {
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       {Array.from({ length: count }).map((_, index) => (

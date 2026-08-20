@@ -1,8 +1,7 @@
 "use client";
-import { Card, CardContent } from "@repo/ui";
+import { Card, CardContent, StatsSkeleton } from "@repo/ui";
 import { Bell, CalendarDays, FileText, Trophy } from "lucide-react";
 import { useDashboardStats } from "../hooks/useDashboardStats";
-import { StatsSkeleton } from "@/components/StatsSkeleton";
 
 export default function Stats() {
   const { stats, isLoading } = useDashboardStats();

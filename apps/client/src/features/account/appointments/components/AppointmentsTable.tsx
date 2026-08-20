@@ -13,10 +13,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Button,
+  TableSkeleton,
 } from "@repo/ui";
 
 import { PaginationControls } from "@/components/PaginationControls";
-import { TableSkeleton } from "@/components/TableSkeleton";
 import { convertDate } from "@/utils/helper";
 import { AppointmentType } from "@repo/schema";
 import { CircleAlert, MoreHorizontalIcon } from "lucide-react";

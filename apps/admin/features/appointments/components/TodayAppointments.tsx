@@ -1,15 +1,19 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
-import { ScrollArea } from "@repo/ui";
-import { formatDate, formatTime } from "@/utils/helper";
-import { Calendar, CalendarX, Clock } from "lucide-react";
-import { useTodayAppointments } from "../hooks/useTodayAppointments";
-import StatusBadge from "@/features/requests/components/StatusBadge";
-import { CardSkeleton } from "@/components/CardSkeleton";
-import { AppointmentType } from "@repo/schema";
-import { cn } from "@repo/ui";
 import AsyncState from "@/components/AsyncState";
+import StatusBadge from "@/features/requests/components/StatusBadge";
+import { formatDate, formatTime } from "@/utils/helper";
+import { AppointmentType } from "@repo/schema";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardSkeleton,
+  CardTitle,
+  ScrollArea,
+} from "@repo/ui";
+import { Calendar, CalendarX } from "lucide-react";
+import { useTodayAppointments } from "../hooks/useTodayAppointments";
 
 export function TodayAppointments() {
   const { appointments, isLoading, isError, refetch } = useTodayAppointments();

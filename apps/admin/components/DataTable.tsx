@@ -16,9 +16,9 @@ import {
   TableHeader,
   TableRow,
   Button,
+  TableSkeleton
 } from "@repo/ui";
 import { DataTablePagination } from "@/components/DataTablePagination";
-import { TableSkeleton } from "./TableSkeleton";
 import { CircleAlert } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {

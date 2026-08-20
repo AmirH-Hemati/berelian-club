@@ -1,5 +1,4 @@
 "use client";
-import { ScrollArea } from "@repo/ui";
 import {
   ArrowLeft,
   FileQuestion,
@@ -9,16 +8,23 @@ import {
   UserRound,
 } from "lucide-react";
 
-import Spinner from "@/components/PageSpinner";
-import { Alert, AlertDescription, AlertTitle } from "@repo/ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
+import {
+  ScrollArea,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  CardSkeleton,
+} from "@repo/ui";
 import { formatDate } from "@/utils/helper";
 import { useUserRequests } from "../hooks/useUserRequests";
 import StatusBadge from "./StatusBadge";
 import { useRouter } from "next/navigation";
 import { RequestType } from "@repo/schema";
 import AsyncState from "@/components/AsyncState";
-import { CardSkeleton } from "@/components/CardSkeleton";
 
 export const typesMap = {
   consultation: {

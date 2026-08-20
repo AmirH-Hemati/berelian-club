@@ -32,7 +32,7 @@ export function ChatHeader({
 
         <Avatar className="size-9">
           <AvatarImage
-            src={`http://localhost:5000/images/users/${user?.photo}`}
+            src={`http://localhost:5000/images/users/${otherUser?.photo}`}
           />
           <AvatarFallback className="bg-primary/10 text-primary">
             {otherUser?.firstName?.[0] + otherUser?.lastName?.[0]}

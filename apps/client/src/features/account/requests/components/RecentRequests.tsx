@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 
 import AsyncState from "@/components/AsyncState";
-import { CardSkeleton } from "@/components/CardSkeleton";
 import {
   ScrollArea,
   Alert,
@@ -18,6 +17,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  CardSkeleton,
 } from "@repo/ui";
 import { convertDate } from "@/utils/helper";
 import { RequestType } from "@repo/schema";

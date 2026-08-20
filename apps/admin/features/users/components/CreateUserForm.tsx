@@ -1,12 +1,9 @@
 "use client";
 
-import { Button } from "@repo/ui";
-import { DialogDescription, DialogHeader, DialogTitle } from "@repo/ui";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 
 import CustomDatePicker from "@/components/CustomDatePicker";
-import { FormField } from "@/components/FormField";
 import {
   Banknote,
   CreditCard,
@@ -17,21 +14,23 @@ import {
   User,
 } from "lucide-react";
 
-import {
-  createUserSchema,
-  CreateUserInputTypes,
-  UserType,
-  updateUserSchema,
-} from "@repo/schema";
+import { createUserSchema, CreateUserInputTypes, UserType } from "@repo/schema";
 import { useCreateUser } from "../hooks/useCreateUser";
 import { useUpdateUser } from "../hooks/useUpdateUser";
-import { Field, FieldError, FieldLabel } from "@repo/ui";
 import {
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  Field,
+  FieldError,
+  FieldLabel,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
+  FormField,
+  Button,
 } from "@repo/ui";
 
 type Props = { user?: UserType; onCloseDialog: () => void };

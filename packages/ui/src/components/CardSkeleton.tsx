@@ -1,6 +1,6 @@
 import { Skeleton, Alert } from "@repo/ui";
 
-export function CardSkeleton({ skeletonLength = 3 }) {
+export default function CardSkeleton({ skeletonLength = 3 }) {
   return (
     <div className="space-y-2">
       {Array.from({ length: skeletonLength }).map((_, index) => (

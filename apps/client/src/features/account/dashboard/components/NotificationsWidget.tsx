@@ -1,6 +1,5 @@
 "use client";
 import AsyncState from "@/components/AsyncState";
-import { CardSkeleton } from "@/components/CardSkeleton";
 
 import {
   Alert,
@@ -13,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
   ScrollArea,
+  CardSkeleton,
 } from "@repo/ui";
 
 import { NotificationType } from "@repo/schema";

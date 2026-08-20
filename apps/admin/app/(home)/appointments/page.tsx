@@ -1,7 +1,6 @@
 "use client";
 
 import { DataTable } from "@/components/DataTable";
-import SearchFilter from "@/components/SearchFilter";
 import TabsComponents from "@/components/TabsComponents";
 import { columns } from "@/features/appointments/components/columns";
 import { useAppointments } from "@/features/appointments/hooks/useAppointments";
@@ -16,7 +15,7 @@ export default function Page() {
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <TabsComponents />
 
-        <SearchFilter />
+        {/* <SearchFilter /> */}
       </div>
       <DataTable
         columns={columns}

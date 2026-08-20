@@ -1,3 +1,4 @@
+import { Skeleton } from "./ui/skeleton";
 import {
   Table,
   TableBody,
@@ -5,8 +6,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  Skeleton,
-} from "@repo/ui";
+} from "./ui/table";
 
 interface TableSkeletonProps {
   columns?: number;
@@ -14,7 +14,7 @@ interface TableSkeletonProps {
   avatar?: boolean;
 }
 
-export function TableSkeleton({
+export default function TableSkeleton({
   columns = 5,
   rows = 8,
   avatar = false,

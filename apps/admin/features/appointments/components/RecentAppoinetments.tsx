@@ -1,16 +1,23 @@
 "use client";
-import { ScrollArea } from "@repo/ui";
 import { CalendarOff, PhoneCall } from "lucide-react";
 
-import { Alert, AlertDescription, AlertTitle } from "@repo/ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
+import {
+  ScrollArea,
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardSkeleton,
+  cn,
+} from "@repo/ui";
 import StatusBadge from "@/features/requests/components/StatusBadge";
 import { formatDate } from "@/utils/helper";
 import { useRouter } from "next/navigation";
 import { useRecentAppointments } from "../hooks/useRecentAppointments";
-import { CardSkeleton } from "@/components/CardSkeleton";
 import { AppointmentType } from "@repo/schema";
-import { cn } from "@repo/ui";
 import AsyncState from "@/components/AsyncState";
 
 export const typesMap = {

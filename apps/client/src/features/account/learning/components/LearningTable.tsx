@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
   Badge,
   DownloadButton,
+  TableSkeleton,
 } from "@repo/ui";
 
 import {
@@ -27,7 +28,6 @@ import {
 import { useMyFiles } from "../hooks/useMyFiles";
 import { convertDate, formatFileSize } from "@/utils/helper";
 import { PaginationControls } from "@/components/PaginationControls";
-import { TableSkeleton } from "@/components/TableSkeleton";
 import { UserFileType } from "@repo/schema";
 
 const getFileTypeBadge = (fileType: string, mimeType?: string) => {
