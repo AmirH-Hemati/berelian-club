@@ -38,7 +38,6 @@ export function DeleteRequestDialog({ requestId }: DeleteRequestDialogProps) {
         <AlertDialogTrigger asChild>
           <Button
             variant="ghost"
-            size="sm"
             className="w-full flex justify-start"
           >
             <Trash2 className="size-4" />

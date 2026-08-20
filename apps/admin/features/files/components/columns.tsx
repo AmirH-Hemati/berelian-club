@@ -1,6 +1,4 @@
 "use client";
-import { Badge } from "@repo/ui";
-import { Button } from "@repo/ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +6,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  Badge,
+  Button,
+  DownloadButton,
 } from "@repo/ui";
 import { formatDate, formatFileSize } from "@/utils/helper";
 import { FileType } from "@repo/schema";
@@ -20,7 +21,6 @@ import {
   Trash2Icon,
   VideoIcon,
 } from "lucide-react";
-import DownloadButton from "@repo/ui/components/DownloadButton";
 import { ColumnDef } from "@tanstack/react-table";
 import { useDeleteFile } from "../hooks/useDeleteFile";
 
@@ -125,20 +125,17 @@ export const columns: ColumnDef<FileType>[] = [
               <MoreHorizontalIcon className="size-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="w-50">
             <DropdownMenuLabel>فعالیت‌ها</DropdownMenuLabel>
             <DropdownMenuSeparator />
-
-            <DropdownMenuItem>
-              <SendIcon className="size-4 ml-2" />
-              ارسال به کاربر
-            </DropdownMenuItem>
 
             <DropdownMenuItem asChild>
               <DownloadButton
                 fileId={file._id}
                 originalName={file.originalName}
-              />
+              >
+                دانلود فایل
+              </DownloadButton>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
@@ -146,10 +143,13 @@ export const columns: ColumnDef<FileType>[] = [
             <DropdownMenuItem
               onClick={() => deleteFile(file._id)}
               disabled={isDeleting}
-              className="text-red-600 focus:text-red-600"
+              variant="destructive"
+              asChild
             >
-              <Trash2Icon className="size-4 ml-2" />
-              حذف فایل
+              <Button variant="ghost" className="w-full flex justify-start">
+                <Trash2Icon className="size-4 " />
+                حذف فایل
+              </Button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -11,7 +11,14 @@ import {
 } from "@repo/ui";
 import { Button } from "@repo/ui";
 import { Badge } from "@repo/ui";
-import { MoreHorizontalIcon, Calendar, Clock } from "lucide-react";
+import {
+  MoreHorizontalIcon,
+  Calendar,
+  Clock,
+  Eye,
+  CheckCircle2,
+  Trash2,
+} from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/utils/helper";
 import StatusBadge from "@/features/requests/components/StatusBadge";
@@ -126,19 +133,28 @@ export const columns: ColumnDef<FollowUpType>[] = [
               <MoreHorizontalIcon className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="w-50">
             <DropdownMenuLabel>فعالیت‌ها</DropdownMenuLabel>
             <DropdownMenuSeparator />
 
             <DropdownMenuItem asChild>
-              <Link href={`/followups/${followUp._id}`}>مشاهده جزئیات</Link>
+              <Link
+                href={`/followups/${followUp._id}`}
+                className="flex items-center gap-2 font-semibold"
+              >
+                <Eye className="size-4" />
+                مشاهده جزئیات
+              </Link>
             </DropdownMenuItem>
+            <DropdownMenuSeparator />
 
             {followUp.status !== "completed" && (
               <DropdownMenuItem
                 onClick={() => completeFollowUps(followUp._id)}
                 disabled={isCompleting}
+                className="flex items-center gap-2 font-semibold"
               >
+                <CheckCircle2 className="size-4" />
                 تکمیل پیگیری
               </DropdownMenuItem>
             )}
@@ -149,7 +165,9 @@ export const columns: ColumnDef<FollowUpType>[] = [
               variant="destructive"
               onClick={() => deleteFollowUp(followUp._id)}
               disabled={isDeleting}
+              className="flex items-center gap-2 font-semibold"
             >
+              <Trash2 className="size-4" />
               حذف پیگیری
             </DropdownMenuItem>
           </DropdownMenuContent>

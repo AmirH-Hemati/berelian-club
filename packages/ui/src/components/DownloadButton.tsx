@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 type Props = {
   fileId: string;
   originalName: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 export default function DownloadButton({
   fileId,
@@ -35,9 +35,13 @@ export default function DownloadButton({
     }
   }
   return (
-    <Button variant="ghost" className=" " onClick={handleDownloadButton}>
-      {children}
+    <Button
+      variant="ghost"
+      className="w-full flex justify-start"
+      onClick={handleDownloadButton}
+    >
       <DownloadIcon className="size-4 " />
+      {children}
     </Button>
   );
 }

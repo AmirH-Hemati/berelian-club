@@ -1,7 +1,7 @@
 "use client";
 
 import CustomDatePicker from "@/components/CustomDatePicker";
-import TextareaFiled from "@/components/TextareaFiled";
+import { TextareaFiled } from "@repo/ui";
 import { Button } from "@repo/ui";
 import {
   Dialog,

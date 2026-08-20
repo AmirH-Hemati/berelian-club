@@ -55,14 +55,10 @@ const requestSchema = new mongoose.Schema<RequestDocument>(
 requestSchema.pre<Query<RequestDocument, RequestDocument>>(
   /^find/,
   function () {
-    this.populate("user");
-  },
-);
-
-requestSchema.pre<Query<RequestDocument, RequestDocument>>(
-  /^find/,
-  function () {
-    this.populate("cancelledBy", "firstName lastName");
+    this.populate("user", "firstName lastName photo _id phoneNumber nationalCode " ).populate(
+      "cancelledBy",
+      "firstName lastName",
+    );
   },
 );
 

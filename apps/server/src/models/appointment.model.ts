@@ -72,7 +72,7 @@ const appointmentSchema = new mongoose.Schema<appointmentDocument>(
 appointmentSchema.pre<Query<appointmentDocument, appointmentDocument>>(
   /^find/,
   function () {
-    this.populate("user", "_id firstName lastName phoneNumber nationalCode")
+    this.populate("user", "_id firstName lastName photo phoneNumber nationalCode")
       .populate("cancelledBy", "firstName lastName")
       .populate("rescheduledBy", "firstName lastName");
   },

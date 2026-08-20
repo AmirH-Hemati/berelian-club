@@ -31,7 +31,9 @@ export function ChatHeader({
         </Button>
 
         <Avatar className="size-9">
-          <AvatarImage src={otherUser?.photo || ""} />
+          <AvatarImage
+            src={`http://localhost:5000/images/users/${user?.photo}`}
+          />
           <AvatarFallback className="bg-primary/10 text-primary">
             {otherUser?.firstName?.[0] + otherUser?.lastName?.[0]}
           </AvatarFallback>

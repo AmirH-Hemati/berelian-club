@@ -11,7 +11,7 @@ import {
 } from "@repo/ui";
 import { cn } from "@repo/ui";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Trash2, UserRound } from "lucide-react";
 import Link from "next/link";
 import { UserType } from "@repo/schema";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
@@ -23,9 +23,12 @@ export const columns: ColumnDef<UserType>[] = [
     header: "",
     cell: ({ row }) => {
       const user = row.original;
+
       return (
         <Avatar>
-          <AvatarImage src={user?.photo || ""} />
+          <AvatarImage
+            src={`http://localhost:5000/images/users/${user?.photo}`}
+          />
           <AvatarFallback>
             {user?.firstName[0] + user?.lastName[0]}
           </AvatarFallback>
@@ -80,12 +83,23 @@ export const columns: ColumnDef<UserType>[] = [
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>فعالیت ها </DropdownMenuLabel>
-            <DropdownMenuItem variant="destructive">حذف کاربر</DropdownMenuItem>
+          <DropdownMenuContent align="end" className="w-50">
+            <DropdownMenuLabel>فعالیت‌ها</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link href={`/users/${user._id}`}>مشاهده کاربر</Link>
+
+            <DropdownMenuItem asChild>
+              <Link
+                href={`/users/${user._id}`}
+                className="flex items-center gap-2 font-semibold"
+              >
+                <UserRound className="size-4" />
+                مشاهده کاربر
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem variant="destructive" className="gap-2">
+              <Trash2 className="size-4" />
+              حذف کاربر
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
