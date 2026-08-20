@@ -28,8 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "../../packages/auth/src/components/LoginPage.tsx",
-    "../../packages/ui/src/components/DownloadButton.tsx"
+    "features/files/components/SendFileModal.tsx",
+    "features/files/components/FileSelector.tsx"
   ],
   "exclude": ["node_modules"]
 }

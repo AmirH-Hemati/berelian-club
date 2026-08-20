@@ -13,18 +13,16 @@ import { UserType } from "@repo/schema";
 
 interface ChatWindowProps {
   conversationId: string;
-  otherUserId: string;
   currentUser: UserType;
-  otherUserName: string;
   isActive: boolean;
+  sendFileIconAction?: React.ReactNode;
 }
 
 export function ChatWindow({
   conversationId,
   currentUser,
-  otherUserId,
-  otherUserName,
   isActive,
+  sendFileIconAction,
 }: ChatWindowProps) {
   const [isAtBottom, setIsAtBottom] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -166,9 +164,8 @@ export function ChatWindow({
         isActive={isActive}
         conversationId={conversationId}
         setIsAtBottom={setIsAtBottom}
-        otherUserId={otherUserId}
-        otherUserName={otherUserName}
         currentUserRole={currentUser?.role}
+        sendFileIconAction={sendFileIconAction}
       />
     </div>
   );

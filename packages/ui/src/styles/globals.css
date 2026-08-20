@@ -3,6 +3,7 @@
 @import "shadcn/tailwind.css";
 
 @source "../components/**/*.tsx";
+@source "../../../chats/src/**/*.tsx";
 
 @custom-variant dark (&:is(.dark *));
 
