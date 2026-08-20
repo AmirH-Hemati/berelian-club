@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@repo/ui";
 import { Textarea } from "@repo/ui";
-// import { SendFileModal } from "@/features/files/components/SendFileModal";
 import { Send } from "lucide-react";
 import { useState } from "react";
 import useSendMessage from "../hooks/useSendMessage";
@@ -9,18 +8,16 @@ import useSendMessage from "../hooks/useSendMessage";
 type Props = {
   setIsAtBottom: (isAtBottom: boolean) => void;
   conversationId: string;
-  otherUserId: string;
-  otherUserName: string;
   currentUserRole: string;
   isActive: boolean;
+  sendFileIconAction: React.ReactNode;
 };
 export default function InputMessage({
   setIsAtBottom,
   conversationId,
-  otherUserId,
-  otherUserName,
   currentUserRole,
   isActive,
+  sendFileIconAction,
 }: Props) {
   const [newMessage, setNewMessage] = useState("");
   const { sendMessage, isPending } = useSendMessage(conversationId);
@@ -37,14 +34,10 @@ export default function InputMessage({
   return (
     <div className="p-3 border-t bg-background/95 backdrop-blur ">
       <div className="flex items-end gap-2">
-        {/* {currentUserRole === "admin" && (
-          <SendFileModal
-            userId={otherUserId}
-            userName={otherUserName}
-            conversationId={conversationId}
-            iconChat
-          />
-        )} */}
+        {currentUserRole === "admin" &&
+          sendFileIconAction &&
+          sendFileIconAction}
+
         <Textarea
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}

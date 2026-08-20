@@ -7,9 +7,16 @@ import { ChatWindow } from "./ChatWindow";
 import { useConversation } from "../hooks/useConversation";
 import { MessageCircle } from "lucide-react";
 import Link from "next/link";
-import { SocketProvider } from "./SocketProvider";
 
-export default function ChatPage() {
+type Props = {
+  renderSendFileIconAction?: (props: {
+    userId: string;
+    userName: string;
+    conversationId: string;
+  }) => React.ReactNode;
+};
+
+export default function ChatPage({ renderSendFileIconAction }: Props) {
   const { user, isLoading: userLoading } = useUser();
   const { conversation, isLoading } = useConversation();
 
@@ -36,24 +43,25 @@ export default function ChatPage() {
   );
 
   return (
- 
-      <div className="flex flex-col h-[calc(100vh-4rem)] max-w-4xl mx-auto">
-        <ChatHeader
-          conversationId={conversation._id}
-          isActive={conversation.isActive}
-          otherUser={otherUser}
-          onBack={() => window.history.back()}
-          requestId={conversation.request}
-        />
+    <div className="flex flex-col h-[calc(100vh-4rem)] max-w-4xl mx-auto">
+      <ChatHeader
+        conversationId={conversation._id}
+        isActive={conversation.isActive}
+        otherUser={otherUser}
+        onBack={() => window.history.back()}
+        requestId={conversation.request}
+      />
 
-        <ChatWindow
-          conversationId={conversation?._id}
-          otherUserId={otherUser?._id}
-          currentUser={user}
-          isActive={conversation.isActive}
-          otherUserName={otherUser?.firstName + otherUser?.lastName}
-        />
-      </div>
-
+      <ChatWindow
+        conversationId={conversation?._id}
+        currentUser={user}
+        isActive={conversation.isActive}
+        sendFileIconAction={renderSendFileIconAction?.({
+          userId: otherUser?._id,
+          userName: otherUser?.firstName + otherUser?.lastName,
+          conversationId: conversation._id,
+        })}
+      />
+    </div>
   );
 }
