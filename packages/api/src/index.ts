@@ -1,1 +1,1 @@
-export * from "./createAxios.ts"
+export { default as axiosInstance } from "./axiosInstance";

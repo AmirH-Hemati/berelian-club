@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 import ErrorState from "@/components/ErrorState";
-import { EmptyState } from "@/components/EmptyState";
+import { EmptyState } from "@repo/ui";
 import { Inbox, LucideIcon } from "lucide-react";
 
 type AsyncStateProps<T> = {

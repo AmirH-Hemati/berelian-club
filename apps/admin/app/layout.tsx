@@ -7,7 +7,7 @@ import QueryProvider from "@/components/providers/QueryProvider";
 import { ToastContainer } from "react-toastify";
 import { cn } from "@repo/ui";
 import { DirectionProvider } from "@repo/ui";
-import { SocketProvider } from "@/features/chats/components/SocketProvider";
+import { SocketProvider } from "@repo/chat";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 

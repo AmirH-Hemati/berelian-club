@@ -1,4 +1,4 @@
-import axiosInstance from "@/lib/axiosInstance";
+import { axiosInstance } from "@repo/api";
 import { buildQueryParams, GetRequestsParams } from "@/utils/buildQueryParams";
 import { SessionReportFormValues } from "@repo/schema";
 

@@ -1,7 +1,6 @@
 "use client";
 
-import { ScrollArea } from "@repo/ui";
-import DownloadButton from "@/features/files/components/DownloadButton";
+import { ScrollArea, DownloadButton } from "@repo/ui";
 import { cn } from "@repo/ui";
 import { formatFileSize, formatTimeOnly } from "@/utils/helper";
 import { FileIcon, MessageCircle } from "lucide-react";

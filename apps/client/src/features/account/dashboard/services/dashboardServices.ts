@@ -1,4 +1,4 @@
-import axiosInstance from "@/lib/axiosInstance";
+import { axiosInstance } from "@repo/api";
 
 export async function getDashboardStats() {
   const { data } = await axiosInstance.get("/dashboard/stats");

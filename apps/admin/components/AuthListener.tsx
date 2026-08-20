@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "./providers/authStore";
+import { useAuthStore } from "@repo/auth";
 
 export function AuthListener() {
   const router = useRouter();
@@ -11,7 +11,7 @@ export function AuthListener() {
 
   useEffect(() => {
     if (status === "unAuthenticated") {
-      router.replace("/");
+      router.replace("/login");
     }
   }, [status, router]);
 

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axiosInstance from "@/lib/axiosInstance";
+import axiosInstance from "@repo/auth";
 import { toast } from "react-toastify";
 
 export function useSendFileToChat() {

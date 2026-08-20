@@ -17,7 +17,7 @@ interface EmptyStateProps {
   children?: React.ReactNode;
 }
 
-export function EmptyState({
+export default function EmptyState({
   icon: Icon,
   title,
   description,

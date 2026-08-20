@@ -1,5 +1,5 @@
 import { Button } from "@repo/ui";
-import axiosInstance from "@/lib/axiosInstance";
+import { axiosInstance } from "@repo/api";
 import { DownloadIcon } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -8,7 +8,7 @@ export default function DownloadButton({ fileId, originalName }: Props) {
   async function handleDownloadButton() {
     try {
       const { data } = await axiosInstance.get(
-        `/userFiles/download/${fileId}`,
+        `/files/downloadById/${fileId}`,
         { responseType: "blob" },
       );
 
@@ -28,7 +28,6 @@ export default function DownloadButton({ fileId, originalName }: Props) {
   return (
     <Button variant="ghost" onClick={handleDownloadButton}>
       <DownloadIcon className="size-4 " />
-      دانلود فایل
     </Button>
   );
 }

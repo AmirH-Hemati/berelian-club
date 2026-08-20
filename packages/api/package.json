@@ -18,6 +18,7 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
+    "@repo/auth": "*",
     "axios": "^1.19.0"
   }
 }

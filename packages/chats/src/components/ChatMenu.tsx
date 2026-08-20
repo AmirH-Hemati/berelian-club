@@ -20,7 +20,7 @@ import {
   AlertDialogTitle,
 } from "@repo/ui";
 import { useCloseConversation } from "../hooks/useCloseConversation";
-import { DeleteRequestDialog } from "@/features/requests/components/DeleteRequestDialog";
+// import { DeleteRequestDialog } from "@/features/requests/components/DeleteRequestDialog";
 
 interface ChatMenuProps {
   conversationId: string;
@@ -60,7 +60,7 @@ export function ChatMenu({
             </DropdownMenuItem>
           )}
 
-          <DeleteRequestDialog requestId={requestId} />
+          {/* <DeleteRequestDialog requestId={requestId} /> */}
         </DropdownMenuContent>
       </DropdownMenu>
 

@@ -20,7 +20,7 @@ import {
   Trash2Icon,
   VideoIcon,
 } from "lucide-react";
-import DownloadButton from "./DownloadButton";
+import DownloadButton from "@repo/ui/components/DownloadButton";
 import { ColumnDef } from "@tanstack/react-table";
 import { useDeleteFile } from "../hooks/useDeleteFile";
 

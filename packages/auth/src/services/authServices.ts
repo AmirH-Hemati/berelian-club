@@ -1,19 +1,5 @@
-import { createAxios } from "@repo/api";
+import { axiosInstance } from "@repo/api";
 import { updateMeTypes, verifyOtpTypes } from "@repo/schema";
-import { useAuthStore } from "../store/authStore";
-
-const axiosInstance = createAxios();
-
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      useAuthStore.getState().logout();
-    }
-
-    return Promise.reject(error);
-  },
-);
 
 export const sendOtp = async (phoneNumber: string) => {
   const { data } = await axiosInstance.post("/auth/sendOtp", { phoneNumber });

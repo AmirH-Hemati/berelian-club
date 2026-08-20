@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@repo/ui";
 import { Textarea } from "@repo/ui";
-import { SendFileModal } from "@/features/files/components/SendFileModal";
+// import { SendFileModal } from "@/features/files/components/SendFileModal";
 import { Send } from "lucide-react";
 import { useState } from "react";
 import useSendMessage from "../hooks/useSendMessage";
@@ -37,14 +37,14 @@ export default function InputMessage({
   return (
     <div className="p-3 border-t bg-background/95 backdrop-blur ">
       <div className="flex items-end gap-2">
-        {currentUserRole === "admin" && (
+        {/* {currentUserRole === "admin" && (
           <SendFileModal
             userId={otherUserId}
             userName={otherUserName}
             conversationId={conversationId}
             iconChat
           />
-        )}
+        )} */}
         <Textarea
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}

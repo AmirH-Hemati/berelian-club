@@ -1,6 +1,7 @@
 import { SidebarProvider } from "@repo/ui";
 import AppSidebar from "@/components/AppSidebar";
 import Navbar from "@/components/Navbar";
+import { AuthListener } from "@/components/AuthListener";
 
 export default function RootLayout({
   children,
@@ -8,8 +9,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div>
+    <>
       <SidebarProvider>
+        <AuthListener />
         <AppSidebar />
 
         <main className="mx-auto max-w-7xl w-full overflow-x-hidden">
@@ -17,6 +19,6 @@ export default function RootLayout({
           <div className="px-4">{children}</div>
         </main>
       </SidebarProvider>
-    </div>
+    </>
   );
 }
