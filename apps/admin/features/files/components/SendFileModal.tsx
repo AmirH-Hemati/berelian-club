@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@repo/ui";
-import { useSendFileToChat } from "@/features/chats/hooks/useSendFileToChat";
+import { useSendFileToChat } from "@repo/chat";
 import { FilesIcon, Loader2, Paperclip, Send } from "lucide-react";
 import { useState } from "react";
 import { useSendFileToUser } from "../hooks/useSendFileToUser";

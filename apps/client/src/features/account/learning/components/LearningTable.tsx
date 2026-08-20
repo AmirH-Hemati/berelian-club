@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Badge,
+  DownloadButton,
 } from "@repo/ui";
 
 import {
@@ -25,7 +26,6 @@ import {
 } from "lucide-react";
 import { useMyFiles } from "../hooks/useMyFiles";
 import { convertDate, formatFileSize } from "@/utils/helper";
-import DownloadButton from "./DownloadButton";
 import { PaginationControls } from "@/components/PaginationControls";
 import { TableSkeleton } from "@/components/TableSkeleton";
 import { UserFileType } from "@repo/schema";

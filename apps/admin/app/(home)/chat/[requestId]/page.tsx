@@ -1,5 +1,9 @@
-import { ChatPage } from "@repo/chat";
+import { ChatPage, SocketProvider } from "@repo/chat";
 
-export default function Page() {
-  return <ChatPage />;
+export default function page() {
+  return (
+    <SocketProvider>
+      <ChatPage />
+    </SocketProvider>
+  );
 }

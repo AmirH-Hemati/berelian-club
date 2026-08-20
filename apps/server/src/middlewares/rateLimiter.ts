@@ -14,7 +14,7 @@ export const generalLimiter = rateLimit({
 
 export const sendOtpLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
-  max: 3,
+  max: 300,
   message: {
     status: "fail",
     message:
@@ -26,7 +26,7 @@ export const sendOtpLimiter = rateLimit({
 
 export const verifyOtpLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10,
+  max: 100,
   message: {
     status: "fail",
     message:
