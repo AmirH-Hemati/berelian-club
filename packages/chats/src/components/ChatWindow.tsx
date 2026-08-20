@@ -118,7 +118,10 @@ export function ChatWindow({
                         )}
                       >
                         {msg.type === "file" && msg.file ? (
-                          <div className="flex items-center gap-3 cursor-pointer rounded-xl">
+                          <DownloadButton
+                            fileId={msg.file._id}
+                            originalName={msg.file.originalName}
+                          >
                             <FileIcon className="size-6" />
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-medium truncate">
@@ -128,11 +131,7 @@ export function ChatWindow({
                                 {formatFileSize(msg.file.size)}
                               </p>
                             </div>
-                            <DownloadButton
-                              fileId={msg.file._id}
-                              originalName={msg.file.originalName}
-                            />
-                          </div>
+                          </DownloadButton>
                         ) : (
                           <p className="text-300 wrap-break-word whitespace-pre-wrap leading-relaxed">
                             {msg.content}

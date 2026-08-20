@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { SendFileModal } from "@/features/files/components/SendFileModal";
 import { ChatPage, SocketProvider } from "@repo/chat";
 

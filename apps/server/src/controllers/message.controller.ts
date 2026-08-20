@@ -112,6 +112,11 @@ export const sendFileMessage = CatchError(
       isRead: false,
     });
 
+    await message.populate([
+      { path: "file" },
+      { path: "sender", select: "firstName lastName" },
+    ]);
+
     conversation.lastMessage = message._id;
     await conversation.save();
 
@@ -120,6 +125,7 @@ export const sendFileMessage = CatchError(
       io.to(`conv-${conversationId as string}`).emit("newMessage", message);
     }
 
+    console.log(message);
     res.status(201).json({
       status: "success",
       data: message,

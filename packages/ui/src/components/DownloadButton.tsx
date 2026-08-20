@@ -3,8 +3,17 @@ import { axiosInstance } from "@repo/api";
 import { DownloadIcon } from "lucide-react";
 import { toast } from "react-toastify";
 
-type Props = { fileId: string; originalName: string };
-export default function DownloadButton({ fileId, originalName }: Props) {
+type Props = {
+  fileId: string;
+  originalName: string;
+  children: React.ReactNode;
+};
+export default function DownloadButton({
+  fileId,
+  originalName,
+  children,
+}: Props) {
+  console.log(fileId, originalName);
   async function handleDownloadButton() {
     try {
       const { data } = await axiosInstance.get(
@@ -26,7 +35,8 @@ export default function DownloadButton({ fileId, originalName }: Props) {
     }
   }
   return (
-    <Button variant="ghost" onClick={handleDownloadButton}>
+    <Button variant="ghost" className=" " onClick={handleDownloadButton}>
+      {children}
       <DownloadIcon className="size-4 " />
     </Button>
   );
