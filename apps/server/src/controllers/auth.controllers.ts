@@ -12,7 +12,7 @@ import multer, { type FileFilterCallback } from "multer";
 import crypto from "crypto";
 import sharp from "sharp";
 import path from "path";
-import fs from "fs";
+import fs from "fs/promises";
 
 const multerStorage = multer.memoryStorage();
 const multerFilter = (
@@ -31,29 +31,47 @@ const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 export const uploadUserImage = upload.single("photo");
 
 export const resizeUserImage = CatchError(async (req, res, next) => {
-  if (!req.file) return next();
+  if (!req.file) {
+    return next();
+  }
   const uniqueName = crypto.randomBytes(16).toString("hex");
   const fileName = `user-${uniqueName}.jpeg`;
-  const pathName = path.join(process.cwd(), `public/images/users/${fileName}`);
+  const imagePath = path.join(
+    process.cwd(),
+    "public",
+    "images",
+    "users",
+    fileName,
+  );
   await sharp(req.file.buffer)
     .resize(500, 500)
     .toFormat("jpeg")
     .jpeg({ quality: 90 })
-    .toFile(pathName);
+    .toFile(imagePath);
 
   req.body.photo = fileName;
-  const user = await UserModel.findById((req.user as UserDocument)._id);
-  if (!user?.photo) {
-    next();
-  }
-  const oldPhotoPath = path.join(
-    process.cwd(),
-    `public/images/users/${user?.photo}`,
+
+  const user = await UserModel.findById((req.user as UserDocument)._id).select(
+    "photo",
   );
-  if (fs.existsSync(oldPhotoPath)) {
-    fs.unlinkSync(oldPhotoPath);
+  if (!user?.photo) {
+    return next();
   }
 
+  const oldPhotoPath = path.join(
+    process.cwd(),
+    "public",
+    "images",
+    "users",
+    user.photo as string,
+  );
+  try {
+    await fs.unlink(oldPhotoPath);
+  } catch (error: any) {
+    if (error.code !== "ENOENT") {
+      throw error;
+    }
+  }
   next();
 });
 
@@ -64,7 +82,7 @@ export const handleSendOtp = CatchError(async (req, res, next) => {
   if (!user) {
     throw new AppError("حساب کاربری متناسب با شماره موبایل موجود نیست", 404);
   }
-  
+
   const existingVerification = await VerificationModel.findOne({
     phoneNumber,
     isUsed: false,

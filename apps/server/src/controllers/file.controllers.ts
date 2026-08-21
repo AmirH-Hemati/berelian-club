@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "fs/promises";
 
 import type { NextFunction, Request, Response } from "express";
 
@@ -38,16 +38,23 @@ export const getAllFiles = getAll<FileDocument>(FileModel);
 
 export const downloadFileById = CatchError(async (req, res, next) => {
   const { id } = req.params;
+
   const file = await FileModel.findById(id);
   if (!file) {
     throw new AppError("فایلی یافت نشد", 404);
   }
+
   const filePath = path.join(process.cwd(), file.path);
 
-  if (!fs.existsSync(filePath)) {
-    throw new AppError("فایل روی سرور وجود ندارد.", 404);
-  }
-  res.download(filePath, file.originalName);
+  res.download(filePath, file.originalName, (err:any) => {
+    if (err) {
+      if (err.code === "ENOENT") {
+        return next(new AppError("فایل روی سرور وجود ندارد", 404));
+      }
+
+      return next(new AppError("خطا در دانلود فایل", 500));
+    }
+  });
 });
 
 export const deleteFile = CatchError(async (req: Request, res: Response) => {
@@ -56,8 +63,13 @@ export const deleteFile = CatchError(async (req: Request, res: Response) => {
   if (!file) {
     throw new AppError("فایل یافت نشد", 404);
   }
-  if (fs.existsSync(file.path)) {
-    fs.unlinkSync(file.path);
+
+  try {
+    await fs.unlink(file.path);
+  } catch (error: any) {
+    if (error.code !== "ENOENT") {
+      throw error;
+    }
   }
 
   await Promise.all([
@@ -65,8 +77,5 @@ export const deleteFile = CatchError(async (req: Request, res: Response) => {
     UserFileModel.deleteMany({ file: file._id }),
   ]);
 
-  res.status(204).json({
-    status: "success",
-    data: null,
-  });
+  res.status(204).send();
 });

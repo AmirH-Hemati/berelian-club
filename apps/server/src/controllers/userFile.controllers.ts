@@ -5,7 +5,6 @@ import { FileModel } from "../models/file.model.js";
 import UserFileModel from "../models/userFile.model.js";
 import { AppError } from "../utils/AppError.js";
 import path from "path";
-import fs from "fs";
 import { ApiFeatures } from "../utils/ApiFeatures.js";
 import UserModel from "../models/user.model.js";
 import NotificationService from "../services/reminder/NotificationService.js";
@@ -133,21 +132,31 @@ export const getUserFilesByAdmin = CatchError(
 
 export const downloadUserFile = CatchError(async (req, res, next) => {
   const { id } = req.params;
-  const userFile = await UserFileModel.find({
+
+  const userFile = await UserFileModel.findOne({
     file: id,
     user: (req.user as UserDocument)._id,
   });
+
   if (!userFile) {
     throw new AppError("فایل ارسالی برای کاربر یافت نشد", 404);
   }
+
   const file = await FileModel.findById(id);
+
   if (!file) {
     throw new AppError("فایلی یافت نشد", 404);
   }
+
   const filePath = path.join(process.cwd(), file.path);
 
-  if (!fs.existsSync(filePath)) {
-    throw new AppError("فایل روی سرور وجود ندارد.", 404);
-  }
-  res.download(filePath, file.originalName);
+  res.download(filePath, file.originalName, (err:any) => {
+    if (err) {
+      if (err.code === "ENOENT") {
+        return next(new AppError("فایل روی سرور وجود ندارد", 404));
+      }
+
+      return next(new AppError("خطا در دانلود فایل", 500));
+    }
+  });
 });

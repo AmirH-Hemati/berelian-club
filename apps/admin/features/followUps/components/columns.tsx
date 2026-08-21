@@ -8,6 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  StatusBadge
 } from "@repo/ui";
 import { Button } from "@repo/ui";
 import { Badge } from "@repo/ui";
@@ -21,7 +22,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/utils/helper";
-import StatusBadge from "@/features/requests/components/StatusBadge";
 import { useDeleteFollowUp } from "../hooks/useDeleteFollowUp";
 import { useCompleteFollowUp } from "../hooks/useCompleteFollowUp";
 import { FollowUpType } from "@repo/schema";
