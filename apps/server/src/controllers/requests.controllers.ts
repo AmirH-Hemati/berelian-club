@@ -33,7 +33,10 @@ export const approveRequest = CatchError(async (req, res, NextRequest) => {
   }
 
   if (request.status !== "pending") {
-    throw new AppError("این درخواست قبلا بررسی شده است", 400);
+    throw new AppError(
+      "این جلسه قبلاً بررسی شده و امکان تایید مجدد آن وجود ندارد",
+      400,
+    );
   }
 
   request.status = "approved";
@@ -122,7 +125,10 @@ export const rejectRequest = CatchError(async (req, res, NextRequest) => {
     throw new AppError("درخواستی یافت نشد", 404);
   }
   if (request.status !== "pending") {
-    throw new AppError("این درخواست قبلا بررسی شده است", 400);
+    throw new AppError(
+      "این جلسه قبلاً بررسی شده و امکان تایید مجدد آن وجود ندارد",
+      400,
+    );
   }
 
   request.status = "cancelled";

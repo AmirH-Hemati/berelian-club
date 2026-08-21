@@ -11,6 +11,7 @@ type SendNotification = {
     | "request_completed"
     | "appointment_approved"
     | "appointment_rejected"
+    | "appointment_completed"
     | "appointment_rescheduled"
     | "reminder"
     | "contract_start"

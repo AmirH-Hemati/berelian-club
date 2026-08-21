@@ -11,11 +11,13 @@ export interface NotificationDocument extends mongoose.Document {
     | "request_completed"
     | "appointment_approved"
     | "appointment_rejected"
+    | "appointment_completed"
     | "appointment_rescheduled"
     | "reminder"
     | "contract_start"
     | "contract_expiry"
     | "birthday";
+
   link?: string;
   deduplicationKey?: string;
   isRead: boolean;
@@ -49,6 +51,7 @@ const notificationSchema = new mongoose.Schema<NotificationDocument>(
         "request_completed",
         "appointment_approved",
         "appointment_rejected",
+        "appointment_completed",
         "appointment_rescheduled",
         "contract_start",
         "contract_expiry",

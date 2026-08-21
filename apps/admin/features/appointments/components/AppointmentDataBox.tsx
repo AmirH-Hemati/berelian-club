@@ -187,17 +187,18 @@ export default function AppointmentDataBox({ appointment }: Props) {
 
       <Separator />
       <CardFooter className="flex gap-2 w-full justify-end">
-        <RejectAppointmentDialog appointmentId={appointment._id} />
-        {(appointment.status === "pending" ||
-          appointment.status === "cancelled") && (
-          <Button
-            onClick={() => approveAppointment(appointment._id)}
-            disabled={isPending}
-            className="w-1/2 md:w-fit"
-          >
-            <CheckCircle className="size-4" />
-            تایید جلسه
-          </Button>
+        {appointment.status === "pending" && (
+          <>
+            <RejectAppointmentDialog appointmentId={appointment._id} />
+            <Button
+              onClick={() => approveAppointment(appointment._id)}
+              disabled={isPending}
+              className="w-1/2 md:w-fit"
+            >
+              <CheckCircle className="size-4" />
+              تایید جلسه
+            </Button>
+          </>
         )}
         {appointment.status === "approved" && (
           <Button
