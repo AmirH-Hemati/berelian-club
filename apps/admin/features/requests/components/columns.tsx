@@ -7,6 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  StatusBadge
 } from "@repo/ui";
 import { Button } from "@repo/ui";
 import {
@@ -17,7 +18,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { formatDate, formatToman } from "@/utils/helper";
-import StatusBadge from "./StatusBadge";
 import Typebadge from "./Typebadge";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
 import { useDeleteRequest } from "../hooks/useDeleteRequest";

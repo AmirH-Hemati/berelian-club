@@ -8,6 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  StatusBadge
 } from "@repo/ui";
 import { Button } from "@repo/ui";
 import {
@@ -19,7 +20,6 @@ import {
 import Link from "next/link";
 import { formatDate, formatToman } from "@/utils/helper";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
-import StatusBadge from "@/features/requests/components/StatusBadge";
 import Typebadge from "@/features/requests/components/Typebadge";
 import { useDeleteAppointment } from "../hooks/useDeleteAppointment";
 import { AppointmentType } from "@repo/schema";

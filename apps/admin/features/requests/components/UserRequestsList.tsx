@@ -18,10 +18,10 @@ import {
   AlertDescription,
   AlertTitle,
   CardSkeleton,
+  StatusBadge
 } from "@repo/ui";
 import { formatDate } from "@/utils/helper";
 import { useUserRequests } from "../hooks/useUserRequests";
-import StatusBadge from "./StatusBadge";
 import { useRouter } from "next/navigation";
 import { RequestType } from "@repo/schema";
 import AsyncState from "@/components/AsyncState";

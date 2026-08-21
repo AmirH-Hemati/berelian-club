@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
   Button,
   TableSkeleton,
+  StatusBadge
 } from "@repo/ui";
 
 import { PaginationControls } from "@/components/PaginationControls";
@@ -21,7 +22,6 @@ import { convertDate } from "@/utils/helper";
 import { AppointmentType } from "@repo/schema";
 import { CircleAlert, MoreHorizontalIcon } from "lucide-react";
 import Link from "next/link";
-import StatusBadge from "../../requests/components/StatusBadge";
 import Typebadge from "../../requests/components/Typebadge";
 import { typesMap } from "../data/typesMap";
 import { useAppointments } from "../hooks/useAppointments";

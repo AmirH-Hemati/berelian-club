@@ -18,12 +18,12 @@ import {
   CardHeader,
   CardTitle,
   CardSkeleton,
+  StatusBadge,
 } from "@repo/ui";
 import { convertDate } from "@/utils/helper";
 import { RequestType } from "@repo/schema";
 import { useRouter } from "next/navigation";
 import { useRecentRequests } from "../hooks/useRecentRequests";
-import StatusBadge from "./StatusBadge";
 
 export const typesMap = {
   consultation: {

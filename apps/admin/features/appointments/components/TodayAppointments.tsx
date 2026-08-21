@@ -1,7 +1,6 @@
 "use client";
 
 import AsyncState from "@/components/AsyncState";
-import StatusBadge from "@/features/requests/components/StatusBadge";
 import { formatDate, formatTime } from "@/utils/helper";
 import { AppointmentType } from "@repo/schema";
 import {
@@ -11,6 +10,7 @@ import {
   CardSkeleton,
   CardTitle,
   ScrollArea,
+  StatusBadge
 } from "@repo/ui";
 import { Calendar, CalendarX } from "lucide-react";
 import { useTodayAppointments } from "../hooks/useTodayAppointments";

@@ -12,8 +12,8 @@ import {
   CardTitle,
   CardSkeleton,
   cn,
+  StatusBadge
 } from "@repo/ui";
-import StatusBadge from "@/features/requests/components/StatusBadge";
 import { formatDate } from "@/utils/helper";
 import { useRouter } from "next/navigation";
 import { useRecentAppointments } from "../hooks/useRecentAppointments";

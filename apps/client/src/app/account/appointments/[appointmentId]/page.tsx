@@ -6,13 +6,13 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
+  StatusBadge
 } from "@repo/ui";
 import { Button } from "@repo/ui";
 import { Spinner } from "@repo/ui";
 import SessionReportCard from "@/features/account/appointments/components/SessionReportCard";
 import UserAppointmentDataBox from "@/features/account/appointments/components/UserAppointmentDataBox";
 import { useAppointment } from "@/features/account/appointments/hooks/useAppointment";
-import StatusBadge from "@/features/account/requests/components/StatusBadge";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 

@@ -6,10 +6,10 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
+  StatusBadge
 } from "@repo/ui";
 import { Button } from "@repo/ui";
 import { Spinner } from "@repo/ui";
-import StatusBadge from "@/features/account/requests/components/StatusBadge";
 import UserRequestDataBox from "@/features/account/requests/components/UserRequestDataBox";
 import { useRequest } from "@/features/account/requests/hooks/useRequest";
 import { ArrowRight } from "lucide-react";

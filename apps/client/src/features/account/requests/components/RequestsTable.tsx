@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
   Button,
   TableSkeleton,
+  StatusBadge
 } from "@repo/ui";
 
 import { PaginationControls } from "@/components/PaginationControls";
@@ -24,7 +25,6 @@ import Link from "next/link";
 import { typesMap } from "../data/typesMap";
 import { useDeleteRequest } from "../hooks/useDeleteRequest";
 import { useRequests } from "../hooks/useRequests";
-import StatusBadge from "./StatusBadge";
 import Typebadge from "./Typebadge";
 
 export default function RequestsTable() {
