@@ -8,6 +8,7 @@ type SendNotification = {
     | "file_received"
     | "request_approved"
     | "request_rejected"
+    | "request_completed"
     | "appointment_approved"
     | "appointment_rejected"
     | "appointment_rescheduled"
@@ -15,6 +16,7 @@ type SendNotification = {
     | "contract_start"
     | "contract_expiry"
     | "birthday";
+
   deduplicationKey?: string;
   link?: string;
 };

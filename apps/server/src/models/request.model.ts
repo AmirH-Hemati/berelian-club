@@ -4,7 +4,7 @@ export interface RequestDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;
   description: string;
   type: "renew_contract" | "increase_capital" | "decrease_capital";
-  status: "pending" | "approved" | "cancelled";
+  status: "pending" | "approved" | "cancelled" | "completed";
   createdAt: Date;
   updatedAt: Date;
   cancellationReason?: string;
@@ -28,7 +28,7 @@ const requestSchema = new mongoose.Schema<RequestDocument>(
     },
     status: {
       type: String,
-      enum: ["pending", "approved", "cancelled"],
+      enum: ["pending", "approved", "cancelled", "completed"],
       default: "pending",
       required: true,
     },

@@ -69,6 +69,51 @@ export const approveRequest = CatchError(async (req, res, NextRequest) => {
     },
   });
 });
+
+export const completeRequest = CatchError(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const request = await RequestModel.findById(id);
+
+    if (!request) {
+      throw new AppError("درخواستی یافت نشد", 404);
+    }
+    if (request.status !== "approved") {
+      throw new AppError("فقط درخواست‌های تایید شده را می‌توان تکمیل کرد", 400);
+    }
+    request.status = "completed";
+    await request.save();
+
+    const conversation = await ConversationModel.findOne({
+      request: id,
+    });
+
+    if (conversation) {
+      conversation.isActive = false;
+      await conversation.save();
+    }
+
+    await NotificationService.send({
+      userId: request.user._id.toString(),
+      title: "درخواست شما تکمیل شد",
+      message:
+        "درخواست شما با موفقیت تکمیل شد و مکالمه مربوط به این درخواست بسته شد.",
+      type: "request_completed",
+      link: `/requests/${request._id}`,
+      deduplicationKey: `request-completed-${request._id}`,
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: "درخواست با موفقیت تکمیل شد و مکالمه بسته گردید",
+      data: {
+        request,
+        conversation,
+      },
+    });
+  },
+);
+
 export const rejectRequest = CatchError(async (req, res, NextRequest) => {
   const { id } = req.params;
   const { reason } = req.body;

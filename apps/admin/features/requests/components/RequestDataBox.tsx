@@ -17,11 +17,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { RejectRequestDialog } from "./RejectRequestDialog";
+import { useCompleteRequest } from "../hooks/useCompleteRequest";
 
 type Props = { request: RequestType };
 
 export default function RequestDataBox({ request }: Props) {
   const { approveRequest, isPending } = useApproveRequest();
+  const { completeRequest, isCompleting } = useCompleteRequest();
 
   const isCancelled = request.status === "cancelled";
 
@@ -36,7 +38,7 @@ export default function RequestDataBox({ request }: Props) {
             </span>
           </div>
 
-          {request.status === "approved" && (
+          {request.status === "approved" || request.status === "completed" && (
             <Link href={`/chat/${request._id}`}>
               <Button variant="outline" size="sm" className="gap-2">
                 <MessagesSquare /> گفتگو
@@ -131,13 +133,11 @@ export default function RequestDataBox({ request }: Props) {
           </div>
         )}
       </CardContent>
-
-      {!isCancelled && (
-        <>
-          <Separator />
-
-          <CardFooter className="flex gap-2 justify-end w-full">
+      <CardFooter className="flex gap-2 justify-end w-full">
+        {request.status === "pending" && (
+          <>
             <RejectRequestDialog requestId={request._id} />
+
             <Button
               onClick={() => approveRequest(request._id)}
               disabled={isPending}
@@ -146,9 +146,20 @@ export default function RequestDataBox({ request }: Props) {
               <CheckCircle />
               تایید درخواست
             </Button>
-          </CardFooter>
-        </>
-      )}
+          </>
+        )}
+
+        {request.status === "approved" && (
+          <Button
+            onClick={() => completeRequest(request._id)}
+            disabled={isCompleting}
+            className="w-full md:w-fit"
+          >
+            <CheckCircle />
+            تکمیل درخواست
+          </Button>
+        )}
+      </CardFooter>
     </Card>
   );
 }

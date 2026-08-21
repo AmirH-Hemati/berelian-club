@@ -10,6 +10,7 @@ import {
   rejectRequest,
   getUserRequests,
   getTodayRequests,
+  completeRequest,
 } from "../controllers/requests.controllers.js";
 import { protectedRoute, restrictTo } from "../controllers/auth.controllers.js";
 import { validateZod } from "../middlewares/validateZod.js";
@@ -32,6 +33,7 @@ router.use(restrictTo("admin"));
 
 router.get("/today", getTodayRequests);
 router.get("/userRequests/:id/", getUserRequests);
+router.patch("/:id/complete", completeRequest);
 router.patch("/:id/approve", approveRequest);
 router.patch("/:id/reject", rejectRequest);
 router.route("/:id").patch(updateRequest);
