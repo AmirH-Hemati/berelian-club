@@ -1,19 +1,19 @@
 import type { NextFunction, Request, Response } from "express";
 import RequestModel, { type RequestDocument } from "../models/request.model.js";
-import {
-  createOne,
-  deleteOne,
-  getAll,
-  getOne,
-  updateOne,
-} from "./handlerFactory.js";
+import { createOne, getAll, getOne, updateOne } from "./handlerFactory.js";
 import CatchError from "../utils/catchAsync.js";
 import { AppError } from "../utils/AppError.js";
 import type { UserDocument } from "../models/user.model.js";
 import { ApiFeatures } from "../utils/ApiFeatures.js";
 import { ConversationModel } from "../models/conversation.model.js";
-import NotificationModel from "../models/notification.model.js";
 import { MessageModel } from "../models/message.model.js";
+import NotificationService from "../services/reminder/NotificationService.js";
+
+export const REQUEST_TYPE_LABELS = {
+  renew_contract: "تمدید قرارداد",
+  increase_capital: "افزایش سرمایه",
+  decrease_capital: "کاهش سرمایه",
+} as const;
 
 export const setRequestUserId = (
   req: Request,
@@ -49,11 +49,15 @@ export const approveRequest = CatchError(async (req, res, NextRequest) => {
     conversation.isActive = true;
     await conversation.save();
   }
-  await NotificationModel.create({
-    user: request.user._id,
+  const requestTypeLabel = REQUEST_TYPE_LABELS[request.type];
+
+  await NotificationService.send({
+    userId: request.user._id.toString(),
     title: "درخواست شما تایید شد",
-    message: `درخواست ${request.type} شما تایید شد. برای ادامه گفتگو وارد چت شوید.`,
-    type: "reminder",
+    message: `درخواست ${requestTypeLabel} شما تأیید شد. برای ادامه گفتگو وارد چت شوید.`,
+    type: "request_approved",
+    link: `/chat/${request._id}`,
+    deduplicationKey: `request-approved-${request._id}`,
   });
 
   res.status(200).json({
@@ -72,7 +76,6 @@ export const rejectRequest = CatchError(async (req, res, NextRequest) => {
   if (!request) {
     throw new AppError("درخواستی یافت نشد", 404);
   }
-
   if (request.status !== "pending") {
     throw new AppError("این درخواست قبلا بررسی شده است", 400);
   }
@@ -80,8 +83,17 @@ export const rejectRequest = CatchError(async (req, res, NextRequest) => {
   request.status = "cancelled";
   request.cancellationReason = reason || "کنسل شده توسط ادمین";
   request.cancelledBy = (req.user as UserDocument)._id;
-
   await request.save();
+
+  await NotificationService.send({
+    userId: request.user._id.toString(),
+    title: "درخواست شما لغو شد",
+    message: `درخواست ${REQUEST_TYPE_LABELS[request.type]} شما لغو شد.`,
+    type: "request_rejected",
+    link: `/requests/${request._id}`,
+    deduplicationKey: `request-cancelled-${request._id}`,
+  });
+
   res.status(200).json({
     status: "success",
     message: "درخواست با موفقیت کنسل شد",

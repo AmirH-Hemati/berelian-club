@@ -1,45 +1,31 @@
 "use client";
 
 import {
+  Badge,
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-  Badge,
-  Button,
   ScrollArea,
   Spinner,
+  cn,
 } from "@repo/ui";
 
-import { cn } from "@repo/ui";
 import { convertDate } from "@/utils/helper";
-import {
-  Bell,
-  Calendar,
-  Check,
-  CheckCheck,
-  Gift,
-  RefreshCw,
-} from "lucide-react";
-import { useMyNotifications } from "../hooks/useMyNotifications";
+import { NotificationType } from "@repo/schema";
+import { Bell, Check, CheckCheck } from "lucide-react";
 import { useMarkAllNotificationsAsRead } from "../hooks/useMarkAllNotificationsAsRead";
 import { useMarkNotificationAsRead } from "../hooks/useMarkNotificationAsRead";
-import { NotificationType } from "@repo/schema";
-
-const notificationTypes = {
-  birthday: { icon: Gift, className: "text-pink-500 bg-pink-50" },
-  contract_expiry: {
-    icon: RefreshCw,
-    className: "text-orange-500 bg-orange-50",
-  },
-  contract_start: { icon: Calendar, className: "text-blue-500 bg-blue-50" },
-  reminder: { icon: Bell, className: "text-gray-500 bg-gray-50" },
-};
+import { useMyNotifications } from "../hooks/useMyNotifications";
+import { notificationTypes } from "../data/notificationTypes";
+import Link from "next/link";
 
 export default function NotificationsDropdown() {
   const { notifications, isLoading } = useMyNotifications();
   const { markAllAsRead, isMarkingAll } = useMarkAllNotificationsAsRead();
   const { markAsRead, isMarking } = useMarkNotificationAsRead();
   if (isLoading) return <Spinner />;
+  console.log(notifications);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -124,9 +110,14 @@ export default function NotificationsDropdown() {
                           </span>
                         </div>
                         <div className="flex items-center justify-between gap-4">
-                          <p className="text-200 text-muted-foreground mt-1 flex-1 ">
-                            {notif.message}
-                          </p>
+                          <div className="space-y-1 flex-1 text-200 text-muted-foreground">
+                            <p>{notif.message}</p>
+                            {notif.link && (
+                              <Link href={`/account${notif.link}`}>
+                                <Button variant="link">مشاهده</Button>
+                              </Link>
+                            )}
+                          </div>
                           {!notif.isRead && (
                             <Button
                               size="icon"

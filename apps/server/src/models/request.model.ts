@@ -3,8 +3,7 @@ import mongoose, { Query } from "mongoose";
 export interface RequestDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;
   description: string;
-  type:
-    "consultation" | "renew_contract" | "increase_capital" | "decrease_capital";
+  type: "renew_contract" | "increase_capital" | "decrease_capital";
   status: "pending" | "approved" | "cancelled";
   createdAt: Date;
   updatedAt: Date;
@@ -20,12 +19,7 @@ const requestSchema = new mongoose.Schema<RequestDocument>(
     },
     type: {
       type: String,
-      enum: [
-        "consultation",
-        "renew_contract",
-        "increase_capital",
-        "decrease_capital",
-      ],
+      enum: ["renew_contract", "increase_capital", "decrease_capital"],
       required: true,
     },
     description: {
@@ -55,10 +49,10 @@ const requestSchema = new mongoose.Schema<RequestDocument>(
 requestSchema.pre<Query<RequestDocument, RequestDocument>>(
   /^find/,
   function () {
-    this.populate("user", "firstName lastName photo _id phoneNumber nationalCode " ).populate(
-      "cancelledBy",
-      "firstName lastName",
-    );
+    this.populate(
+      "user",
+      "firstName lastName photo _id phoneNumber nationalCode ",
+    ).populate("cancelledBy", "firstName lastName");
   },
 );
 

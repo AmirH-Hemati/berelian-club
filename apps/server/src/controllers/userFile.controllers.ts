@@ -8,6 +8,7 @@ import path from "path";
 import fs from "fs";
 import { ApiFeatures } from "../utils/ApiFeatures.js";
 import UserModel from "../models/user.model.js";
+import NotificationService from "../services/reminder/NotificationService.js";
 
 export const sendFileToUser = CatchError(
   async (req: Request, res: Response) => {
@@ -22,6 +23,15 @@ export const sendFileToUser = CatchError(
       user: userId,
       file: file._id,
       sentBy: (req.user as UserDocument)._id,
+    });
+
+    await NotificationService.send({
+      userId: userId.toString(),
+      title: "فایل جدید برای شما ارسال شد",
+      message: `فایل «${file.originalName}» برای شما ارسال شد.`,
+      type: "file_received",
+      link: `/learning`,
+      deduplicationKey: `file-received-${userFile._id}`,
     });
 
     res.status(201).json({

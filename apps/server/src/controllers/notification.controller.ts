@@ -3,13 +3,21 @@ import CatchError from "../utils/catchAsync.js";
 import NotificationModel from "../models/notification.model.js";
 import type { UserDocument } from "../models/user.model.js";
 import { AppError } from "../utils/AppError.js";
+import { ApiFeatures } from "../utils/ApiFeatures.js";
 
 export const getMyNotifications = CatchError(
   async (req: Request, res: Response) => {
     const userId = (req.user as UserDocument)._id;
-    const notifications = await NotificationModel.find({ user: userId }).sort({
-      createdAt: 1,
-    });
+    const features = new ApiFeatures(
+      NotificationModel.find({ user: userId }),
+      req.query,
+    )
+      .filter()
+      .search()
+      .sort()
+      .fields();
+    const { total, limit, page, totalPages } = await features.pagination();
+    const notifications = await features.query;
     const unreadCount = await NotificationModel.countDocuments({
       user: userId,
       isRead: false,
@@ -18,6 +26,12 @@ export const getMyNotifications = CatchError(
     res.status(200).json({
       status: "success",
       data: { notifications, unreadCount },
+      pagination: {
+        totalPages,
+        total,
+        limit,
+        page,
+      },
     });
   },
 );

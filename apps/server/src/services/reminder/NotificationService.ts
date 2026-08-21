@@ -2,35 +2,46 @@ import NotificationModel from "../../models/notification.model.js";
 
 type SendNotification = {
   userId: string;
-
   title: string;
-
   message: string;
-
-  type: "contract_start" | "contract_expiry" | "birthday" | "reminder";
+  type:
+    | "file_received"
+    | "request_approved"
+    | "request_rejected"
+    | "appointment_approved"
+    | "appointment_rejected"
+    | "appointment_rescheduled"
+    | "reminder"
+    | "contract_start"
+    | "contract_expiry"
+    | "birthday";
+  deduplicationKey?: string;
+  link?: string;
 };
 class NotificationService {
   async send(data: SendNotification) {
-    const today = new Date().toISOString().split("T")[0];
     return NotificationModel.create({
       user: data.userId,
       title: data.title,
       message: data.message,
       type: data.type,
-      deduplicationKey: `${data.type}-${today}`,
+      link: data.link,
+      deduplicationKey: data.deduplicationKey,
     });
   }
+
   async sendMany(notifications: SendNotification[]) {
     if (!notifications.length) return;
-    const today = new Date().toISOString().split("T")[0];
 
     const docs = notifications.map((n) => ({
       user: n.userId,
       title: n.title,
       message: n.message,
       type: n.type,
-      deduplicationKey: `${n.type}-${today}`,
+      link: n.link,
+      deduplicationKey: n.deduplicationKey,
     }));
+
     try {
       await NotificationModel.insertMany(docs, {
         ordered: false,

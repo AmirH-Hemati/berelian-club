@@ -13,6 +13,8 @@ import AppointmentModel, {
 } from "../models/appointment.model.js";
 import type { UserDocument } from "../models/user.model.js";
 import NotificationModel from "../models/notification.model.js";
+import NotificationService from "../services/reminder/NotificationService.js";
+import { formatPersianDate } from "../utils/date.js";
 
 export const setAppointmentUserId = (
   req: Request,
@@ -25,17 +27,27 @@ export const setAppointmentUserId = (
 
 export const approveAppointment = CatchError(async (req, res, NextRequest) => {
   const { id } = req.params;
-  const request = await AppointmentModel.findById(id);
-  if (!request) {
+  const appointment = await AppointmentModel.findById(id);
+  if (!appointment) {
     throw new AppError("درخواستی یافت نشد", 404);
   }
 
-  request.status = "approved";
-  await request.save();
+  appointment.status = "approved";
+  await appointment.save();
+
+  await NotificationService.send({
+    userId: appointment.user._id.toString(),
+    title: "مشاوره شما تأیید شد",
+    message: `درخواست مشاوره شما برای تاریخ ${formatPersianDate(appointment.appointmentDate)} تأیید شد.`,
+    type: "appointment_approved",
+    link: `/appointments/${appointment._id}`,
+    deduplicationKey: `appointment-approved-${appointment._id}`,
+  });
+
   res.status(200).json({
     status: "success",
     message: "جلسه مشاوره با موفقیت تایید شد",
-    data: request,
+    data: appointment,
   });
 });
 export const rejectAppointment = CatchError(
@@ -60,11 +72,13 @@ export const rejectAppointment = CatchError(
     appointment.cancelledBy = (req.user as UserDocument)._id;
     await appointment.save();
 
-    await NotificationModel.create({
-      user: appointment.user,
-      title: "کنسل شدن جلسه مشاوره",
-      message: `جلسه مشاوره شما کنسل شد.${reason ? `\nدلیل: ${reason}` : ""}`,
-      type: "reminder",
+    await NotificationService.send({
+      userId: appointment.user._id.toString(),
+      title: "درخواست مشاوره شما تأیید نشد",
+      message: `متأسفانه درخواست مشاوره شما برای تاریخ ${formatPersianDate(appointment.appointmentDate)} تأیید نشد.`,
+      type: "appointment_rejected",
+      link: `/appointments/${appointment._id}`,
+      deduplicationKey: `appointment-rejected-${appointment._id}`,
     });
 
     res.status(200).json({
@@ -115,11 +129,15 @@ export const rescheduleAppointment = CatchError(
     appointment.rescheduledBy = (req.user as UserDocument)._id;
     await appointment.save();
 
-    await NotificationModel.create({
-      user: appointment.user,
-      title: "تغییر زمان مشاوره",
-      message: `زمان جلسه مشاوره شما به ${newAppointmentDate.toLocaleDateString("fa-IR")} تغییر یافت.${reason ? `\nدلیل: ${reason}` : ""}`,
-      type: "reminder",
+    await NotificationService.send({
+      userId: appointment.user._id.toString(),
+      title: "زمان مشاوره تغییر کرد",
+      message: `زمان جلسه مشاوره شما به ${formatPersianDate(appointment.appointmentDate)} تغییر یافت.${
+        reason ? ` دلیل: ${reason}` : ""
+      }`,
+      type: "appointment_rescheduled",
+      link: `/appointments/${appointment._id}`,
+      deduplicationKey: `appointment-rescheduled-${appointment._id}-${new Date(newAppointmentDate).getTime()}`,
     });
 
     res.status(200).json({

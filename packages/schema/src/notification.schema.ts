@@ -4,6 +4,7 @@ export interface NotificationType {
   message: string;
   isRead: boolean;
   type: "birthday" | "contract_expiry" | "contract_start" | "reminder" | "type";
+  link:string;
   createdAt: string;
   updatedAt: string;
 }

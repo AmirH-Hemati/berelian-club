@@ -7,6 +7,7 @@ class ContractStartReminder {
 
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
+    const dateKey = today.toISOString().split("T")[0];
 
     const users = await UserModel.find({
       contractStartDate: {
@@ -25,6 +26,7 @@ class ContractStartReminder {
       title: "📄 شروع قرارداد",
       message: `${user.firstName} ${user.lastName} عزیز، قرارداد شما از امروز آغاز شده است.`,
       type: "contract_start" as const,
+      deduplicationKey: `${user._id}-contract_start-${dateKey}`,
     }));
 
     await NotificationService.sendMany(notifications);

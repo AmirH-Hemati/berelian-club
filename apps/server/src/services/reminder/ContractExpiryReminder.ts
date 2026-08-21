@@ -10,6 +10,7 @@ class ContractExpiryReminder {
 
     const targetDayEnd = new Date(targetDayStart);
     targetDayEnd.setHours(23, 59, 59, 999);
+    const dateKey = today.toISOString().split("T")[0];
 
     const users = await UserModel.find({
       isActive: true,
@@ -35,6 +36,7 @@ class ContractExpiryReminder {
 لطفاً برای تمدید قرارداد اقدام نمایید.`,
 
       type: "contract_expiry" as const,
+      deduplicationKey: `${user._id}-contract_expiry-${dateKey}`,
     }));
 
     await NotificationService.sendMany(notifications);

@@ -4,8 +4,19 @@ export interface NotificationDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;
   title: string;
   message: string;
-  type: "contract_start" | "contract_expiry" | "birthday" | "reminder";
-  deduplicationKey: string;
+  type:
+    | "file_received"
+    | "request_approved"
+    | "request_rejected"
+    | "appointment_approved"
+    | "appointment_rejected"
+    | "appointment_rescheduled"
+    | "reminder"
+    | "contract_start"
+    | "contract_expiry"
+    | "birthday";
+  link?: string;
+  deduplicationKey?: string;
   isRead: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -29,12 +40,29 @@ const notificationSchema = new mongoose.Schema<NotificationDocument>(
     },
     type: {
       type: String,
-      enum: ["contract_start", "contract_expiry", "birthday", "reminder"],
       required: true,
+      enum: [
+        "file_received",
+        "request_approved",
+        "request_rejected",
+        "appointment_approved",
+        "appointment_rejected",
+        "appointment_rescheduled",
+        "contract_start",
+        "contract_expiry",
+        "birthday",
+        "reminder",
+      ],
+    },
+    link: {
+      type: String,
+      required: false,
     },
     deduplicationKey: {
       type: String,
       required: false,
+      unique: true,
+      sparse: true,
     },
     isRead: {
       type: Boolean,
@@ -48,6 +76,7 @@ notificationSchema.index(
   { createdAt: 1 },
   { expireAfterSeconds: 20 * 24 * 60 * 60 },
 );
+
 notificationSchema.index(
   {
     user: 1,
