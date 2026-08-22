@@ -187,4 +187,25 @@ export class AppointmentService {
 
     return appointments;
   }
+
+  async countPendingAppointments() {
+    return AppointmentModel.countDocuments({
+      status: "pending",
+    });
+  }
+  async countTodayApprovedAppointments() {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(startOfDay);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    return AppointmentModel.countDocuments({
+      status: "approved",
+      appointmentDate: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
+    });
+  }
 }

@@ -123,7 +123,12 @@ export class NotificationService {
       },
     );
   }
-
+  async countUnread(userId: string) {
+    return NotificationModel.countDocuments({
+      user: userId,
+      isRead: false,
+    });
+  }
   async deleteNotification(notificationId: string, userId: string) {
     const notification = await NotificationModel.findOneAndDelete({
       _id: notificationId,

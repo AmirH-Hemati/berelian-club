@@ -178,20 +178,26 @@ export class RequestService {
         createdAt: -1,
       });
   }
+  async countPendingRequests(userId?: string) {
+    const filter: Record<string, unknown> = {
+      status: "pending",
+    };
 
+    if (userId) {
+      filter.user = userId;
+    }
+
+    return RequestModel.countDocuments(filter);
+  }
   async deleteRequest(requestId: string, userId: string, isAdmin: boolean) {
     // const request = await RequestModel.findById(requestId);
-
     // if (!request) {
     //   throw new AppError("درخواست یافت نشد", 404);
     // }
-
     // if (!isAdmin && request.user.toString() !== userId) {
     //   throw new AppError("شما دسترسی به این درخواست ندارید", 403);
     // }
-
     // await this.conversationService.deleteByRequest(requestId);
-
     // await RequestModel.findByIdAndDelete(requestId);
   }
 }

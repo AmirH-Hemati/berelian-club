@@ -1,13 +1,14 @@
 import express from "express";
-import { protectedRoute, restrictTo } from "../controllers/auth.controllers.js";
 import {
   createSessionReport,
   deleteSessionReport,
   getSessionReport,
-} from "../controllers/sessionReport.controllers.js";
-import { validateZod } from "../middlewares/validateZod.js";
+} from "./session-report.controller.js";
 import { sessionReportSchema } from "@repo/schema";
-import { convertDateFields } from "../middlewares/convertDateFields.js";
+import { protectedRoute } from "../../middlewares/auth.middleware.js";
+import { restrictTo } from "../../middlewares/authorization.middleware.js";
+import { convertDateFields } from "../../middlewares/convertDateFields.js";
+import { validateZod } from "../../middlewares/validateZod.js";
 
 const router = express.Router();
 

@@ -1,15 +1,14 @@
 import { Router } from "express";
-import {
-  protectedRoute,
-  restrictTo,
-} from "../controllers/auth.controllers.js";
+
 import {
   completeFollowUp,
   deleteFollowUp,
   getAllFollowUps,
   getOverdueFollowUps,
   getTodayFollowUps,
-} from "../controllers/followUps.controllers.js";
+} from "./follow-up.controller.js";
+import { protectedRoute } from "../../middlewares/auth.middleware.js";
+import { restrictTo } from "../../middlewares/authorization.middleware.js";
 
 const router = Router();
 
