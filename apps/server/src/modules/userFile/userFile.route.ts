@@ -4,11 +4,9 @@ import {
   getUserFiles,
   sendFileToAllInvestors,
   sendFileToUser,
-} from "../controllers/userFile.controllers.js";
-import {
-  protectedRoute,
-  restrictTo,
-} from "../controllers/auth.controllers.js";
+} from "./userFile.controller.js";
+import { protectedRoute } from "../../middlewares/auth.middleware.js";
+import { restrictTo } from "../../middlewares/authorization.middleware.js";
 
 const router = express.Router();
 

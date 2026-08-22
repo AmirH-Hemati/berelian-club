@@ -6,6 +6,7 @@ import { MessageService } from "../modules/message/message.service.js";
 import { NotificationService } from "../modules/notification/notification.service.js";
 import { RequestService } from "../modules/request/request.service.js";
 import { TokenService } from "../modules/token/TokenService.js";
+import { UserFileService } from "../modules/userFile/userFile.service.js";
 import { OtpService } from "../modules/verification/verification.service.js";
 import { SmsService } from "../services/sms/sms.service.js";
 
@@ -18,10 +19,12 @@ export const authService = new AuthService(otpService, tokenService);
 export const notificationService = new NotificationService();
 export const appointmentService = new AppointmentService(notificationService);
 export const conversationService = new ConversationService();
-export const fileService = new FileService();
 
 export const messageService = new MessageService(conversationService);
 export const requestService = new RequestService(
   notificationService,
   conversationService,
 );
+
+export const fileService = new FileService();
+export const userFileService = new UserFileService(fileService, notificationService);
