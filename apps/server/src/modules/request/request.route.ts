@@ -11,10 +11,11 @@ import {
   getUserRequests,
   getTodayRequests,
   completeRequest,
-} from "../controllers/requests.controllers.js";
-import { protectedRoute, restrictTo } from "../controllers/auth.controllers.js";
-import { validateZod } from "../middlewares/validateZod.js";
+} from "./request.controller.js";
 import { createRequestSchema } from "@repo/schema";
+import { protectedRoute } from "../../middlewares/auth.middleware.js";
+import { restrictTo } from "../../middlewares/authorization.middleware.js";
+import { validateZod } from "../../middlewares/validateZod.js";
 
 const router = express.Router();
 router.use(protectedRoute);

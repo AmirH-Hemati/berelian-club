@@ -1,5 +1,5 @@
+import { notificationService } from "../../container/index.js";
 import UserModel from "../../models/user.model.js";
-import NotificationService from "./NotificationService.js";
 
 class ContractExpiryReminder {
   async run(today: Date) {
@@ -39,7 +39,7 @@ class ContractExpiryReminder {
       deduplicationKey: `${user._id}-contract_expiry-${dateKey}`,
     }));
 
-    await NotificationService.sendMany(notifications);
+    await notificationService.sendMany(notifications);
   }
 }
 

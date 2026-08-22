@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
 
 import type { UserDocument } from "../../models/user.model.js";
-import { dashboardService } from "../container/index.js";
 import CatchError from "../../utils/catchAsync.js";
+import { dashboardService } from "../../container/index.js";
 
 export const getStats = CatchError(async (req: Request, res: Response) => {
   const userId = (req.user as UserDocument)._id.toString();
