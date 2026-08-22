@@ -5,7 +5,6 @@ import { ApiFeatures } from "../utils/ApiFeatures.js";
 
 export const createOne = <T>(Model: Model<T>) =>
   CatchError(async (req, res, next) => {
-    console.log(req.body);
     const document = await Model.create(req.body);
 
     res.status(201).json({

@@ -1,12 +1,12 @@
 import type { NextFunction } from "express";
-import userModel, { type UserDocument } from "../models/user.model.js";
+import userModel, { type UserDocument } from "../../models/user.model.js";
 import {
   createOne,
   deleteOne,
   getAll,
   getOne,
   updateOne,
-} from "./handlerFactory.js";
+} from "../../controllers/handlerFactory.js";
 
 export const setUserId = (req: Request, res: Response, next: NextFunction) => {
   const userId = (req.user as UserDocument)._id.toString();

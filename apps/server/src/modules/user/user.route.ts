@@ -5,15 +5,19 @@ import {
   getUser,
   getUsers,
   updateUser,
-} from "../controllers/users.controllers.js";
-import { validateZod } from "../middlewares/validateZod.js";
+  setUserId,
+} from "./user.controller.js";
+import { validateZod } from "../../middlewares/validateZod.js";
 
 import { createUserSchema, updateUserSchema } from "@repo/schema";
-import { convertDateFields } from "../middlewares/convertDateFields.js";
-import { protectedRoute, restrictTo } from "../controllers/auth.controllers.js";
+import { convertDateFields } from "../../middlewares/convertDateFields.js";
+import { protectedRoute } from "../../middlewares/auth.middleware.js";
+import { restrictTo } from "../../middlewares/authorization.middleware.js";
 const router = express.Router();
 
 router.use(protectedRoute);
+router.get("/me", setUserId, getUser);
+
 router.use(restrictTo("admin"));
 
 router
@@ -24,7 +28,6 @@ router
     validateZod(createUserSchema),
     createUser,
   );
-router.get("/me", setUserId, getUser);
 
 router
   .route("/:id")

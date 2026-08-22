@@ -1,12 +1,13 @@
 import express from "express";
-import { protectedRoute, restrictTo } from "../controllers/auth.controllers.js";
 import {
   deleteFile,
   downloadFileById,
   getAllFiles,
   uploadFile,
-} from "../controllers/file.controllers.js";
-import { upload } from "../config/multer.config.js";
+} from "./file.controller.js";
+import { protectedRoute } from "../../middlewares/auth.middleware.js";
+import { restrictTo } from "../../middlewares/authorization.middleware.js";
+import { upload } from "../../config/multer.config.js";
 
 const router = express.Router();
 
