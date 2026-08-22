@@ -3,7 +3,7 @@ import CatchError from "../utils/catchAsync.js";
 import type { UserDocument } from "../models/user.model.js";
 import { AppError } from "../utils/AppError.js";
 import { ConversationModel } from "../models/conversation.model.js";
-import { MessageModel } from "../models/message.model.js";
+import { MessageModel, type MessageDocument } from "../models/message.model.js";
 import { getReceiverSocketId, io } from "../utils/setupSocket.js";
 import { FileModel } from "../models/file.model.js";
 
@@ -65,25 +65,88 @@ export const getMessages = CatchError(async (req: Request, res: Response) => {
   const { conversationId } = req.params;
 
   const conversation = await ConversationModel.findById(conversationId);
+
   if (!conversation) {
     throw new AppError("مکالمه یافت نشد", 404);
   }
+
   const user = req.user as UserDocument;
+
   const isParticipant = conversation.participants.some(
-    (p) => p._id.toString() === user._id.toString(),
+    (participant) => participant.toString() === user._id.toString(),
   );
+
   if (!isParticipant && user.role !== "admin") {
     throw new AppError("شما دسترسی به این مکالمه ندارید", 403);
   }
 
-  const messages = await MessageModel.find({ conversation: conversationId })
+  const requestedLimit = Number(req.query.limit);
+
+  const limit =
+    Number.isFinite(requestedLimit) && requestedLimit > 0
+      ? Math.min(requestedLimit, 50)
+      : 30;
+
+  const before = req.query.before as string | undefined;
+  // : FilterQuery<MessageDocument>
+  const query = {
+    conversation: conversationId,
+  };
+
+  if (before) {
+    const [createdAt, messageId] = before.split("_");
+
+    if (!createdAt || !messageId) {
+      throw new AppError("Cursor نامعتبر است", 400);
+    }
+
+    query.$or = [
+      {
+        createdAt: {
+          $lt: new Date(createdAt),
+        },
+      },
+      {
+        createdAt: new Date(createdAt),
+        _id: {
+          $lt: messageId,
+        },
+      },
+    ];
+  }
+
+  const messages = await MessageModel.find(query)
+    .populate("file")
     .populate("sender", "firstName lastName")
     .populate("receiver", "firstName lastName")
-    .sort({ createdAt: 1 });
+    .sort({
+      createdAt: -1,
+      _id: -1,
+    })
+    .limit(limit + 1)
+    .lean();
+
+  const hasMore = messages.length > limit;
+
+  if (hasMore) {
+    messages.pop();
+  }
+
+  messages.reverse();
+
+  const oldestMessage = messages[0];
+
+  const nextCursor = oldestMessage
+    ? `${oldestMessage.createdAt.toISOString()}_${oldestMessage._id}`
+    : null;
 
   res.status(200).json({
     status: "success",
-    data: messages,
+    data: {
+      messages,
+      hasMore,
+      nextCursor,
+    },
   });
 });
 

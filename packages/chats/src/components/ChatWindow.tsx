@@ -1,16 +1,16 @@
 "use client";
 
-import { ScrollArea, DownloadButton } from "@repo/ui";
+import { ScrollArea, DownloadButton, Spinner } from "@repo/ui";
 import { cn } from "@repo/ui";
 import { formatFileSize, formatTimeOnly } from "@/utils/helper";
 import { FileIcon, MessageCircle } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { useGetConversationMessages } from "../hooks/useGetConversationMessages";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useJoinConversation } from "../hooks/useJoinConversation";
 import { useNewMessages } from "../hooks/useNewMessage";
 import InputMessage from "./InputMessage";
 import { UserType } from "@repo/schema";
-
+import { useGetConversationMessages } from "../hooks/useGetConversationMessages";
+import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 interface ChatWindowProps {
   conversationId: string;
   currentUser: UserType;
@@ -25,18 +25,44 @@ export function ChatWindow({
   sendFileIconAction,
 }: ChatWindowProps) {
   const [isAtBottom, setIsAtBottom] = useState(true);
+  const [initialScrollDone, setInitialScrollDone] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const { messages, isLoading } = useGetConversationMessages(conversationId);
+  const {
+    messages,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useGetConversationMessages(conversationId);
+
+  const loadOlderMessages = useCallback(async () => {
+    if (!isFetchingNextPage && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetchingNextPage]);
+  const topSentinelRef = useIntersectionObserver(loadOlderMessages, {
+    enabled: initialScrollDone && hasNextPage,
+    threshold: 0,
+  });
 
   useJoinConversation(conversationId);
   useNewMessages(conversationId);
 
   useEffect(() => {
-    if (messagesEndRef.current && isAtBottom) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    if (
+      !isLoading &&
+      messages?.length > 0 &&
+      !initialScrollDone &&
+      isAtBottom
+    ) {
+      messagesEndRef.current?.scrollIntoView({
+        behavior: "instant",
+      });
+
+      setInitialScrollDone(true);
     }
-  }, [messages, isAtBottom]);
+  }, [isLoading, messages, initialScrollDone, isAtBottom]);
 
   const groupMessagesByDate = (messages: any[]) => {
     if (!messages) return [];
@@ -70,8 +96,14 @@ export function ChatWindow({
 
   return (
     <div className="flex flex-col h-full overflow-hidden bg-linear-to-b from-background to-muted/10">
-      <ScrollArea className="flex-1 p-4  overflow-auto">
+      <ScrollArea className="flex-1 p-4 overflow-auto">
         <div className="space-y-6">
+          <div ref={topSentinelRef} className="h-1" />
+          {isFetchingNextPage && (
+            <div className="flex justify-center py-2">
+              <Spinner />
+            </div>
+          )}
           {messages?.length === 0 ? (
             <div className="flex flex-col items-center justify-center text-center">
               <div className="size-24 bg-primary/10 rounded-full flex items-center justify-center mb-4">

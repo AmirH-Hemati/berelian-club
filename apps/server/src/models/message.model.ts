@@ -60,7 +60,11 @@ messageSchema.pre<Query<MessageDocument, MessageDocument>>(
     this.populate("file").populate("sender", "firstName lastName");
   },
 );
-messageSchema.index({ conversation: 1, createdAt: -1 });
+messageSchema.index({
+  conversation: 1,
+  createdAt: -1,
+  _id: -1,
+});
 
 export const MessageModel = mongoose.model<MessageDocument>(
   "Message",
