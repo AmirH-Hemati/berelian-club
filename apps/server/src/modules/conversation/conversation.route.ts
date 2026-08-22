@@ -1,7 +1,10 @@
 import express from "express";
 
-import { protectedRoute } from "../controllers/auth.controllers.js";
-import { closeConversation, getConversationByRequest } from "../controllers/conversation.controller.js";
+import {
+  closeConversation,
+  getConversationByRequest,
+} from "./conversation.controller.js";
+import { protectedRoute } from "../../middlewares/auth.middleware.js";
 
 const router = express.Router();
 

@@ -6,7 +6,6 @@ import UserFileModel from "../models/userFile.model.js";
 import { AppError } from "../utils/AppError.js";
 import path from "path";
 import { ApiFeatures } from "../utils/ApiFeatures.js";
-import UserModel from "../models/user.model.js";
 import NotificationService from "../services/reminder/NotificationService.js";
 
 export const sendFileToUser = CatchError(
@@ -68,18 +67,12 @@ export const sendFileToAllInvestors = CatchError(
       targetRole: "investor",
     });
 
-    const investorsCount = await UserModel.countDocuments({
-      role: "investor",
-      isActive: true,
-    });
-
     res.status(201).json({
       status: "success",
-      message: `فایل برای ${investorsCount} سرمایه‌گذار ارسال شد`,
+      message: `فایل برای  تمامی سرمایه‌گذاران ارسال شد`,
       data: {
         file: file.originalName,
         targetRole: "investor",
-        investorsCount,
       },
     });
   },
@@ -150,7 +143,7 @@ export const downloadUserFile = CatchError(async (req, res, next) => {
 
   const filePath = path.join(process.cwd(), file.path);
 
-  res.download(filePath, file.originalName, (err:any) => {
+  res.download(filePath, file.originalName, (err: any) => {
     if (err) {
       if (err.code === "ENOENT") {
         return next(new AppError("فایل روی سرور وجود ندارد", 404));
