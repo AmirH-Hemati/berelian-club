@@ -24,6 +24,7 @@ router
     validateZod(createUserSchema),
     createUser,
   );
+router.get("/me", setUserId, getUser);
 
 router
   .route("/:id")

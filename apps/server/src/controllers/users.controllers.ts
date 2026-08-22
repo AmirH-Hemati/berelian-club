@@ -1,3 +1,4 @@
+import type { NextFunction } from "express";
 import userModel, { type UserDocument } from "../models/user.model.js";
 import {
   createOne,
@@ -6,6 +7,12 @@ import {
   getOne,
   updateOne,
 } from "./handlerFactory.js";
+
+export const setUserId = (req: Request, res: Response, next: NextFunction) => {
+  const userId = (req.user as UserDocument)._id.toString();
+  if (!req.params.id) req.params.id = userId;
+  next();
+};
 
 export const createUser = createOne<UserDocument>(userModel);
 
