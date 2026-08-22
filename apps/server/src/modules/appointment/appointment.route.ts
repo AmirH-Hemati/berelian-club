@@ -1,7 +1,5 @@
 import express from "express";
 import { createAppointmentSchema } from "@repo/schema";
-import { validateZod } from "../middlewares/validateZod.js";
-import { protectedRoute, restrictTo } from "../controllers/auth.controllers.js";
 import {
   approveAppointment,
   completeAppointment,
@@ -14,11 +12,16 @@ import {
   rejectAppointment,
   rescheduleAppointment,
   setAppointmentUserId,
-} from "../controllers/appointments.controllers.js";
-import { convertDateFields } from "../middlewares/convertDateFields.js";
+} from "./appointment.controller.js";
+
+import { validateZod } from "../../middlewares/validateZod.js";
+import { restrictTo } from "../../middlewares/authorization.middleware.js";
+import { protectedRoute } from "../../middlewares/auth.middleware.js";
+import { convertDateFields } from "../../middlewares/convertDateFields.js";
 
 const router = express.Router();
 router.use(protectedRoute);
+
 router
   .route("/")
   .get(restrictTo("admin"), getAppointments)
