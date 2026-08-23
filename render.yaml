@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: berelianclub-server
+    runtime: node
+    plan: free
+
+    rootDir: .
+
+    buildCommand: npm install && npm run build --workspace=@repo/schema && npm run build --workspace=server
+
+    startCommand: npm run start --workspace=server
+
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+
+  - type: web
+    name: berelianclub
+    runtime: node
+    plan: free
+
+    rootDir: .
+
+    buildCommand: npm install && npm run build --workspace=client
+
+    startCommand: npm run start --workspace=client
+
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+
+  - type: web
+    name: berelianclub-admin
+    runtime: node
+    plan: free
+
+    rootDir: .
+
+    buildCommand: npm install && npm run build --workspace=admin
+
+    startCommand: npm run start --workspace=admin
+
+    envVars:
+      - key: NODE_VERSION
+        value: 22
