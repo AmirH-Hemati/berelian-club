@@ -5,8 +5,8 @@ import LoginHeroButton from "./LoginHeroButton";
 export default function HeroSection() {
   return (
     <section>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 items-center">
-        <div className="space-y-6 flex flex-col items-center lg:items-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
+        <div className="space-y-6 flex flex-col items-center md:items-start">
           <h1 className="text-800 font-extrabold tracking-tight leading-[1.2]">
             سرمایه‌گذاری شما،
             <br />
@@ -39,7 +39,7 @@ export default function HeroSection() {
           </div>
         </div>
 
-        <div className="relative ">
+        <div className="relative w-full">
           <div className="absolute -inset-4 bg-linear-to-r from-primary/10 to-transparent blur-3xl" />
           <Dashboard />
         </div>

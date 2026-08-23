@@ -12,7 +12,7 @@ export function FeatureSlider() {
   return (
     <ActiveProvider itemsCount={4}>
       <div className="relative space-y-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2  gap-16 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2  gap-16 items-center">
           <TitleSection />
           <SubtitleSection />
         </div>

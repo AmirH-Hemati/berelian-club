@@ -14,7 +14,7 @@ export default function LoginForm() {
   const [step, setStep] = useState<Step>("phone");
 
   return (
-    <DialogContent>
+    <DialogContent className="min-w-xs">
       {step === "phone" ? (
         <DialogHeader>
           <DialogTitle className="text-xs md:text-sm font-mono">
@@ -35,7 +35,7 @@ export default function LoginForm() {
         </DialogHeader>
       )}
 
-      <Login step={step} setStep={setStep} forwardLink="/account"/>
+      <Login step={step} setStep={setStep} forwardLink="/account" />
     </DialogContent>
   );
 }

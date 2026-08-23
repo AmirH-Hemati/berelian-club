@@ -19,7 +19,7 @@ export default function LoginHeroButton() {
           <Link href="/account">وورد به پنل اختصاصی</Link>
         </Button>
       ) : (
-        <Dialog>
+        <Dialog >
           <DialogTrigger asChild>
             <Button>وورد به پنل اختصاصی</Button>
           </DialogTrigger>

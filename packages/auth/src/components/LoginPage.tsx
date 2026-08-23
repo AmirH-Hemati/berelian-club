@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [step, setStep] = useState<Step>("phone");
 
   return (
-    <Card className="min-w-xs ">
+    <Card className="min-w-xs">
       {step === "phone" ? (
         <CardHeader>
           <CardTitle className="text-300 font-mono">
