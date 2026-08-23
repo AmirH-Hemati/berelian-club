@@ -21,7 +21,7 @@ export interface AppointmentType extends createAppointmentTypes {
   _id: string;
   user: Pick<
     UserType,
-    "_id" | "firstName" | "lastName" | "phoneNumber" | "nationalCode"
+    "_id" | "firstName" | "lastName" | "phoneNumber" | "nationalCode" | "photo"
   >;
   status: "pending" | "approved" | "completed" | "cancelled";
   type: "online" | "phone";

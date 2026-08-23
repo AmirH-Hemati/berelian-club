@@ -101,13 +101,9 @@ export class UserFileService {
       $or: [
         { user: userId },
 
-        ...(role === "investor"
-          ? [
-              {
-                targetRole: "investor",
-              },
-            ]
-          : []),
+        {
+          targetRole: role === "investor" ? "investor" : null,
+        },
       ],
     });
 

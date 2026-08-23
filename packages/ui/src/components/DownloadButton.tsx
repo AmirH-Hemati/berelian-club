@@ -1,5 +1,5 @@
 import { Button } from "@repo/ui";
-import { axiosInstance } from "@repo/api";
+import { axiosInstance } from "@repo/auth";
 import { DownloadIcon } from "lucide-react";
 import { toast } from "react-toastify";
 

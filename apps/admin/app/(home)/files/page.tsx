@@ -2,7 +2,6 @@
 
 import { DataTable } from "@/components/DataTable";
 import SearchFilter from "@/components/SearchFilter";
-import { TableSkeleton } from "@/components/TableSkeleton";
 import AddNewFile from "@/features/files/components/AddNewFile";
 import { columns } from "@/features/files/components/columns";
 import { SendFileToAllModal } from "@/features/files/components/SendFileToAllModal";

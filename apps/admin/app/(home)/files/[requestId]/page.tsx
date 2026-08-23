@@ -6,13 +6,13 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
+  StatusBadge
 } from "@repo/ui";
 
 import { useRouter } from "next/navigation";
 
 import Spinner from "@/components/PageSpinner";
 import { useRequest } from "@/features/requests/hooks/useRequest";
-import StatusBadge from "@/features/requests/components/StatusBadge";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@repo/ui";
 import RequestDataBox from "@/features/requests/components/RequestDataBox";

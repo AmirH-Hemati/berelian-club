@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {axiosInstance} from "@repo/api";
+import { axiosInstance } from "@repo/auth";
 import { toast } from "react-toastify";
 
 interface RescheduleParams {

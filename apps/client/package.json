@@ -11,7 +11,6 @@
   "dependencies": {
     "@repo/auth": "*",
     "@repo/chat": "*",
-    "@repo/api": "*",
     "@repo/schema": "*",
     "@repo/ui": "*",
     "@tanstack/react-query": "^5.101.0",
@@ -38,6 +37,6 @@
     "postcss": "^8.5.15",
     "postcss-nesting": "^14.0.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^6.0.3"
   }
 }

@@ -1,4 +1,4 @@
-import { axiosInstance } from "@repo/api";
+import { axiosInstance } from "@repo/auth";
 import { updateMeTypes, verifyOtpTypes } from "@repo/schema";
 
 export const sendOtp = async (phoneNumber: string) => {

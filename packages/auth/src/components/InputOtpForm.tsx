@@ -12,11 +12,12 @@ import {
   DialogFooter,
 } from "@repo/ui";
 import { Controller, useForm } from "react-hook-form";
-import { Step } from "./Login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { otpSchema, otpSchemaTypes } from "@repo/schema";
 import { useVerifyOtp } from "../hooks/useVerifyOtp";
 import { TimerButton } from "./TimerButton";
+
+type Step = "phone" | "otp";
 
 type Props = {
   onChangeStep: (step: Step) => void;

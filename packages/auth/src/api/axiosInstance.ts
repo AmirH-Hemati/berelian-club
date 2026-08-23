@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useAuthStore } from "@repo/auth";
+import { useAuthStore } from "../store/authStore";
 
 const axiosInstance = axios.create({
   // baseURL: "https://monorepo-bashgah-moshtarian.onrender.com/api/v1",

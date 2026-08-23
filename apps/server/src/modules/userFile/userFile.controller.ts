@@ -67,7 +67,7 @@ export const downloadUserFile = CatchError(
     const { file, filePath } = await userFileService.getDownloadData(
       user._id,
       user.role,
-      req.params.id,
+      req.params.id as string,
     );
 
     res.download(filePath, file.originalName, (error: any) => {

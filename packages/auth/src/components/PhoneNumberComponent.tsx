@@ -2,14 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { phoneSchema, phoneSchemaTypes } from "@repo/schema";
-import {
-  Button,
-  FormField
-} from "@repo/ui";
+import { Button, FormField } from "@repo/ui";
 import { Phone } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useSendOtp } from "../hooks/useSendOtp";
-import { Step } from "./Login";
+
+type Step = "phone" | "otp";
 
 type Props = {
   onChangeStep: (step: Step) => void;

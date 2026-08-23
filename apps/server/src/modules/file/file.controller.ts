@@ -24,9 +24,11 @@ export const uploadFile = CatchError(async (req: Request, res: Response) => {
 
 export const downloadFileById = CatchError(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { file, filePath } = await fileService.downloadFile(req.params.id);
+    const { file, filePath } = await fileService.downloadFile(
+      req.params.id as string,
+    );
 
-    res.download(filePath, file.originalName, (error) => {
+    res.download(filePath, file.originalName, (error: any) => {
       if (!error) {
         return;
       }
@@ -41,7 +43,7 @@ export const downloadFileById = CatchError(
 );
 
 export const deleteFile = CatchError(async (req: Request, res: Response) => {
-  await fileService.deleteFile(req.params.id);
+  await fileService.deleteFile(req.params.id as string);
 
   return res.status(204).send();
 });

@@ -1,4 +1,4 @@
-import { axiosInstance } from "@repo/api";
+import { axiosInstance } from "@repo/auth";
 import { buildQueryParams, GetRequestsParams } from "@/utils/buildQueryParams";
 
 export const getFollowUps = async (query: GetRequestsParams) => {

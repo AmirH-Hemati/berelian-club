@@ -62,7 +62,7 @@ export const completeRequest = CatchError(async (req, res) => {
 });
 
 export const rejectRequest = CatchError(async (req, res) => {
-  const adminId = (req.user as UserDocument)._id.toString();
+  const adminId = (req.user as UserDocument)._id;
 
   const request = await requestService.rejectRequest(
     req.params.id as string,

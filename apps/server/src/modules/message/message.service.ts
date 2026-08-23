@@ -126,7 +126,6 @@ export class MessageService {
   async sendFileMessage(
     conversationId: string,
     senderId: string,
-    receiverId: string,
     fileId: string,
   ) {
     const file = await FileModel.findById(fileId);
@@ -135,10 +134,19 @@ export class MessageService {
       throw new AppError("فایل یافت نشد", 404);
     }
 
-    await this.conversationService.getActiveConversationForParticipant(
-      conversationId,
-      senderId,
+    const conversation =
+      await this.conversationService.getActiveConversationForParticipant(
+        conversationId,
+        senderId,
+      );
+
+    const receiverId = conversation.participants.find(
+      (participant) => participant.toString() !== senderId,
     );
+
+    if (!receiverId) {
+      throw new AppError("گیرنده یافت نشد", 404);
+    }
 
     const message = await MessageModel.create({
       conversation: conversationId,

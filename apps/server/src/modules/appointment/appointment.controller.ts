@@ -25,7 +25,7 @@ export const setAppointmentUserId = (
 export const approveAppointment = CatchError(async (req, res) => {
   const { id } = req.params;
 
-  const appointment = await appointmentService.approveAppointment(id);
+  const appointment = await appointmentService.approveAppointment(id as string);
 
   return res.status(200).json({
     status: "success",
@@ -39,12 +39,12 @@ export const rejectAppointment = CatchError(async (req, res) => {
 
   const { reason } = req.body;
 
-  const userId = (req.user as UserDocument)._id.toString();
+  const userId = (req.user as UserDocument)._id;
 
   const appointment = await appointmentService.rejectAppointment(
-    id,
+    id as string,
     reason,
-    userId,
+    userId ,
   );
 
   return res.status(200).json({
@@ -73,13 +73,13 @@ export const rescheduleAppointment = CatchError(async (req, res) => {
 
   const { newDate, reason } = req.body;
 
-  const userId = (req.user as UserDocument)._id.toString();
+  const userId = (req.user as UserDocument)._id;
 
   const appointment = await appointmentService.rescheduleAppointment(
     id as string,
     newDate,
     reason,
-    userId,
+    userId ,
   );
 
   return res.status(200).json({

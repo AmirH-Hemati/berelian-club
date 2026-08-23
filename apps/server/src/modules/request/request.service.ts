@@ -5,6 +5,7 @@ import { ApiFeatures } from "../../utils/ApiFeatures.js";
 
 import type { ConversationService } from "../conversation/conversation.service.js";
 import type { NotificationService } from "../notification/notification.service.js";
+import type { Types } from "mongoose";
 
 export const REQUEST_TYPE_LABELS = {
   renew_contract: "تمدید قرارداد",
@@ -96,7 +97,7 @@ export class RequestService {
   async rejectRequest(
     requestId: string,
     reason: string | undefined,
-    adminId: string,
+    adminId: Types.ObjectId,
   ) {
     const request = await RequestModel.findById(requestId);
 

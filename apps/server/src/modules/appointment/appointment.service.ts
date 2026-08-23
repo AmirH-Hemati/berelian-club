@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import AppointmentModel from "../../models/appointment.model.js";
 import { AppError } from "../../utils/AppError.js";
 import { formatPersianDate } from "../../utils/date.js";
@@ -41,7 +42,7 @@ export class AppointmentService {
   async rejectAppointment(
     appointmentId: string,
     reason: string | undefined,
-    userId: string,
+    userId: Types.ObjectId,
   ) {
     const appointment = await AppointmentModel.findById(appointmentId);
 
@@ -111,7 +112,7 @@ export class AppointmentService {
     appointmentId: string,
     newDate: string,
     reason: string | undefined,
-    userId: string,
+    userId: Types.ObjectId,
   ) {
     const appointment = await AppointmentModel.findById(appointmentId);
 
@@ -138,7 +139,7 @@ export class AppointmentService {
     appointment.rescheduleReason =
       reason || "زمان جلسه مشاوره توسط ادمین تغییر کرد";
 
-    appointment.rescheduledBy = userId as string;
+    appointment.rescheduledBy = userId;
 
     await appointment.save();
 

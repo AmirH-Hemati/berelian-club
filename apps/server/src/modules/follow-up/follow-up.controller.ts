@@ -33,7 +33,9 @@ export const getOverdueFollowUps = catchAsync(
 
 export const completeFollowUp = catchAsync(
   async (req: Request, res: Response) => {
-    const followUp = await followUpService.completeFollowUp(req.params.id);
+    const followUp = await followUpService.completeFollowUp(
+      req.params.id as string,
+    );
 
     res.status(200).json({
       status: "success",
@@ -44,7 +46,7 @@ export const completeFollowUp = catchAsync(
 
 export const deleteFollowUp = catchAsync(
   async (req: Request, res: Response) => {
-    await followUpService.deleteFollowUp(req.params.id);
+    await followUpService.deleteFollowUp(req.params.id as string);
 
     res.status(204).send();
   },

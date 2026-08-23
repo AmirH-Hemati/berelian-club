@@ -53,7 +53,7 @@ export const getSessionReport = CatchError(
 );
 export const deleteSessionReport = CatchError(
   async (req: Request, res: Response) => {
-    await sessionReportService.deleteSessionReport(req.params.id);
+    await sessionReportService.deleteSessionReport(req.params.id as string);
 
     return res.status(204).send();
   },

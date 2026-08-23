@@ -1,4 +1,4 @@
-import { axiosInstance } from "@repo/api";
+import { axiosInstance } from "@repo/auth";
 
 export const getMyNotifications = async () => {
   const { data } = await axiosInstance.get("/notifications");

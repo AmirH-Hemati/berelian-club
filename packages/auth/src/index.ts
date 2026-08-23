@@ -1,3 +1,5 @@
+export { default as axiosInstance } from "./api/axiosInstance";
+
 export { default as LoginPage } from "./components/LoginPage";
 export { default as LoginForm } from "./components/LoginForm";
 

@@ -16,7 +16,7 @@ export const sendMessage = CatchError(async (req: Request, res: Response) => {
   const senderId = (req.user as UserDocument)._id.toString();
 
   const { message, receiverId } = await messageService.sendMessage(
-    conversationId,
+    conversationId as string,
     senderId,
     content,
   );
@@ -37,7 +37,7 @@ export const getMessages = CatchError(async (req: Request, res: Response) => {
   const user = req.user as UserDocument;
 
   const result = await messageService.getMessages(
-    req.params.conversationId,
+    req.params.conversationId as string,
     user._id.toString(),
     user.role === "admin",
     req.query.limit as string,
@@ -55,12 +55,12 @@ export const sendFileMessage = CatchError(
     const senderId = (req.user as UserDocument)._id.toString();
 
     const { message, receiverId } = await messageService.sendFileMessage(
-      req.params.conversationId,
+      req.params.conversationId as string,
       senderId,
       req.body.fileId,
     );
 
-    const receiverSocketId = getReceiverSocketId(receiverId);
+    const receiverSocketId = getReceiverSocketId(receiverId.toString());
 
     if (receiverSocketId) {
       io.to(`conv-${req.params.conversationId}`).emit("newMessage", message);

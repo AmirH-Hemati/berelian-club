@@ -8,7 +8,7 @@ export const useDeleteRequest = () => {
   const { mutate: deleteRequest, isPending: isDeleting } = useMutation({
     mutationFn: deleteRequestApi,
     onSuccess: () => {
-      toast.success("درخواست با موفقیت رد شد");
+      toast.success("درخواست با موفقیت حذف شد");
       queryClient.invalidateQueries({ queryKey: ["requests"] });
       queryClient.invalidateQueries({ queryKey: ["conversation"] });
     },

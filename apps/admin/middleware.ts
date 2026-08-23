@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import axiosInstance from "./lib/axiosInstance";
 
 export async function middleware(req: NextRequest) {
   // return NextResponse.next();
