@@ -21,7 +21,7 @@ services:
 
     rootDir: .
 
-    buildCommand: npm install && npm run build --workspace=client
+    buildCommand: npm install && npm run build --workspace=@repo/schema && npm run build --workspace=client
 
     startCommand: npm run start --workspace=client
 
@@ -36,7 +36,7 @@ services:
 
     rootDir: .
 
-    buildCommand: npm install && npm run build --workspace=admin
+    buildCommand: npm install && npm run build --workspace=@repo/schema && npm run build --workspace=admin
 
     startCommand: npm run start --workspace=admin
 
