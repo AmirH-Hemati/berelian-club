@@ -6,13 +6,12 @@ import { ReactNode } from "react";
 type Props = { children: ReactNode };
 export default function Layout({ children }: Props) {
   return (
-    
-      <SidebarProvider dir="rtl">
-        <AppSidebar />
-        <main className="max-w-5xl w-full p-4 mx-auto ">
-          <Navbar />
-          {children}
-        </main>
-      </SidebarProvider>
+    <SidebarProvider dir="rtl">
+      <AppSidebar />
+      <main className="max-w-5xl w-full p-4 mx-auto ">
+        <Navbar />
+        {children}
+      </main>
+    </SidebarProvider>
   );
 }

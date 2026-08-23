@@ -6,7 +6,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-  StatusBadge
+  StatusBadge,
 } from "@repo/ui";
 import { Button } from "@repo/ui";
 import { Spinner } from "@repo/ui";

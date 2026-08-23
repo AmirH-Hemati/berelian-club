@@ -16,12 +16,6 @@ export const verifyOtp = async ({ phoneNumber, otp }: verifyOtpTypes) => {
   return data.data;
 };
 
-export const getCurrentUser = async () => {
-  const { data } = await axiosInstance.get("/auth/me");
-
-  return data.data;
-};
-
 export const updateMe = async (updateUser: updateMeTypes) => {
   const { data } = await axiosInstance.patch("/auth/updateMe", updateUser, {
     headers: { "Content-Type": "multipart/form-data" },
@@ -32,4 +26,10 @@ export const updateMe = async (updateUser: updateMeTypes) => {
 export const logout = async () => {
   const { data } = await axiosInstance.post("/auth/logout");
   return data;
+};
+
+export const getCurrentUser = async () => {
+  const { data } = await axiosInstance.get("/users/me");
+
+  return data.data;
 };

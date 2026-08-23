@@ -5,12 +5,12 @@ import Footer from "@/features/home/components/Footer";
 import Header from "@/features/home/components/Header";
 export default function HomePage() {
   return (
-    <div className="max-w-7xl mx-auto space-y-16 overflow-hidden p-3">
+    <main className="max-w-7xl mx-auto space-y-16 overflow-hidden p-3">
       <Header />
       <HeroSection />
       <FeatureSlider />
       <FAQ />
       <Footer />
-    </div>
+    </main>
   );
 }

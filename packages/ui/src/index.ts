@@ -6,6 +6,7 @@ export { default as TableSkeleton } from "./components/TableSkeleton";
 export { default as StatsSkeleton } from "./components/StatsSkeleton";
 export { default as DownloadButton } from "./components/DownloadButton";
 export { default as StatusBadge } from "./components/StatusBadge";
+export { default as NotFoundComponent } from "./components/NotFoundComponent";
 
 export * from "./components/ui/button";
 export * from "./components/ui/accordion";
