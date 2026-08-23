@@ -5,8 +5,12 @@ import InputOTPForm from "./InputOtpForm";
 import PhoneNumberComponent from "./PhoneNumberComponent";
 import { Step } from "./LoginPage";
 
-type Props = { step: string; setStep: Dispatch<SetStateAction<Step>> };
-export default function Login({ step, setStep }: Props) {
+type Props = {
+  step: string;
+  setStep: Dispatch<SetStateAction<Step>>;
+  forwardLink: string;
+};
+export default function Login({ step, setStep, forwardLink }: Props) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otpSentAt, setOtpSentAt] = useState<Date | null>(null);
   const [timer, setTimer] = useState(120);
@@ -78,6 +82,7 @@ export default function Login({ step, setStep }: Props) {
 
       {step === "otp" && (
         <InputOTPForm
+          forwardLink={forwardLink}
           phoneNumber={phoneNumber}
           onChangeStep={handleChangeStep}
           timer={timer}

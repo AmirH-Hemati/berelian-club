@@ -45,7 +45,7 @@ export default function RootLayout({
           <DirectionProvider dir="rtl">
             <ThemeProvider
               attribute="class"
-              defaultTheme="system"
+              defaultTheme="light"
               enableSystem
               disableTransitionOnChange
             >

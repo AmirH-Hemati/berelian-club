@@ -35,7 +35,7 @@ export default function LoginForm() {
         </DialogHeader>
       )}
 
-      <Login step={step} setStep={setStep} />
+      <Login step={step} setStep={setStep} forwardLink="/account"/>
     </DialogContent>
   );
 }

@@ -37,7 +37,7 @@ export default function LoginPage() {
       )}
 
       <CardContent>
-        <LoginForm step={step} setStep={setStep} />
+        <LoginForm step={step} setStep={setStep} forwardLink="/" />
       </CardContent>
     </Card>
   );

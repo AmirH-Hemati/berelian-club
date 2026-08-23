@@ -7,7 +7,6 @@ import QueryProvider from "@/components/providers/QueryProvider";
 import { ToastContainer } from "react-toastify";
 import { cn } from "@repo/ui";
 import { DirectionProvider } from "@repo/ui";
-import { SocketProvider } from "@repo/chat";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -38,7 +37,7 @@ export default function RootLayout({
           <QueryProvider>
             <ThemeProvider
               attribute="class"
-              defaultTheme="system"
+              defaultTheme="light"
               enableSystem
               disableTransitionOnChange
             >

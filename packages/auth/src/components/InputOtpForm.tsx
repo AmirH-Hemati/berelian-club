@@ -24,6 +24,7 @@ type Props = {
   phoneNumber: string;
   timer: number;
   onResetTimer: () => void;
+  forwardLink: string;
 };
 
 export default function InputOTPForm({
@@ -31,8 +32,9 @@ export default function InputOTPForm({
   phoneNumber,
   timer,
   onResetTimer,
+  forwardLink,
 }: Props) {
-  const { verifyOtp, isVerifingCode } = useVerifyOtp();
+  const { verifyOtp, isVerifingCode } = useVerifyOtp(forwardLink);
   const form = useForm<otpSchemaTypes>({
     resolver: zodResolver(otpSchema),
     defaultValues: {
