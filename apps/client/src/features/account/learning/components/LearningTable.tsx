@@ -150,7 +150,9 @@ export default function LearningTable() {
                         <DownloadButton
                           fileId={file?.file?._id}
                           originalName={file?.file?.originalName}
-                        />
+                        >
+                          دانلود فایل
+                        </DownloadButton>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
 

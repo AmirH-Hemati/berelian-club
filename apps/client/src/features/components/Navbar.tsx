@@ -13,16 +13,17 @@ import {
   Spinner,
 } from "@repo/ui";
 
-import { LogOut, Moon, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import NotificationsDropdown from "../account/notifications/components/NotificationsDropdown";
 import { useLogout, useUser } from "@repo/auth";
+import { LogOut, Moon, Sun, User } from "lucide-react";
 
 export default function Navbar() {
   const { user, isLoading, isError } = useUser();
   const { setTheme } = useTheme();
   const { logout, isLogouting } = useLogout();
+
   if (isError) return null;
   return (
     <nav className="flex items-center justify-between mb-4">
@@ -60,11 +61,14 @@ export default function Navbar() {
             <DropdownMenuTrigger className="cursor-pointer">
               <Avatar>
                 <AvatarImage
-                  src={`http://localhost:5000/images/users/${user?.photo}`}
+                  src={
+                    `https://berelianclub-server.onrender.com/images/users/${user?.photo}` ||
+                    ""
+                  }
                 />
                 <AvatarFallback>
                   {user?.firstName?.[0] + user?.lastName?.[0]}
-                </AvatarFallback>{" "}
+                </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className=" w-44" sideOffset={15}>

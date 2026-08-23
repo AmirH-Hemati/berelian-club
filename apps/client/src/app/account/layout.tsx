@@ -1,7 +1,7 @@
 import { SidebarProvider } from "@repo/ui";
-import Navbar from "@/features/components/Navbar";
 import { AppSidebar } from "@/features/components/Sidebar";
 import { ReactNode } from "react";
+import Navbar from "@/features/components/Navbar";
 
 type Props = { children: ReactNode };
 export default function Layout({ children }: Props) {

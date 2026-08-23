@@ -25,7 +25,7 @@ export default function NotificationsDropdown() {
   const { markAllAsRead, isMarkingAll } = useMarkAllNotificationsAsRead();
   const { markAsRead, isMarking } = useMarkNotificationAsRead();
   if (isLoading) return <Spinner />;
-  console.log(notifications);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
