@@ -11,22 +11,23 @@ import {
 } from "./auth.controller.js";
 import { validateZod } from "../../middlewares/validateZod.js";
 import { protectedRoute } from "../../middlewares/auth.middleware.js";
-// import {
-//   sendOtpLimiter,
-//   verifyOtpLimiter,
-// } from "../middlewares/rateLimiter.js";
-// sendOtpLimiter,
-//  verifyOtpLimiter,
+import {
+  sendOtpLimiter,
+  verifyOtpLimiter,
+} from "../../middlewares/rateLimiter.js";
+
 const router = express.Router();
 router.post(
   "/sendOtp",
 
+  sendOtpLimiter,
   validateZod(phoneSchema),
   handleSendOtp,
 );
 router.post(
   "/verifyOtp",
 
+  verifyOtpLimiter,
   validateZod(verifyOtpSchema),
   handleVerifyOtp,
 );
