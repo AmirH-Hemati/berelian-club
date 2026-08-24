@@ -15,8 +15,8 @@ const io = new Server(server, {
     origin: [
       "http://localhost:4001",
       "http://localhost:4002",
-      "https://monorepo-bashgah-moshtarian-1.onrender.com",
-      "https://monorepo-bashgah-moshtarian-2.onrender.com",
+      "https://berelianclub.onrender.com",
+      "https://berelianclub-admin.onrender.com",
     ],
     credentials: true,
   },
