@@ -24,3 +24,17 @@ server.listen(port, () => {
   console.log(`server listen on port ${port}`);
   ReminderEngine.start();
 });
+
+const io = new Server(server, {
+  cors: {
+    origin: [
+      "http://localhost:4001",
+      "http://localhost:4002",
+      "https://berelianclub.onrender.com",
+      "https://berelianclub-admin.onrender.com",
+    ],
+    credentials: true,
+  },
+});
+
+export { io };
