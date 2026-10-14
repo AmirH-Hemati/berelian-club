@@ -1,159 +1,301 @@
-# Turborepo starter
+# 💎 Berelian Club
 
-This Turborepo starter is maintained by the Turborepo core team.
+### Customer Relationship & Investment Management Platform
 
-## Using this example
+Berelian Club is a full-stack web application designed to manage customer relationships, service requests, and communication between customers and investment managers.
 
-Run the following command:
+The platform provides a centralized environment for managing customer accounts, support tickets, real-time conversations, appointments, notifications, and customer-related documents.
 
-```sh
-npx create-turbo@latest
+Built with **Next.js, React, Express.js, TypeScript, MongoDB, and Socket.IO**, the project follows a Monorepo architecture with shared packages, a feature-based frontend structure, and Dependency Injection on the backend.
+
+## 🌐 Live Applications
+
+- **Client Application:** [Visit Berelian Club](https://berelianclub.onrender.com)
+- **Admin Dashboard:** [Visit Admin Panel](https://berelianclub-admin.onrender.com)
+
+The client and admin applications are deployed separately and communicate with the backend API.
+
+*Note: Availability depends on the current deployment status and hosting environment.*
+
+## ✨ Features
+
+### 👤 Client Application
+
+- Customer profile and account management.
+- Submit and track service requests.
+- Real-time conversations with administrators and managers.
+- Notifications and customer updates.
+- Appointment and meeting management.
+- Access to meeting reports and follow-up tasks.
+- Contract-related reminders and customer information management.
+- Access to educational resources and related documents.
+
+### 🛡️ Admin Dashboard
+
+- Centralized customer management.
+- Create and manage customer accounts.
+- Review, approve, and manage customer requests.
+- Initiate conversations after request approval.
+- Manage conversations and messages.
+- Coordinate appointments and meetings.
+- Manage notifications and follow-up activities.
+- Access customer-related information and reports.
+
+### 🔐 Controlled Registration & OTP Authentication
+
+Berelian Club does not support unrestricted public registration. **User accounts are created and managed by administrators through the admin dashboard.**
+
+The authentication system uses **One-Time Password (OTP)** verification for user login.
+
+Key aspects include:
+
+- Administrator-controlled account creation.
+- OTP-based authentication.
+- Protected application routes and API endpoints.
+- Cookie-based authentication for managing authenticated sessions.
+- Access control for customer-related resources.
+
+This approach allows the platform to maintain controlled access to customer services and sensitive information.
+
+### 💬 Real-Time Ticketing & Messaging
+
+The platform includes a request and ticket-based communication workflow powered by **WebSockets using Socket.IO**.
+
+Key capabilities include:
+
+- Customers submit service requests.
+- Administrators review and approve requests.
+- Approved requests can initiate conversations.
+- Customers and administrators exchange messages in real time.
+- New messages are delivered to connected participants without requiring a page refresh.
+- Conversations are organized into separate communication rooms.
+- Users receive relevant notifications and updates.
+
+The system combines request management and real-time messaging to streamline communication between customers and administrators.
+
+### 📅 Appointments & Follow-Ups
+
+- Manage customer appointments and meetings.
+- Coordinate meetings between customers and managers.
+- Maintain meeting reports and follow-up tasks.
+- Support customer reminders and related notifications.
+
+## 🏗️ Architecture
+
+### Monorepo Architecture
+
+Berelian Club uses a **Monorepo architecture** to manage multiple applications and shared packages within a single repository.
+
+```text
+monorepo-bashgah-moshtarian/
+├── apps/
+│   ├── client/              # Next.js customer application
+│   ├── admin/               # Next.js admin dashboard
+│   └── server/              # Express.js backend API
+│
+├── packages/
+│   ├── ui/                  # Shared UI components
+│   ├── schema/              # Shared schemas and validation
+│   ├── eslint-config/       # Shared ESLint configuration
+│   └── typescript-config/   # Shared TypeScript configuration
+│
+├── package.json
+└── turbo.json
 ```
 
-## What's inside?
+The monorepo structure helps keep applications and shared code organized while simplifying dependency management and code reuse.
 
-This Turborepo includes the following packages/apps:
+### Feature-Based Frontend Architecture
 
-### Apps and Packages
+The client and admin applications follow a **Feature-Based Architecture**, organizing code around application features and business domains.
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+This structure helps to:
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+- Keep related components, hooks, and services together.
+- Improve code readability and maintainability.
+- Reduce unnecessary coupling between features.
+- Make individual features easier to extend and maintain.
+- Support a clearer separation of responsibilities.
 
-### Utilities
+### Dependency Injection in the Backend
 
-This Turborepo has some additional tools already setup for you:
+The backend uses **Dependency Injection (DI)** to manage service dependencies and separate business logic from infrastructure concerns.
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+The backend is organized around modular responsibilities, including:
 
-### Build
+- **Routes:** Define API endpoints.
+- **Controllers:** Handle HTTP requests and responses.
+- **Services:** Encapsulate business logic.
+- **Models:** Define MongoDB data structures through Mongoose.
+- **Middleware:** Handle authentication, validation, and other cross-cutting concerns.
+- **Dependency Container:** Manage and provide service dependencies.
 
-To build all apps and packages, run the following command:
+This design improves separation of concerns, testability, and maintainability as the application evolves.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+### Shared Packages
 
-```sh
-cd my-turborepo
-turbo build
+Common functionality is extracted into dedicated workspace packages to reduce duplication and maintain consistency across applications.
+
+- **UI Package:** Reusable components shared between the client and admin applications.
+- **Schema Package:** Shared schemas and validation definitions.
+- **TypeScript Configuration:** Consistent compiler settings across workspaces.
+- **ESLint Configuration:** Shared code quality and linting rules.
+
+### Monorepo Tooling
+
+The project uses **Turborepo and npm Workspaces** to manage applications, shared packages, dependencies, and development workflows.
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- [Next.js](https://nextjs.org/)
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
+- [Lucide](https://lucide.dev/)
+- [TanStack Query](https://tanstack.com/query/latest)
+- [Zustand](https://zustand.docs.pmnd.rs/)
+
+### Backend
+
+- [Node.js](https://nodejs.org/)
+- [Express.js](https://expressjs.com/)
+- TypeScript
+- [MongoDB](https://www.mongodb.com/)
+- [Mongoose](https://mongoosejs.com/)
+- [Socket.IO](https://socket.io/)
+- OTP-based authentication
+- Cookie-based session authentication
+
+### Infrastructure & Tooling
+
+- [Turborepo](https://turbo.build/repo)
+- npm Workspaces
+- [Render](https://render.com/)
+- Git & GitHub
+
+## 🔒 Security Considerations
+
+The application uses controlled account creation and authenticated access to protect customer-related functionality.
+
+Security considerations include:
+
+- OTP-based authentication.
+- HTTP-only cookies for sensitive authentication tokens, where configured.
+- Protected API endpoints and access control.
+- CORS configuration for deployed applications.
+- Validation and centralized error handling.
+- Authorization checks for conversations and customer resources.
+
+Sensitive customer information, uploaded documents, and conversations should only be accessible to authorized users.
+
+Production deployments should also include appropriate rate limiting, secure environment configuration, database backups, HTTPS, and monitoring.
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Make sure the following tools are installed:
+
+- [Node.js](https://nodejs.org/)
+- npm
+- [MongoDB](https://www.mongodb.com/)
+
+### 1. Clone the Repository
+
+```bash
+git clone <YOUR_REPOSITORY_URL>
+cd monorepo-bashgah-moshtarian
 ```
 
-Without global `turbo`, use your package manager:
+### 2. Install Dependencies
 
-```sh
-cd my-turborepo
-npx turbo build
-npm dlx turbo build
-npm exec turbo build
+Install dependencies from the repository root:
+
+```bash
+npm install
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+### 3. Configure Environment Variables
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+Configure the environment variables required by the client, admin, and server applications.
 
-```sh
-turbo build --filter=docs
+Depending on the application configuration, these may include:
+
+- MongoDB connection URI.
+- Authentication and token secrets.
+- Application port.
+- Client and admin application URLs.
+- CORS allowed origins.
+- SMS provider credentials for OTP delivery.
+- Frontend API base URLs.
+- Socket.IO connection configuration.
+
+Use the variable names expected by the actual source code and application configuration.
+
+**Never commit real `.env` files, API keys, authentication secrets, OTP credentials, or database credentials to GitHub.**
+
+### 4. Run the Applications
+
+Use the scripts defined in the root and workspace `package.json` files.
+
+For example, if the root development script is configured to run the applications through Turborepo:
+
+```bash
+npm run dev
 ```
 
-Without global `turbo`:
+Check the repository's scripts for the exact commands supported by the current configuration.
 
-```sh
-npx turbo build --filter=docs
-npm exec turbo build --filter=docs
-npm exec turbo build --filter=docs
-```
+## 📦 Deployment
 
-### Develop
+Berelian Club consists of three main applications:
 
-To develop all apps and packages, run the following command:
+| Application | Technology | Responsibility |
+|---|---|---|
+| Client | Next.js | Customer-facing application |
+| Admin | Next.js | Administrative dashboard |
+| Server | Express.js | API, business logic, authentication, and real-time communication |
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+The client and admin applications are deployed independently, while the backend provides the API and Socket.IO services.
 
-```sh
-cd my-turborepo
-turbo dev
-```
+Deployment requires appropriate environment variables, database connectivity, CORS configuration, HTTPS, and authentication cookie settings.
 
-Without global `turbo`, use your package manager:
+## 🔮 Future Improvements
 
-```sh
-cd my-turborepo
-npx turbo dev
-npm exec turbo dev
-npm exec turbo dev
-```
+Potential areas for further development include:
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+- Unit and integration testing.
+- CI/CD automation.
+- Enhanced logging and monitoring.
+- Automated database backup and recovery.
+- Performance optimization and caching.
+- Progressive Web App (PWA) support.
+- Background job processing when needed.
+- Additional scalability improvements based on actual usage.
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+## 🎯 Project Goals
 
-```sh
-turbo dev --filter=web
-```
+Berelian Club demonstrates practical experience with:
 
-Without global `turbo`:
+- Full-stack web application development.
+- Monorepo architecture and workspace management.
+- Feature-based frontend architecture.
+- Dependency Injection and modular backend design.
+- Shared component and schema packages.
+- RESTful API development.
+- Real-time communication with Socket.IO.
+- OTP-based authentication.
+- Controlled user registration and account management.
+- Customer request and ticket workflows.
+- Database modeling and application security.
 
-```sh
-npx turbo dev --filter=web
-npm exec turbo dev --filter=web
-npm exec turbo dev --filter=web
-```
+## 👨‍💻 Author
 
-### Remote Caching
+Developed as a full-stack web development project focused on maintainable architecture, reusable components, real-time communication, and customer relationship management.
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+---
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-npm exec turbo login
-npm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-npm exec turbo link
-npm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+**Berelian Club — A modular full-stack platform for customer and investment relationship management.**
