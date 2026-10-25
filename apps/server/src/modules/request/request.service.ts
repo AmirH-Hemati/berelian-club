@@ -37,6 +37,8 @@ export class RequestService {
 
     await request.save();
 
+    console.log(request)
+
     const conversation =
       await this.conversationService.createOrActivateForRequest(
         request._id.toString(),
@@ -191,14 +193,17 @@ export class RequestService {
     return RequestModel.countDocuments(filter);
   }
   async deleteRequest(requestId: string, userId: string, isAdmin: boolean) {
-    // const request = await RequestModel.findById(requestId);
-    // if (!request) {
-    //   throw new AppError("درخواست یافت نشد", 404);
-    // }
-    // if (!isAdmin && request.user.toString() !== userId) {
-    //   throw new AppError("شما دسترسی به این درخواست ندارید", 403);
-    // }
-    // await this.conversationService.deleteByRequest(requestId);
-    // await RequestModel.findByIdAndDelete(requestId);
+    const request = await RequestModel.findById(requestId);
+    if (!request) {
+      throw new AppError("درخواست یافت نشد", 404);
+    }
+    if (!isAdmin && request.user.toString() !== userId) {
+      throw new AppError("شما دسترسی به این درخواست ندارید", 403);
+    }
+    const conversation = await this.conversationService.findByRequest(requestId);
+    if (conversation) {
+      await this.conversationService.deleteConversation(conversation._id.toString());
+    }
+    await RequestModel.findByIdAndDelete(requestId);
   }
 }

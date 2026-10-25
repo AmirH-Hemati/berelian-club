@@ -1,6 +1,6 @@
 import type { Server } from "socket.io";
-import type { SocketService } from "./socket.types.js";
 import { authSocketMiddleware } from "../../middlewares/authSocketMiddleware.js";
+import type { SocketService } from "./socket.service.js";
 
 export const setupSocketGateway = (
   io: Server,
@@ -10,6 +10,7 @@ export const setupSocketGateway = (
   io.on("connection", (socket) => {
     const userId = socket.userId;
 
+    console.log("user online", userId);
     socketService.registerUser(userId, socket);
 
     socket.on("join-conversation", (conversationId: string) => {

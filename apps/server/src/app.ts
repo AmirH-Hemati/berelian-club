@@ -21,16 +21,6 @@ import conversationsRoutes from "./modules/conversation/conversation.route.js";
 import messagesRoutes from "./modules/message/message.route.js";
 
 const app = express();
-// throw new Error("this is error");
-
-// app.use(
-//   cors({
-//     origin: (origin, callback) => {
-//       callback(null, true);
-//     },
-//     credentials: true,
-//   }),
-// );
 
 app.use(
   cors({

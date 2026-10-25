@@ -150,7 +150,7 @@ export class ConversationService {
     }
 
     const isParticipant = conversation.participants.some(
-      (participant: any) => participant.toString() === userId,
+      (participant: any) => participant._id.toString() === userId,
     );
 
     if (!isParticipant) {

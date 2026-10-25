@@ -2,18 +2,18 @@ import type { NextFunction, Request, Response } from "express";
 import { AppError } from "../utils/AppError.js";
 import { z } from "zod";
 
-const handelDuplicateFieldsDb = (err: AppError) => {
+const handleDuplicateFieldsDb = (err: any) => {
   const value = err.errmsg?.match(/(["'])(\\?.)*?\1/)?.[0] || "";
   const message = `فیلد انتخاب شده تکراری است ${value} `;
   return new AppError(message, 400);
 };
-function handleJWTError() {
-  return new AppError("توکن نامعتبر است , دوباره وارد شوید", 401);
+function handleJWTError(err: Error) {
+  return new AppError(`توکن نامعتبر است: ${err.message}، دوباره وارد شوید`, 401);
 }
-function handleJWTExpiredError() {
-  return new AppError("توکن منقضی شده است , دوباره وارد شوید", 401);
+function handleJWTExpiredError(err: Error) {
+  return new AppError(`توکن منقضی شده است: ${err.message}، دوباره وارد شوید`, 401);
 }
-const sendErrorDev = (res: Response, err: AppError) => {
+const sendErrorDev = (res: Response, err: any) => {
   if (err instanceof z.ZodError) {
     const errors = err.issues.map((err) => ({
       path: err.path.join("."),
@@ -22,7 +22,7 @@ const sendErrorDev = (res: Response, err: AppError) => {
 
     return res.status(400).json({
       message: "خطا در اعتبارسنجی داده‌ها",
-      status: err.status,
+      status: "fail",
       errors,
     });
   }
@@ -34,7 +34,7 @@ const sendErrorDev = (res: Response, err: AppError) => {
   });
 };
 
-const sendErrorProd = (err: AppError, res: Response) => {
+const sendErrorProd = (err: any, res: Response) => {
   if (err instanceof z.ZodError) {
     const errors = err.issues.map((err) => ({
       path: err.path.join("."),
@@ -43,7 +43,7 @@ const sendErrorProd = (err: AppError, res: Response) => {
 
     return res.status(400).json({
       message: "خطا در اعتبارسنجی داده‌ها",
-      status: err.status,
+      status: "fail",
       errors,
     });
   }
@@ -60,7 +60,7 @@ const sendErrorProd = (err: AppError, res: Response) => {
   });
 };
 export const errorController = (
-  err: AppError,
+  err: any,
   req: Request,
   res: Response,
   next: NextFunction,
@@ -71,9 +71,9 @@ export const errorController = (
   if (process.env.APP_ENV === "development") {
     sendErrorDev(res, err);
   } else if (process.env.APP_ENV === "production") {
-    if (err.code === 11000) err = handelDuplicateFieldsDb(err);
-    if (err.name === "JsonWebTokenError") err = handleJWTError();
-    if (err.name === "TokenExpiredError") err = handleJWTExpiredError();
+    if (err.code === 11000) err = handleDuplicateFieldsDb(err);
+    if (err.name === "JsonWebTokenError") err = handleJWTError(err);
+    if (err.name === "TokenExpiredError") err = handleJWTExpiredError(err);
     sendErrorProd(err, res);
   }
 };

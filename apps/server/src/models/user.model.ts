@@ -1,15 +1,24 @@
-import type { CreateUserInputTypes } from "@repo/schema";
 import mongoose from "mongoose";
 
-export interface UserDocument extends mongoose.Document, CreateUserInputTypes {
+export interface UserDocument extends mongoose.Document {
+  firstName: string;
+  lastName: string;
+  nationalCode: string;
+  phoneNumber: string;
+  email: string;
+  photo?: string;
+  birthDate: Date;
+  birthMonth: number;
+  birthDay: number;
   role: "admin" | "investor";
+  contractStartDate: Date;
+  contractEndDate: Date;
+  bankAccountNumber: string;
+  shabaNumber: string;
   isActive: boolean;
   contractDaysRemaining: number;
   contractStatus: string;
   contractProgress: number;
-  photo: String;
-  birthMonth: number;
-  birthDay: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -131,7 +140,7 @@ userSchema.virtual("contractProgress").get(function () {
   return Math.round((elapsed / total) * 100);
 });
 
-userSchema.pre("save", function (next) {
+userSchema.pre("save", function (this: UserDocument) {
   if (this.isModified("birthDate")) {
     this.birthMonth = this.birthDate.getMonth() + 1;
     this.birthDay = this.birthDate.getDate();

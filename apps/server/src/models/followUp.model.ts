@@ -41,8 +41,6 @@ const followUpSchema = new mongoose.Schema<FollowUpDocument>(
   { timestamps: true },
 );
 
-followUpSchema.index({ user: 1, status: 1, dueDate: 1 });
-followUpSchema.index({ createdBy: 1, status: 1 });
 followUpSchema.index({ dueDate: 1, status: 1 });
 
 followUpSchema.pre<Query<FollowUpDocument, FollowUpDocument[]>>(

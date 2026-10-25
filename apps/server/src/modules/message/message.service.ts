@@ -4,9 +4,13 @@ import { FileModel } from "../../models/file.model.js";
 import { AppError } from "../../utils/AppError.js";
 
 import type { ConversationService } from "../conversation/conversation.service.js";
+import type { SocketService } from "../socket/socket.service.js";
 
 export class MessageService {
-  constructor(private readonly conversationService: ConversationService) {}
+  constructor(
+    private readonly conversationService: ConversationService,
+    private readonly socketService: SocketService,
+  ) {}
 
   async sendMessage(conversationId: string, senderId: string, content: string) {
     const conversation =
@@ -16,7 +20,7 @@ export class MessageService {
       );
 
     const receiverId = conversation.participants.find(
-      (participant) => participant.toString() !== senderId,
+      (participant) => participant._id.toString() !== senderId,
     );
 
     if (!receiverId) {
@@ -39,9 +43,16 @@ export class MessageService {
       message._id.toString(),
     );
 
+    // const receiverSocketId = this.socketService.isUserOnline(
+    //   receiverId.toString(),
+    // );
+
+    // if (receiverSocketId) {
+    // }
+    this.socketService.emitNewMessage(conversationId, message);
+
     return {
       message,
-      receiverId: receiverId.toString(),
     };
   }
 
@@ -141,7 +152,7 @@ export class MessageService {
       );
 
     const receiverId = conversation.participants.find(
-      (participant) => participant.toString() !== senderId,
+      (participant) => participant._id.toString() !== senderId,
     );
 
     if (!receiverId) {
@@ -172,6 +183,14 @@ export class MessageService {
       conversationId,
       message._id.toString(),
     );
+
+    // const receiverSocketId = this.socketService.isUserOnline(
+    //   receiverId.toString(),
+    // );
+
+    // if (receiverSocketId) {
+    // }
+    this.socketService.emitNewMessage(conversationId, message);
 
     return {
       message,

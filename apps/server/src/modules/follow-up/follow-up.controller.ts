@@ -1,13 +1,13 @@
 import type { Request, Response } from "express";
 
-import catchAsync from "../../utils/catchAsync.js";
+import CatchError from "../../utils/catchAsync.js";
 
 import { followUpService } from "../../container/index.js";
 import { getAll } from "../../controllers/handlerFactory.js";
 import type { FollowUpDocument } from "../../models/followUp.model.js";
 import FollowUpModel from "../../models/followUp.model.js";
 
-export const getTodayFollowUps = catchAsync(
+export const getTodayFollowUps = CatchError(
   async (req: Request, res: Response) => {
     const followUps = await followUpService.getTodayFollowUps();
 
@@ -19,7 +19,7 @@ export const getTodayFollowUps = catchAsync(
   },
 );
 
-export const getOverdueFollowUps = catchAsync(
+export const getOverdueFollowUps = CatchError(
   async (req: Request, res: Response) => {
     const followUps = await followUpService.getOverdueFollowUps();
 
@@ -31,7 +31,7 @@ export const getOverdueFollowUps = catchAsync(
   },
 );
 
-export const completeFollowUp = catchAsync(
+export const completeFollowUp = CatchError(
   async (req: Request, res: Response) => {
     const followUp = await followUpService.completeFollowUp(
       req.params.id as string,
@@ -44,7 +44,7 @@ export const completeFollowUp = catchAsync(
   },
 );
 
-export const deleteFollowUp = catchAsync(
+export const deleteFollowUp = CatchError(
   async (req: Request, res: Response) => {
     await followUpService.deleteFollowUp(req.params.id as string);
 

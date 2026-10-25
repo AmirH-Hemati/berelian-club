@@ -1,3 +1,5 @@
+import type { Server } from "socket.io";
+
 import { AppointmentService } from "../modules/appointment/appointment.service.js";
 import { AuthService } from "../modules/auth/auth.service.js";
 import { ConversationService } from "../modules/conversation/conversation.service.js";
@@ -8,6 +10,8 @@ import { MessageService } from "../modules/message/message.service.js";
 import { NotificationService } from "../modules/notification/notification.service.js";
 import { RequestService } from "../modules/request/request.service.js";
 import { SessionReportService } from "../modules/session-report/session-report.service.js";
+import { setupSocketGateway } from "../modules/socket/socket.gateway.js";
+import { SocketService } from "../modules/socket/socket.service.js";
 import { TokenService } from "../modules/token/TokenService.js";
 import { UserService } from "../modules/user/user.service.js";
 import { UserFileService } from "../modules/userFile/userFile.service.js";
@@ -25,7 +29,9 @@ export const notificationService = new NotificationService();
 export const appointmentService = new AppointmentService(notificationService);
 export const conversationService = new ConversationService();
 
-export const messageService = new MessageService(conversationService);
+export let socketService: SocketService;
+export let messageService: MessageService;
+
 export const requestService = new RequestService(
   notificationService,
   conversationService,
@@ -46,3 +52,11 @@ export const dashboardService = new DashboardService(
   appointmentService,
   followUpService,
 );
+
+export const initializeSocketServices = (io: Server) => {
+  socketService = new SocketService(io);
+
+  messageService = new MessageService(conversationService, socketService);
+
+  setupSocketGateway(io, socketService);
+};

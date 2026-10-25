@@ -9,19 +9,40 @@ export function useNewMessages(conversationId: string) {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!socket || !isConnected) return;
+    if (!socket || !isConnected || !conversationId) return;
 
     const handleNewMessage = (newMessage: any) => {
-      if (newMessage.conversation !== conversationId) return;
+      const messageConversationId =
+        typeof newMessage.conversation === "string"
+          ? newMessage.conversation
+          : (newMessage.conversation?._id?.toString() ??
+            newMessage.conversation?.toString());
 
-      queryClient.setQueryData(
-        ["messages", conversationId],
-        (oldMessages: any[] = []) => {
-          const exists = oldMessages.some((m) => m._id === newMessage._id);
-          if (exists) return oldMessages;
-          return [...oldMessages, newMessage];
-        },
-      );
+      if (messageConversationId !== conversationId) return;
+
+      queryClient.setQueryData(["messages", conversationId], (oldData: any) => {
+        if (!oldData?.pages?.length) return oldData;
+
+        const alreadyExists = oldData.pages.some((page: any) =>
+          page.messages.some((message: any) => message._id === newMessage._id),
+        );
+
+        if (alreadyExists) return oldData;
+
+        const lastPageIndex = oldData.pages.length - 1;
+
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page: any, index: number) =>
+            index === lastPageIndex
+              ? {
+                  ...page,
+                  messages: [...page.messages, newMessage],
+                }
+              : page,
+          ),
+        };
+      });
     };
 
     socket.on("newMessage", handleNewMessage);

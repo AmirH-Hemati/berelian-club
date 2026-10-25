@@ -6,8 +6,6 @@ import type { UserDocument } from "../../models/user.model.js";
 
 import { messageService } from "../../container/index.js";
 
-import { getReceiverSocketId, io } from "../../utils/setupSocket.js";
-
 export const sendMessage = CatchError(async (req: Request, res: Response) => {
   const { conversationId } = req.params;
 
@@ -15,17 +13,12 @@ export const sendMessage = CatchError(async (req: Request, res: Response) => {
 
   const senderId = (req.user as UserDocument)._id.toString();
 
-  const { message, receiverId } = await messageService.sendMessage(
+  const { message } = await messageService.sendMessage(
     conversationId as string,
     senderId,
     content,
   );
 
-  const receiverSocketId = getReceiverSocketId(receiverId);
-
-  if (receiverSocketId) {
-    io.to(`conv-${conversationId}`).emit("newMessage", message);
-  }
 
   return res.status(201).json({
     status: "success",
@@ -54,17 +47,11 @@ export const sendFileMessage = CatchError(
   async (req: Request, res: Response) => {
     const senderId = (req.user as UserDocument)._id.toString();
 
-    const { message, receiverId } = await messageService.sendFileMessage(
+    const { message } = await messageService.sendFileMessage(
       req.params.conversationId as string,
       senderId,
       req.body.fileId,
     );
-
-    const receiverSocketId = getReceiverSocketId(receiverId.toString());
-
-    if (receiverSocketId) {
-      io.to(`conv-${req.params.conversationId}`).emit("newMessage", message);
-    }
 
     return res.status(201).json({
       status: "success",

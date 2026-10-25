@@ -1,6 +1,7 @@
 import express from "express";
 
 import { phoneSchema, verifyOtpSchema } from "@repo/schema";
+import { updateMeSchema } from "@repo/schema";
 import {
   handleSendOtp,
   handleVerifyOtp,
@@ -11,6 +12,7 @@ import {
 } from "./auth.controller.js";
 import { validateZod } from "../../middlewares/validateZod.js";
 import { protectedRoute } from "../../middlewares/auth.middleware.js";
+import { convertDateFields } from "../../middlewares/convertDateFields.js";
 import {
   sendOtpLimiter,
   verifyOtpLimiter,
@@ -33,7 +35,14 @@ router.post(
 );
 
 router.use(protectedRoute);
-router.patch("/updateMe", uploadUserImage, resizeUserImage, updateMe);
+router.patch(
+  "/updateMe",
+  convertDateFields(["birthDate"]),
+  validateZod(updateMeSchema),
+  uploadUserImage,
+  resizeUserImage,
+  updateMe,
+);
 router.post("/logout", logout);
 // router.route("/:id").get(getUser).patch(updateUser).delete(deleteUser);
 
