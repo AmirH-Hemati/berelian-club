@@ -11,7 +11,6 @@ import { thirtyDaysFromNow } from "../../utils/date.js";
 import type { UserDocument } from "../../models/user.model.js";
 import UserModel from "../../models/user.model.js";
 
-
 const multerStorage = multer.memoryStorage();
 const multerFilter = (
   req: Request,
@@ -93,7 +92,8 @@ export const handleVerifyOtp = CatchError(async (req, res, next) => {
     expires: thirtyDaysFromNow(),
     secure: true,
     httpOnly: true,
-    sameSite: "none",
+    sameSite: "lax",
+    domain: "berelianbg.ir",
   };
   res.cookie("token", token, cookieOption);
   return res.status(200).json({
@@ -106,7 +106,8 @@ export const logout = (req: Request, res: Response, next: NextFunction) => {
   res.clearCookie("token", {
     secure: true,
     httpOnly: true,
-    sameSite: "none",
+    sameSite: "lax",
+    domain: "berelianbg.ir",
   });
   res.status(200).json({
     status: "success",
