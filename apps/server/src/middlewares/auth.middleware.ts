@@ -5,9 +5,15 @@ import { tokenService } from "../container/index.js";
 
 export const protectedRoute = CatchError(async (req, res, next) => {
   let token;
-  if (req.cookies.token) {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  } else if (req.cookies.token) {
     token = req.cookies.token;
   }
+
   if (!token) {
     throw new AppError("لطفا برای ادامه دسترسی وارد حساب کاربری خود شوید", 401);
   }
