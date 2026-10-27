@@ -10,15 +10,17 @@ import { fileService } from "../../container/index.js";
 import { AppError } from "../../utils/AppError.js";
 
 export const uploadFile = CatchError(async (req: Request, res: Response) => {
-  if (!req.file) {
+  const file = req.file;
+
+  if (!file) {
     throw new AppError("فایلی آپلود نشده است", 400);
   }
 
-  const file = await fileService.uploadFile(req.file);
+  const result = await fileService.uploadFile(file);
 
   return res.status(201).json({
     status: "success",
-    data: file,
+    data: result,
   });
 });
 

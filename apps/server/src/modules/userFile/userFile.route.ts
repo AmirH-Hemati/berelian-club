@@ -13,7 +13,7 @@ const router = express.Router();
 router.use(protectedRoute);
 
 router.get("/myFiles", getUserFiles);
-router.get("/download/:id", downloadUserFile);
+router.get("/downloadById/:id", downloadUserFile);
 
 router.use(restrictTo("admin"));
 

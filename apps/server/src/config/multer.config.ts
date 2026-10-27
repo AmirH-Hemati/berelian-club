@@ -3,7 +3,7 @@ import path from "path";
 import crypto from "crypto";
 import fs from "fs";
 
-const uploadDir = "public/files";
+const uploadDir = path.resolve(process.cwd(), "private-uploads", "files");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }

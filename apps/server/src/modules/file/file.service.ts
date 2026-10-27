@@ -1,39 +1,46 @@
-import fs from "fs/promises";
-import path from "path";
+import fs from "node:fs/promises";
+import path from "node:path";
+import mongoose from "mongoose";
 
 import { FileModel } from "../../models/file.model.js";
-
 import UserFileModel from "../../models/userFile.model.js";
-
 import { AppError } from "../../utils/AppError.js";
 
+type FileType = "image" | "video" | "document";
+
 export class FileService {
-    
   async uploadFile(file: Express.Multer.File) {
-    const createdFile = await FileModel.create({
-      originalName: file.originalname,
+    if (!file) {
+      throw new AppError("فایلی آپلود نشده است", 400);
+    }
 
-      fileName: file.filename,
+    try {
+      const createdFile = await FileModel.create({
+        originalName: this.decodeOriginalName(file.originalname),
+        fileName: file.filename,
+        fileType: this.getFileType(file.mimetype),
+        mimeType: file.mimetype,
+        size: file.size,
+        path: file.path,
+      });
 
-      fileType: file.mimetype.startsWith("image/")
-        ? "image"
-        : file.mimetype.startsWith("video/")
-          ? "video"
-          : "document",
+      return createdFile;
+    } catch (error) {
+      try {
+        await fs.unlink(file.path);
+      } catch (cleanupError) {
+        console.error("Failed to clean up uploaded file:", cleanupError);
+      }
 
-      mimeType: file.mimetype,
-
-      size: file.size,
-
-      path: file.path,
-
-      url: `/files/${file.filename}`,
-    });
-
-    return createdFile;
+      throw error;
+    }
   }
 
   async getFileById(fileId: string) {
+    if (!mongoose.isValidObjectId(fileId)) {
+      throw new AppError("شناسه فایل معتبر نیست", 400);
+    }
+
     const file = await FileModel.findById(fileId);
 
     if (!file) {
@@ -45,32 +52,64 @@ export class FileService {
 
   async downloadFile(fileId: string) {
     const file = await this.getFileById(fileId);
+    const filePath = this.resolveFilePath(file.path);
 
-    const filePath = path.join(process.cwd(), file.path);
+    try {
+      await fs.access(filePath);
+    } catch (error) {
+      if (this.isNodeError(error) && error.code === "ENOENT") {
+        throw new AppError("فایل روی سرور وجود ندارد", 404);
+      }
 
-    return {
-      file,
-      filePath,
-    };
+      throw error;
+    }
+
+    return { file, filePath };
   }
 
   async deleteFile(fileId: string) {
     const file = await this.getFileById(fileId);
 
+    await UserFileModel.deleteMany({ file: file._id });
+
+    await FileModel.findByIdAndDelete(file._id);
+
+    const filePath = this.resolveFilePath(file.path);
+
     try {
-      await fs.unlink(file.path);
-    } catch (error: any) {
-      if (error.code !== "ENOENT") {
-        throw error;
+      await fs.unlink(filePath);
+    } catch (error) {
+      if (this.isNodeError(error) && error.code === "ENOENT") {
+        return;
       }
+
+      console.error("Failed to delete physical file:", error);
+
+      throw new AppError(
+        "رکورد فایل حذف شد، اما حذف فایل از دیسک ناموفق بود",
+        500,
+      );
     }
+  }
 
-    await Promise.all([
-      FileModel.findByIdAndDelete(file._id),
+  private getFileType(mimeType: string): FileType {
+    if (mimeType.startsWith("image/")) return "image";
+    if (mimeType.startsWith("video/")) return "video";
 
-      UserFileModel.deleteMany({
-        file: file._id,
-      }),
-    ]);
+    return "document";
+  }
+
+  private resolveFilePath(filePath: string): string {
+    return path.isAbsolute(filePath)
+      ? path.resolve(filePath)
+      : path.resolve(process.cwd(), filePath);
+  }
+
+  private decodeOriginalName(name: string): string {
+    return Buffer.from(name, "latin1").toString("utf8");
+  }
+
+  private isNodeError(error: unknown): error is NodeJS.ErrnoException {
+    return error instanceof Error && "code" in error;
   }
 }

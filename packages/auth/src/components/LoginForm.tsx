@@ -14,7 +14,7 @@ export default function LoginForm() {
   const [step, setStep] = useState<Step>("phone");
 
   return (
-    <DialogContent className="w-xs">
+    <DialogContent className="sm:max-w-xs">
       {step === "phone" ? (
         <DialogHeader>
           <DialogTitle className="text-xs md:text-sm font-mono">

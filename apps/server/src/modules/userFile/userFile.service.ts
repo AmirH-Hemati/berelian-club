@@ -1,5 +1,7 @@
-import { Types } from "mongoose";
-import UserFileModel from "../../models/userFile.model.js";
+import mongoose, { Types } from "mongoose";
+import UserFileModel, {
+  type UserFileDocument,
+} from "../../models/userFile.model.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFeatures } from "../../utils/ApiFeatures.js";
 import type { FileService } from "../file/file.service.js";
@@ -95,16 +97,21 @@ export class UserFileService {
   }
 
   async getDownloadData(userId: Types.ObjectId, role: string, fileId: string) {
+    if (!mongoose.isValidObjectId(fileId)) {
+      throw new AppError("شناسه فایل نامعتبر است", 400);
+    }
+
+    const accessConditions: (
+      { user: Types.ObjectId } | { targetRole: "investor" }
+    )[] = [{ user: userId }];
+
+    if (role === "investor") {
+      accessConditions.push({ targetRole: "investor" });
+    }
+
     const userFile = await UserFileModel.findOne({
       file: fileId,
-
-      $or: [
-        { user: userId },
-
-        {
-          targetRole: role === "investor" ? "investor" : null,
-        },
-      ],
+      $or: accessConditions,
     });
 
     if (!userFile) {

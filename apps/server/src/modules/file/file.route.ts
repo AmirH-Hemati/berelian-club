@@ -12,9 +12,9 @@ import { upload } from "../../config/multer.config.js";
 const router = express.Router();
 
 router.use(protectedRoute);
-router.get("/downloadById/:id", downloadFileById);
-
 router.use(restrictTo("admin"));
+
+router.get("/downloadById/:id", downloadFileById);
 router.route("/").get(getAllFiles).post(upload.single("file"), uploadFile);
 router.route("/:id").delete(deleteFile);
 

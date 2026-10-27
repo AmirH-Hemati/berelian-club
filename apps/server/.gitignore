@@ -1,3 +1,4 @@
+private-uploads
 public
 .env
 node_modules
