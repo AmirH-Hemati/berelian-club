@@ -26,7 +26,10 @@ export const authService = new AuthService(otpService, tokenService);
 const userService = new UserService();
 
 export const notificationService = new NotificationService();
-export const appointmentService = new AppointmentService(notificationService);
+export const appointmentService = new AppointmentService(
+  notificationService,
+  userService,
+);
 export const conversationService = new ConversationService();
 
 export let socketService: SocketService;

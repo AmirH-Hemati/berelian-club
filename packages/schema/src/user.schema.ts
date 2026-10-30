@@ -29,8 +29,8 @@ export const createUserSchema = z.object({
     .nonempty("شماره شبا کاربر نمیتواند خالی باشد")
     .regex(/^IR[0-9]{24}$/, "شماره شبا باید با IR شروع شود و ۲۶ رقم باشد"),
   role: z
-    .enum(["admin", "investor"])
-    .nonoptional("نقش کاربر نمیتواند خالی باشد")
+    .enum(["admin", "investor", "reception", "consultant"])
+    .nonoptional("نقش کاربر نمیتواند خالی باشد"),
 });
 
 export const updateUserSchema = createUserSchema.partial();
@@ -39,7 +39,7 @@ export type updateUserInputTypes = z.infer<typeof updateUserSchema>;
 
 export interface UserType extends CreateUserInputTypes {
   _id: string;
-  role: "admin" | "investor";
+  role: "admin" | "investor" | "reception" | "consultant";
   isActive: boolean;
   photo?: string;
   createdAt: Date;

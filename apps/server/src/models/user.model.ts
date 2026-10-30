@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+export type UserRole = "admin" | "investor" | "reception" | "consultant";
+
 export interface UserDocument extends mongoose.Document {
   firstName: string;
   lastName: string;
@@ -10,7 +12,7 @@ export interface UserDocument extends mongoose.Document {
   birthDate: Date;
   birthMonth: number;
   birthDay: number;
-  role: "admin" | "investor";
+  role: UserRole;
   contractStartDate: Date;
   contractEndDate: Date;
   bankAccountNumber: string;
@@ -71,7 +73,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
     },
     role: {
       type: String,
-      enum: ["admin", "investor"],
+      enum: ["admin", "investor", "reception", "consultant"],
       default: "investor",
       required: true,
     },

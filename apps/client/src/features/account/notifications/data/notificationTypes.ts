@@ -10,6 +10,7 @@ import {
   CalendarX,
   CalendarClock,
   CheckCheck,
+  CalendarPlus,
 } from "lucide-react";
 
 export const notificationTypes = {
@@ -46,6 +47,10 @@ export const notificationTypes = {
   request_completed: {
     icon: CheckCheck,
     className: "text-emerald-500 bg-emerald-50",
+  },
+  appointment_new: {
+    icon: CalendarPlus,
+    className: "text-cyan-600 bg-cyan-50",
   },
 
   appointment_approved: {

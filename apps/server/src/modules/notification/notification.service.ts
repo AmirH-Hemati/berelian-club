@@ -11,6 +11,7 @@ export type SendNotification = {
     | "request_approved"
     | "request_rejected"
     | "request_completed"
+    | "appointment_new"
     | "appointment_approved"
     | "appointment_rejected"
     | "appointment_completed"

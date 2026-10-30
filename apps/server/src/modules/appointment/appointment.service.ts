@@ -1,39 +1,115 @@
-import { Types } from "mongoose";
+import type { createAppointmentTypes } from "@repo/schema";
+import mongoose from "mongoose";
+
 import AppointmentModel from "../../models/appointment.model.js";
-import { AppError } from "../../utils/AppError.js";
+import { UserService } from "../user/user.service.js";
+import { NotificationService } from "../notification/notification.service.js";
 import { formatPersianDate } from "../../utils/date.js";
-import type { NotificationService } from "../notification/notification.service.js";
+
+const APPOINTMENT_DURATION = 60;
+
+const BUSINESS_TIMEZONE = "Asia/Tehran";
 
 export class AppointmentService {
-  constructor(private readonly notificationService: NotificationService) {}
+  constructor(
+    private readonly notificationService: NotificationService,
+    private readonly userService: UserService,
+  ) {}
 
-  async approveAppointment(appointmentId: string) {
+  private getAppointmentDateTime(appointmentDate: Date, startAt: string) {
+    const [hour, minute] = startAt.split(":").map(Number);
+
+    const date = new Date(appointmentDate);
+
+    date.setHours(hour as number, minute, 0, 0);
+
+    return date;
+  }
+
+  private calculateEndAt(startAt: string) {
+    const [hour, minute] = startAt.split(":").map(Number);
+
+    const endHour = (hour as number) + 1;
+
+    return `${String(endHour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+  }
+
+  private validateBusinessHours(startAt: string) {
+    const [hour, minute] = startAt.split(":").map(Number);
+
+    if (hour < 9 || hour > 15 || minute !== 0) {
+      throw new Error("ساعت انتخاب شده خارج از ساعات کاری است");
+    }
+  }
+
+  async createAppointment(userId: string, data: createAppointmentTypes) {
+    const { appointmentDate, startAt, type, description } = data;
+
+    this.validateBusinessHours(startAt);
+
+    const appointmentDateTime = this.getAppointmentDateTime(
+      appointmentDate,
+      startAt,
+    );
+
+    if (appointmentDateTime <= new Date()) {
+      throw new Error("زمان مشاوره باید در آینده باشد");
+    }
+
+    const endAt = this.calculateEndAt(startAt);
+
+    const appointment = await AppointmentModel.create({
+      user: userId,
+      consultant: null,
+      appointmentDate,
+      startAt,
+      endAt,
+      description,
+      type,
+      status: "pending",
+    });
+
+    const consultants = await this.userService.getUsersByRole("consultant");
+
+    const notifications = consultants.map((consultant) => ({
+      userId: consultant._id.toString(),
+      title: "درخواست مشاوره جدید",
+      message: "یک درخواست مشاوره جدید ثبت شده است. برای بررسی وارد پنل شوید.",
+      type: "appointment_new" as const,
+      link: `/appointments/${appointment._id}`,
+      deduplicationKey: `appointment-new-${appointment._id}-${consultant._id}`,
+    }));
+
+    await this.notificationService.sendMany(notifications);
+
+    return appointment;
+  }
+
+  async approveAppointment(
+    appointmentId: string,
+    consultantId: mongoose.Types.ObjectId,
+  ) {
     const appointment = await AppointmentModel.findById(appointmentId);
 
     if (!appointment) {
-      throw new AppError("جلسه مشاوره یافت نشد", 404);
+      throw new Error("نوبت مشاوره پیدا نشد");
     }
 
     if (appointment.status !== "pending") {
-      throw new AppError(
-        "این جلسه قبلاً بررسی شده و امکان تایید مجدد آن وجود ندارد",
-        400,
-      );
+      throw new Error("این نوبت در وضعیت قابل تأیید نیست");
     }
 
+    appointment.consultant = consultantId;
     appointment.status = "approved";
 
     await appointment.save();
 
     await this.notificationService.send({
       userId: appointment.user._id.toString(),
-      title: "مشاوره شما تأیید شد",
-      message: `درخواست مشاوره شما برای تاریخ ${formatPersianDate(
-        appointment.appointmentDate,
-      )} تأیید شد.`,
+      title: "تأیید نوبت مشاوره",
+      message: `نوبت مشاوره شما در تاریخ ${formatPersianDate(appointment.appointmentDate)} تأیید شد.`,
       type: "appointment_approved",
       link: `/appointments/${appointment._id}`,
-      deduplicationKey: `appointment-approved-${appointment._id}`,
     });
 
     return appointment;
@@ -41,39 +117,31 @@ export class AppointmentService {
 
   async rejectAppointment(
     appointmentId: string,
-    reason: string | undefined,
-    userId: Types.ObjectId,
+    reason: string,
+    userId: string,
   ) {
     const appointment = await AppointmentModel.findById(appointmentId);
 
     if (!appointment) {
-      throw new AppError("جلسه مشاوره یافت نشد", 404);
+      throw new Error("نوبت مشاوره پیدا نشد");
     }
 
     if (appointment.status !== "pending") {
-      throw new AppError(
-        "این جلسه قبلاً بررسی شده و امکان لغو آن وجود ندارد",
-        400,
-      );
+      throw new Error("این نوبت در وضعیت قابل رد نیست");
     }
 
     appointment.status = "cancelled";
-
-    appointment.cancellationReason = reason || "کنسل شده توسط ادمین";
-
-    appointment.cancelledBy = userId;
+    appointment.cancellationReason = reason;
+    appointment.cancelledBy = new mongoose.Types.ObjectId(userId);
 
     await appointment.save();
 
     await this.notificationService.send({
       userId: appointment.user._id.toString(),
-      title: "مشاوره شما تأیید نشد",
-      message: `متأسفانه درخواست مشاوره شما برای تاریخ ${formatPersianDate(
-        appointment.appointmentDate,
-      )} تأیید نشد.`,
+      title: "رد درخواست مشاوره",
+      message: `درخواست مشاوره شما در تاریخ ${formatPersianDate(appointment.appointmentDate)} رد شد. دلیل: ${reason}`,
       type: "appointment_rejected",
       link: `/appointments/${appointment._id}`,
-      deduplicationKey: `appointment-rejected-${appointment._id}`,
     });
 
     return appointment;
@@ -83,11 +151,11 @@ export class AppointmentService {
     const appointment = await AppointmentModel.findById(appointmentId);
 
     if (!appointment) {
-      throw new AppError("جلسه مشاوره‌ای یافت نشد", 404);
+      throw new Error("نوبت مشاوره پیدا نشد");
     }
 
     if (appointment.status !== "approved") {
-      throw new AppError("فقط جلسات تایید شده را می‌توان تکمیل کرد", 400);
+      throw new Error("فقط نوبت‌های تأیید شده قابل تکمیل هستند");
     }
 
     appointment.status = "completed";
@@ -95,14 +163,11 @@ export class AppointmentService {
     await appointment.save();
 
     await this.notificationService.send({
-      userId: appointment.user._id.toString(),
-      title: "مشاوره شما برگزار شد",
-      message: `جلسه مشاوره شما در تاریخ ${formatPersianDate(
-        appointment.appointmentDate,
-      )} با موفقیت برگزار شد.`,
+      userId: appointment.user.toString(),
+      title: "تکمیل مشاوره",
+      message: `مشاوره شما در تاریخ ${formatPersianDate(appointment.appointmentDate)} تکمیل شد.`,
       type: "appointment_completed",
       link: `/appointments/${appointment._id}`,
-      deduplicationKey: `appointment-completed-${appointment._id}`,
     });
 
     return appointment;
@@ -110,83 +175,70 @@ export class AppointmentService {
 
   async rescheduleAppointment(
     appointmentId: string,
-    newDate: string,
-    reason: string | undefined,
-    userId: Types.ObjectId,
+    appointmentDate: Date,
+    startAt: string,
+    reason: string,
+    userId: string,
   ) {
     const appointment = await AppointmentModel.findById(appointmentId);
 
     if (!appointment) {
-      throw new AppError("جلسه مشاوره یافت نشد", 404);
+      throw new Error("نوبت مشاوره پیدا نشد");
     }
 
-    if (appointment.status !== "approved" && appointment.status !== "pending") {
-      throw new AppError("این جلسه قابل تغییر زمان نیست", 400);
+    if (!["pending", "approved"].includes(appointment.status)) {
+      throw new Error("امکان تغییر زمان این نوبت وجود ندارد");
     }
 
-    const newAppointmentDate = new Date(newDate);
+    this.validateBusinessHours(startAt);
 
-    if (Number.isNaN(newAppointmentDate.getTime())) {
-      throw new AppError("تاریخ جدید نامعتبر است", 400);
+    const newDateTime = this.getAppointmentDateTime(appointmentDate, startAt);
+
+    if (newDateTime <= new Date()) {
+      throw new Error("زمان جدید باید در آینده باشد");
     }
 
-    if (newAppointmentDate <= new Date()) {
-      throw new AppError("تاریخ جدید باید در آینده باشد", 400);
-    }
-
-    appointment.appointmentDate = newAppointmentDate;
-
-    appointment.rescheduleReason =
-      reason || "زمان جلسه مشاوره توسط ادمین تغییر کرد";
-
-    appointment.rescheduledBy = userId;
+    appointment.appointmentDate = appointmentDate;
+    appointment.startAt = startAt;
+    appointment.endAt = this.calculateEndAt(startAt);
+    appointment.rescheduleReason = reason;
+    appointment.rescheduledBy = new mongoose.Types.ObjectId(userId);
 
     await appointment.save();
 
     await this.notificationService.send({
       userId: appointment.user._id.toString(),
-      title: "زمان مشاوره تغییر کرد",
-      message: `زمان جلسه مشاوره شما به ${formatPersianDate(
-        appointment.appointmentDate,
-      )} تغییر یافت.${reason ? ` دلیل: ${reason}` : ""}`,
+      title: "تغییر زمان مشاوره",
+      message: `زمان مشاوره شما به ${formatPersianDate(appointment.appointmentDate)} ساعت ${startAt} تغییر کرد.`,
       type: "appointment_rescheduled",
       link: `/appointments/${appointment._id}`,
-      deduplicationKey: `appointment-rescheduled-${appointment._id}-${newAppointmentDate.getTime()}`,
     });
 
     return appointment;
   }
 
   async getUserAppointments(userId: string) {
-    const appointments = await AppointmentModel.find({
-      user: userId,
-    }).limit(10);
-
-    return appointments;
+    return AppointmentModel.find({ user: userId }).sort({
+      appointmentDate: -1,
+      startAt: 1,
+    });
   }
 
   async getTodayAppointments() {
-    const startOfDay = new Date();
+    const now = new Date();
 
+    const startOfDay = new Date(now);
     startOfDay.setHours(0, 0, 0, 0);
 
-    const endOfDay = new Date();
-
+    const endOfDay = new Date(now);
     endOfDay.setHours(23, 59, 59, 999);
 
-    const appointments = await AppointmentModel.find({
-      status: "approved",
+    return AppointmentModel.find({
       appointmentDate: {
         $gte: startOfDay,
         $lte: endOfDay,
       },
-    })
-      .populate("user", "firstName lastName phoneNumber email")
-      .sort({
-        appointmentDate: 1,
-      });
-
-    return appointments;
+    }).sort({ startAt: 1 });
   }
 
   async countPendingAppointments() {
@@ -194,11 +246,14 @@ export class AppointmentService {
       status: "pending",
     });
   }
+
   async countTodayApprovedAppointments() {
-    const startOfDay = new Date();
+    const now = new Date();
+
+    const startOfDay = new Date(now);
     startOfDay.setHours(0, 0, 0, 0);
 
-    const endOfDay = new Date(startOfDay);
+    const endOfDay = new Date(now);
     endOfDay.setHours(23, 59, 59, 999);
 
     return AppointmentModel.countDocuments({

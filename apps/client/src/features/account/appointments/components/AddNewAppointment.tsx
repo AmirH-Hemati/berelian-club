@@ -27,6 +27,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createAppointmentSchema, createAppointmentTypes } from "@repo/schema";
 import { useCreateAppointment } from "../hooks/useCreateAppointment";
 import { useState } from "react";
+import AppointmentTimeSlots from "./AppointmentTimeSlots";
 export default function AddNewAppointment() {
   const [open, setOpen] = useState(false);
 
@@ -35,6 +36,7 @@ export default function AddNewAppointment() {
     resolver: zodResolver(createAppointmentSchema),
     defaultValues: {
       appointmentDate: new Date(),
+      startAt: "",
       description: "",
       type: "online",
     },
@@ -46,13 +48,22 @@ export default function AddNewAppointment() {
       },
     });
   };
+  const handleOpenChange = (value: boolean) => {
+    setOpen(value);
 
+    form.reset({
+      appointmentDate: new Date(),
+      startAt: "",
+      description: "",
+      type: "online",
+    });
+  };
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button>ثبت مشاوره جدید</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="flex max-h-[90dvh] flex-col gap-0 overflow-hidden sm:max-w-lg ">
         <DialogHeader>
           <DialogTitle> رزرو مشاوره</DialogTitle>
           <DialogDescription>
@@ -60,51 +71,57 @@ export default function AddNewAppointment() {
           </DialogDescription>
         </DialogHeader>
 
-        <form className="space-y-4" onSubmit={form.handleSubmit(handleSubmit)}>
-          <CustomDatePicker
-            control={form.control}
-            name="appointmentDate"
-            label="تاریخ مشاوره"
-          />
+        <form
+          className="flex min-h-0 flex-1 flex-col gap-2"
+          onSubmit={form.handleSubmit(handleSubmit)}
+        >
+          <div
+            className="min-h-0 flex-1 space-y-4  overflow-y-auto overflow-hidden "
+            style={{ scrollbarWidth: "thin" }}
+          >
+            <CustomDatePicker
+              control={form.control}
+              name="appointmentDate"
+              label="تاریخ مشاوره"
+            />
+            <AppointmentTimeSlots control={form.control} />
+            <Controller
+              name="type"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>
+                    نوع برگزاری جلسه مشاوره
+                  </FieldLabel>
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    name="type"
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="انتخاب نوع مشاوره" />
+                    </SelectTrigger>
 
-          <Controller
-            name="type"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>
-                  نوع برگزاری جلسه مشاوره
-                </FieldLabel>
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  name="type"
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="انتخاب نوع مشاوره" />
-                  </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="online">مشاوره آنلاین </SelectItem>
 
-                  <SelectContent>
-                    <SelectItem value="online">مشاوره آنلاین </SelectItem>
+                      <SelectItem value="phone">مشاوره تلفنی</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
 
-                    <SelectItem value="phone">مشاوره تلفنی</SelectItem>
-                  </SelectContent>
-                </Select>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-
-          <TextareaFiled
-            label="توضیحات جهت ثبت مشاوره"
-
-            control={form.control}
-            name="description"
-            placeholder="توضیحات درخواست مشاوره خود را وارد کنید"
-          />
-
+            <TextareaFiled
+              label="توضیحات جهت ثبت مشاوره"
+              control={form.control}
+              name="description"
+              placeholder="توضیحات درخواست مشاوره خود را وارد کنید"
+            />
+          </div>
           <DialogFooter>
             <DialogClose asChild>
               <Button type="button" variant="secondary">

@@ -17,6 +17,13 @@ import { UserType } from "@repo/schema";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
 import { Badge } from "@repo/ui";
 
+const roleLabels: Record<string, string> = {
+  admin: "ادمین",
+  investor: "سرمایه‌گذار",
+  reception: "پذیرش",
+  consultant: "مشاور",
+};
+
 export const columns: ColumnDef<UserType>[] = [
   {
     accessorKey: "photo",
@@ -62,10 +69,9 @@ export const columns: ColumnDef<UserType>[] = [
     header: "نقش کاربر",
     cell: ({ row }) => {
       const role = row.getValue("role");
-
       return (
         <Badge variant="secondary">
-          {role === "admin" ? "ادمین" : ("سرمایه گذار" as string)}
+          {roleLabels[role as keyof typeof roleLabels] ?? "نامشخص"}
         </Badge>
       );
     },

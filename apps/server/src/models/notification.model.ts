@@ -9,6 +9,7 @@ export interface NotificationDocument extends mongoose.Document {
     | "request_approved"
     | "request_rejected"
     | "request_completed"
+    | "appointment_new"
     | "appointment_approved"
     | "appointment_rejected"
     | "appointment_completed"
@@ -49,6 +50,7 @@ const notificationSchema = new mongoose.Schema<NotificationDocument>(
         "request_approved",
         "request_rejected",
         "request_completed",
+        "appointment_new",
         "appointment_approved",
         "appointment_rejected",
         "appointment_completed",

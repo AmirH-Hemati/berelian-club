@@ -6,7 +6,9 @@ import { Controller, useForm } from "react-hook-form";
 import CustomDatePicker from "@/components/CustomDatePicker";
 import {
   Banknote,
+  BriefcaseBusiness,
   CreditCard,
+  Headset,
   IdCard,
   Mail,
   Phone,
@@ -148,14 +150,12 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor="role">نقش کاربر</FieldLabel>
-              <Select
-                value={field.value}
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-              >
+
+              <Select value={field.value} onValueChange={field.onChange}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="انتخاب نقش کاربر" />
                 </SelectTrigger>
+
                 <SelectContent>
                   <SelectItem value="admin">
                     <div className="flex items-center gap-2">
@@ -163,14 +163,30 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
                       <span>ادمین</span>
                     </div>
                   </SelectItem>
+
                   <SelectItem value="investor">
                     <div className="flex items-center gap-2">
                       <User className="size-4 text-blue-500" />
                       <span>سرمایه‌گذار</span>
                     </div>
                   </SelectItem>
+
+                  <SelectItem value="reception">
+                    <div className="flex items-center gap-2">
+                      <Headset className="size-4 text-green-500" />
+                      <span>پذیرش</span>
+                    </div>
+                  </SelectItem>
+
+                  <SelectItem value="consultant">
+                    <div className="flex items-center gap-2">
+                      <BriefcaseBusiness className="size-4 text-purple-500" />
+                      <span>مشاور</span>
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
+
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}

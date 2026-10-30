@@ -27,6 +27,7 @@ export default function TextareaFiled<T extends FieldValues>({
             aria-invalid={fieldState.invalid}
             id={name}
             placeholder={placeholder}
+            className="min-h-24 max-h-24 resize-none overflow-y-auto"
           />
           {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
         </Field>

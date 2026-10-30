@@ -3,7 +3,6 @@ import AppointmentModel, {
   type appointmentDocument,
 } from "../../models/appointment.model.js";
 import {
-  createOne,
   deleteOne,
   getAll,
   getOne,
@@ -22,96 +21,119 @@ export const setAppointmentUserId = (
   next();
 };
 
-export const approveAppointment = CatchError(async (req, res) => {
-  const { id } = req.params;
+export const createAppointmentController = CatchError(
+  async (req: Request, res: Response) => {
+    const userId = (req.user as UserDocument)._id.toString();
 
-  const appointment = await appointmentService.approveAppointment(id as string);
+    const appointment = await appointmentService.createAppointment(
+      userId,
+      req.body,
+    );
 
-  return res.status(200).json({
-    status: "success",
-    message: "جلسه مشاوره با موفقیت تایید شد",
-    data: appointment,
-  });
-});
+    return res.status(201).json({
+      status: "success",
+      message: "درخواست مشاوره با موفقیت ثبت شد",
+      data: appointment,
+    });
+  },
+);
 
-export const rejectAppointment = CatchError(async (req, res) => {
-  const { id } = req.params;
+export const approveAppointmentController = CatchError(
+  async (req: Request, res: Response) => {
+    const consultantId = (req.user as UserDocument)._id;
+    const appointment = await appointmentService.approveAppointment(
+      req.params.id as string,
+      consultantId,
+    );
 
-  const { reason } = req.body;
+    return res.status(200).json({
+      status: "success",
+      message: "نوبت مشاوره با موفقیت تأیید شد",
+      data: appointment,
+    });
+  },
+);
 
-  const userId = (req.user as UserDocument)._id;
+export const rejectAppointmentController = CatchError(
+  async (req: Request, res: Response) => {
+    const userId = (req.user as UserDocument)._id.toString();
 
-  const appointment = await appointmentService.rejectAppointment(
-    id as string,
-    reason,
-    userId ,
-  );
+    const appointment = await appointmentService.rejectAppointment(
+      req.params.id as string,
+      req.body.reason,
+      userId,
+    );
 
-  return res.status(200).json({
-    status: "success",
-    message: "جلسه مشاوره با موفقیت کنسل شد",
-    data: appointment,
-  });
-});
+    return res.status(200).json({
+      status: "success",
+      message: "نوبت مشاوره با موفقیت رد شد",
+      data: appointment,
+    });
+  },
+);
 
-export const completeAppointment = CatchError(async (req, res) => {
-  const { id } = req.params;
+export const completeAppointmentController = CatchError(
+  async (req: Request, res: Response) => {
+    const appointment = await appointmentService.completeAppointment(
+      req.params.id as string,
+    );
 
-  const appointment = await appointmentService.completeAppointment(
-    id as string,
-  );
+    return res.status(200).json({
+      status: "success",
+      message: "مشاوره با موفقیت تکمیل شد",
+      data: appointment,
+    });
+  },
+);
 
-  return res.status(200).json({
-    status: "success",
-    message: "جلسه مشاوره با موفقیت برگزار شد",
-    data: appointment,
-  });
-});
+export const rescheduleAppointmentController = CatchError(
+  async (req: Request, res: Response) => {
+    const userId = (req.user as UserDocument)._id.toString();
 
-export const rescheduleAppointment = CatchError(async (req, res) => {
-  const { id } = req.params;
+    const appointment = await appointmentService.rescheduleAppointment(
+      req.params.id as string,
+      req.body.appointmentDate,
+      req.body.startAt,
+      req.body.reason,
+      userId,
+    );
 
-  const { newDate, reason } = req.body;
+    return res.status(200).json({
+      status: "success",
+      message: "زمان مشاوره با موفقیت تغییر کرد",
+      data: appointment,
+    });
+  },
+);
 
-  const userId = (req.user as UserDocument)._id;
+export const getUserAppointmentsController = CatchError(
+  async (req: Request, res: Response) => {
+    const userId = (req.user as UserDocument)._id.toString();
 
-  const appointment = await appointmentService.rescheduleAppointment(
-    id as string,
-    newDate,
-    reason,
-    userId ,
-  );
+    const appointments = await appointmentService.getUserAppointments(userId);
 
-  return res.status(200).json({
-    status: "success",
-    message: "زمان جلسه با موفقیت تغییر یافت",
-    data: appointment,
-  });
-});
+    return res.status(200).json({
+      status: "success",
+      results: appointments.length,
+      data: appointments,
+    });
+  },
+);
 
-export const getUserAppointments = CatchError(async (req, res) => {
-  const userId = (req.user as UserDocument)._id.toString();
+export const getTodayAppointmentsController = CatchError(
+  async (_req: Request, res: Response) => {
+    const appointments = await appointmentService.getTodayAppointments();
 
-  const appointments = await appointmentService.getUserAppointments(userId);
-
-  return res.status(200).json({
-    status: "success",
-    data: appointments,
-  });
-});
-
-export const getTodayAppointments = CatchError(async (req, res) => {
-  const appointments = await appointmentService.getTodayAppointments();
-
-  return res.status(200).json({
-    status: "success",
-    data: appointments,
-  });
-});
+    return res.status(200).json({
+      status: "success",
+      results: appointments.length,
+      data: appointments,
+    });
+  },
+);
 export const getAppointments = getAll<appointmentDocument>(AppointmentModel);
 export const getAppointment = getOne<appointmentDocument>(AppointmentModel);
-export const createAppointment =
-  createOne<appointmentDocument>(AppointmentModel);
+
 export const updateAppointment =
   updateOne<appointmentDocument>(AppointmentModel);
 export const deleteAppointment =
