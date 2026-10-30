@@ -4,7 +4,8 @@ import { toast } from "react-toastify";
 
 interface RescheduleParams {
   appointmentId: string;
-  newDate: Date;
+  appointmentDate: Date;
+  startAt: string;
   reason?: string;
 }
 
@@ -15,14 +16,16 @@ export function useRescheduleAppointment() {
     useMutation({
       mutationFn: async ({
         appointmentId,
-        newDate,
+        appointmentDate,
+        startAt,
         reason,
       }: RescheduleParams) => {
         const { data } = await axiosInstance.patch(
           `/appointments/${appointmentId}/reschedule`,
           {
-            newDate,
+            appointmentDate,
             reason,
+            startAt,
           },
         );
         return data.data;

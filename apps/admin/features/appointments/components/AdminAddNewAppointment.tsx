@@ -19,11 +19,60 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRescheduleAppointment } from "../hooks/useRescheduleAppointment";
+import AppointmentTimeSlots from "./AppointmentTimeSlots";
 
-const rescheduleSchema = z.object({
-  newDate: z.date({ error: "تاریخ جدید الزامی است" }),
-  reason: z.string().optional(),
-});
+const rescheduleSchema = z
+  .object({
+    appointmentDate: z.date("تاریخ جدید الزامی است"),
+    reason: z.string().optional(),
+    startAt: z
+      .string()
+      .regex(/^([01]\d|2[0-3]):[0-5]\d$/, "ساعت شروع مشاوره معتبر نیست")
+      .min(1, "ساعت مشاوره را انتخاب کنید"),
+  })
+  .refine(
+    (data) => {
+      const today = new Date();
+
+      const appointmentDate = new Date(data.appointmentDate);
+      appointmentDate.setHours(0, 0, 0, 0);
+
+      today.setHours(0, 0, 0, 0);
+
+      return appointmentDate >= today;
+    },
+    {
+      message: "تاریخ مشاوره نمی‌تواند در گذشته باشد",
+      path: ["appointmentDate"],
+    },
+  )
+  .refine(
+    (data) => {
+      const [hour, minute] = data.startAt.split(":").map(Number);
+
+      return hour && hour >= 9 && hour < 16 && minute === 0;
+    },
+    {
+      message: "ساعت شروع مشاوره باید بین ۹ تا ۱۵ باشد",
+      path: ["startAt"],
+    },
+  )
+  .refine(
+    (data) => {
+      const now = new Date();
+      const appointment = new Date(data.appointmentDate);
+
+      const [hour, minute] = data.startAt.split(":").map(Number);
+
+      appointment.setHours(hour as number, minute, 0, 0);
+
+      return appointment > now;
+    },
+    {
+      message: "زمان مشاوره باید در آینده باشد",
+      path: ["startAt"],
+    },
+  );
 
 type RescheduleFormValues = z.infer<typeof rescheduleSchema>;
 
@@ -42,13 +91,15 @@ export default function AdminRescheduleAppointment({
 }: AdminRescheduleAppointmentProps) {
   const [open, setOpen] = useState(false);
 
+  console.log(currentDate);
   const { rescheduleAppointment, isRescheduling } = useRescheduleAppointment();
 
   const form = useForm<RescheduleFormValues>({
     resolver: zodResolver(rescheduleSchema),
     defaultValues: {
-      newDate: new Date(currentDate),
+      appointmentDate: new Date(currentDate),
       reason: "",
+      startAt: "",
     },
   });
 
@@ -56,15 +107,17 @@ export default function AdminRescheduleAppointment({
     rescheduleAppointment(
       {
         appointmentId,
-        newDate: values.newDate,
+        appointmentDate: values.appointmentDate,
+        startAt: values.startAt,
         reason: values.reason,
       },
       {
         onSuccess: () => {
           setOpen(false);
           form.reset({
-            newDate: new Date(),
+            appointmentDate: new Date(currentDate),
             reason: "",
+            startAt: "",
           });
         },
       },
@@ -96,10 +149,10 @@ export default function AdminRescheduleAppointment({
         <form className="space-y-4" onSubmit={form.handleSubmit(handleSubmit)}>
           <CustomDatePicker
             control={form.control}
-            name="newDate"
+            name="appointmentDate"
             label="تاریخ و زمان جدید"
           />
-
+          <AppointmentTimeSlots control={form.control} />
           <TextareaFiled
             control={form.control}
             label="دلیل تغییر زمان (اختیاری)"

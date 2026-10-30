@@ -3,9 +3,7 @@ import { UserType } from "./user.schema.js";
 
 export const createAppointmentSchema = z
   .object({
-    appointmentDate: z.date({
-      message: "تاریخ مشاوره الزامی است",
-    }),
+    appointmentDate: z.date("تاریخ مشاوره الزامی است"),
 
     startAt: z
       .string()
