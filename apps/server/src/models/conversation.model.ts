@@ -4,8 +4,8 @@ export interface ConversationDocument extends mongoose.Document {
   participants: mongoose.Types.ObjectId[];
   request: mongoose.Types.ObjectId;
   isActive: boolean;
-  lastMessage?: mongoose.Types.ObjectId;
-  closedAt?: Date;
+  lastMessage: mongoose.Types.ObjectId | null;
+  closedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }

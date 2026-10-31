@@ -22,7 +22,7 @@ router.use(protectedRoute);
 
 router
   .route("/")
-  .get(restrictTo("admin"), getRequests)
+  .get(restrictTo("admin", "reception"), getRequests)
   .post(validateZod(createRequestSchema), setRequestUserId, createRequest);
 
 router.get("/myRequests", getUserRequests);
@@ -30,7 +30,7 @@ router.get("/:id", getRequest);
 router.delete("/:id", deleteRequest);
 
 // restrit for only admin
-router.use(restrictTo("admin"));
+router.use(restrictTo("admin", "reception"));
 
 router.get("/today", getTodayRequests);
 router.get("/userRequests/:id/", getUserRequests);

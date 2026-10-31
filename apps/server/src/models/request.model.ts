@@ -2,6 +2,7 @@ import mongoose, { Query } from "mongoose";
 
 export interface RequestDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;
+  assignedTo: mongoose.Types.ObjectId | null;
   description: string;
   type: "renew_contract" | "increase_capital" | "decrease_capital";
   status: "pending" | "approved" | "cancelled" | "completed";
@@ -16,6 +17,11 @@ const requestSchema = new mongoose.Schema<RequestDocument>(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+    },
+    assignedTo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
     },
     type: {
       type: String,
@@ -52,7 +58,9 @@ requestSchema.pre<Query<RequestDocument, RequestDocument>>(
     this.populate(
       "user",
       "firstName lastName photo _id phoneNumber nationalCode ",
-    ).populate("cancelledBy", "firstName lastName");
+    )
+      .populate("cancelledBy", "firstName lastName")
+      .populate("assignedTo", "firstName lastName ");
   },
 );
 

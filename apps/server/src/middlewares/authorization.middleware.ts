@@ -1,7 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 import { AppError } from "../utils/AppError.js";
+import type { UserRole } from "../models/user.model.js";
 
-export const restrictTo = (...roles: string[]) => {
+export const restrictTo = (...roles: UserRole[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
       return next(new AppError("شما وارد نشده‌اید", 401));

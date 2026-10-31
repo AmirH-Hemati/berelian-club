@@ -1,4 +1,6 @@
-import RequestModel from "../../models/request.model.js";
+import RequestModel, {
+  type RequestDocument,
+} from "../../models/request.model.js";
 
 import { AppError } from "../../utils/AppError.js";
 import { ApiFeatures } from "../../utils/ApiFeatures.js";
@@ -6,6 +8,7 @@ import { ApiFeatures } from "../../utils/ApiFeatures.js";
 import type { ConversationService } from "../conversation/conversation.service.js";
 import type { NotificationService } from "../notification/notification.service.js";
 import type { Types } from "mongoose";
+import type { UserService } from "../user/user.service.js";
 
 export const REQUEST_TYPE_LABELS = {
   renew_contract: "تمدید قرارداد",
@@ -17,33 +20,72 @@ export class RequestService {
   constructor(
     private readonly notificationService: NotificationService,
     private readonly conversationService: ConversationService,
+    private readonly userService: UserService,
   ) {}
+  async createRequest(
+    userId: string,
+    data: Pick<RequestDocument, "type" | "description">,
+  ) {
+    const request = await RequestModel.create({
+      user: userId,
+      type: data.type,
+      description: data.description,
+      status: "pending",
+      assignedTo: null,
+    });
 
-  async approveRequest(requestId: string, adminId: string) {
-    const request = await RequestModel.findById(requestId);
+    const receptions = await this.userService.getUsersByRole("reception");
+
+    const notifications = receptions.map((reception) => ({
+      userId: reception._id.toString(),
+      title: "درخواست جدید",
+      message: "یک درخواست جدید ثبت شده است. برای بررسی وارد پنل شوید.",
+      type: "request_new" as const,
+      link: `/requests/${request._id}`,
+      deduplicationKey: `request-new-${request._id}-${reception._id}`,
+    }));
+
+    await this.notificationService.sendMany(notifications);
+
+    return request;
+  }
+  async approveRequest(requestId: string, receptionId: string) {
+    const request = await RequestModel.findOneAndUpdate(
+      {
+        _id: requestId,
+        status: "pending",
+        assignedTo: null,
+      },
+      {
+        $set: {
+          status: "approved",
+          assignedTo: receptionId,
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
 
     if (!request) {
-      throw new AppError("درخواستی یافت نشد", 404);
-    }
+      const existingRequest = await RequestModel.findById(requestId);
 
-    if (request.status !== "pending") {
+      if (!existingRequest) {
+        throw new AppError("درخواستی یافت نشد", 404);
+      }
+
       throw new AppError(
-        "این درخواست قبلاً بررسی شده و امکان تایید مجدد آن وجود ندارد",
+        "این درخواست قبلاً توسط پذیرش دیگری بررسی شده است",
         400,
       );
     }
-
-    request.status = "approved";
-
-    await request.save();
-
-    console.log(request)
 
     const conversation =
       await this.conversationService.createOrActivateForRequest(
         request._id.toString(),
         request.user._id.toString(),
-        adminId,
+        receptionId,
       );
 
     const requestTypeLabel = REQUEST_TYPE_LABELS[request.type];
@@ -200,9 +242,12 @@ export class RequestService {
     if (!isAdmin && request.user.toString() !== userId) {
       throw new AppError("شما دسترسی به این درخواست ندارید", 403);
     }
-    const conversation = await this.conversationService.findByRequest(requestId);
+    const conversation =
+      await this.conversationService.findByRequest(requestId);
     if (conversation) {
-      await this.conversationService.deleteConversation(conversation._id.toString());
+      await this.conversationService.deleteConversation(
+        conversation._id.toString(),
+      );
     }
     await RequestModel.findByIdAndDelete(requestId);
   }

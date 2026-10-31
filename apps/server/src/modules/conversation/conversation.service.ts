@@ -44,10 +44,12 @@ export class ConversationService {
   async getActiveConversationForParticipant(
     conversationId: string,
     userId: string,
+    isAdmin: boolean,
   ) {
     const conversation = await this.getConversationForParticipant(
       conversationId,
       userId,
+      isAdmin,
     );
 
     if (!conversation.isActive) {
@@ -60,7 +62,7 @@ export class ConversationService {
   async createOrActivateForRequest(
     requestId: string,
     userId: string,
-    adminId: string,
+    receptionId: string,
   ) {
     let conversation = await ConversationModel.findOne({
       request: requestId,
@@ -68,13 +70,22 @@ export class ConversationService {
 
     if (!conversation) {
       conversation = await ConversationModel.create({
-        participants: [userId, adminId],
+        participants: [userId, receptionId],
         request: requestId,
         isActive: true,
       });
     } else {
       conversation.isActive = true;
-      conversation.closedAt = undefined;
+      conversation.closedAt = null;
+
+      await ConversationModel.updateOne(
+        { _id: conversation._id },
+        {
+          $addToSet: {
+            participants: receptionId,
+          },
+        },
+      );
 
       await conversation.save();
     }
@@ -145,12 +156,11 @@ export class ConversationService {
   }
 
   private assertAccess(conversation: any, userId: string, isAdmin: boolean) {
-    if (isAdmin) {
-      return;
-    }
+    if (isAdmin) return;
 
     const isParticipant = conversation.participants.some(
-      (participant: any) => participant._id.toString() === userId,
+      (participant: any) =>
+        (participant._id ?? participant).toString() === userId,
     );
 
     if (!isParticipant) {

@@ -12,11 +12,17 @@ export class MessageService {
     private readonly socketService: SocketService,
   ) {}
 
-  async sendMessage(conversationId: string, senderId: string, content: string) {
+  async sendMessage(
+    conversationId: string,
+    senderId: string,
+    content: string,
+    isAdmin: boolean,
+  ) {
     const conversation =
       await this.conversationService.getActiveConversationForParticipant(
         conversationId,
         senderId,
+        isAdmin,
       );
 
     const receiverId = conversation.participants.find(

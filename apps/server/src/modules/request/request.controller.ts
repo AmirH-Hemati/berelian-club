@@ -4,7 +4,6 @@ import RequestModel, {
 } from "../../models/request.model.js";
 import type { UserDocument } from "../../models/user.model.js";
 import {
-  createOne,
   getAll,
   getOne,
   updateOne,
@@ -37,11 +36,11 @@ export const setUserIdToParams = (
 };
 
 export const approveRequest = CatchError(async (req, res) => {
-  const adminId = (req.user as UserDocument)._id.toString();
+  const receptionId = (req.user as UserDocument)._id.toString();
 
   const result = await requestService.approveRequest(
     req.params.id as string,
-    adminId,
+    receptionId,
   );
 
   return res.status(200).json({
@@ -110,7 +109,17 @@ export const deleteRequest = CatchError(async (req, res) => {
   return res.status(204).send();
 });
 
+export const createRequest = CatchError(async (req: Request, res: Response) => {
+  const userId = (req.user as UserDocument)._id.toString();
+
+  const request = await requestService.createRequest(userId, req.body);
+
+  return res.status(201).json({
+    status: "success",
+    message: "درخواست شما با موفقیت ثبت شد",
+    data: request,
+  });
+});
 export const getRequest = getOne<RequestDocument>(RequestModel);
 export const getRequests = getAll<RequestDocument>(RequestModel);
-export const createRequest = createOne<RequestDocument>(RequestModel);
 export const updateRequest = updateOne<RequestDocument>(RequestModel);

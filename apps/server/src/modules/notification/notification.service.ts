@@ -8,6 +8,7 @@ export type SendNotification = {
   message: string;
   type:
     | "file_received"
+    | "request_new"
     | "request_approved"
     | "request_rejected"
     | "request_completed"

@@ -38,6 +38,7 @@ export let messageService: MessageService;
 export const requestService = new RequestService(
   notificationService,
   conversationService,
+  userService,
 );
 
 export const fileService = new FileService();

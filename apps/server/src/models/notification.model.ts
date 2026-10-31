@@ -6,6 +6,7 @@ export interface NotificationDocument extends mongoose.Document {
   message: string;
   type:
     | "file_received"
+    | "request_new"
     | "request_approved"
     | "request_rejected"
     | "request_completed"
@@ -47,6 +48,7 @@ const notificationSchema = new mongoose.Schema<NotificationDocument>(
       required: true,
       enum: [
         "file_received",
+        "request_new",
         "request_approved",
         "request_rejected",
         "request_completed",

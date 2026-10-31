@@ -11,14 +11,16 @@ export const sendMessage = CatchError(async (req: Request, res: Response) => {
 
   const { content } = req.body;
 
-  const senderId = (req.user as UserDocument)._id.toString();
+  const user = req.user as UserDocument;
+  const senderId = user._id.toString();
+  const isAdmin = user.role === "admin";
 
   const { message } = await messageService.sendMessage(
     conversationId as string,
     senderId,
     content,
+    isAdmin,
   );
-
 
   return res.status(201).json({
     status: "success",

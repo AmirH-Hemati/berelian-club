@@ -33,7 +33,10 @@ export const notificationTypes = {
     icon: Bell,
     className: "text-gray-500 bg-gray-50",
   },
-
+  request_new: {
+    icon: FileText,
+    className: "text-blue-500 bg-blue-50",
+  },
   request_approved: {
     icon: CheckCircle2,
     className: "text-green-500 bg-green-50",
