@@ -8,7 +8,7 @@ import { SendFileToAllModal } from "@/features/files/components/SendFileToAllMod
 import { useFiles } from "@/features/files/hooks/useFiles";
 
 export default function Page() {
-  const { files, isLoading, pagination, isError, refetch } = useFiles();
+  const { files, isLoading, pagination, isError, refetch,error } = useFiles();
 
   return (
     <div className="overflow-auto space-y-4 mt-4">
@@ -30,6 +30,7 @@ export default function Page() {
         isLoading={isLoading}
         isError={isError}
         onRetry={refetch}
+        errorMessage={error?.response?.data?.message as string}
       />
     </div>
   );

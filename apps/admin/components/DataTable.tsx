@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
   Button,
-  TableSkeleton
+  TableSkeleton,
 } from "@repo/ui";
 import { DataTablePagination } from "@/components/DataTablePagination";
 import { CircleAlert } from "lucide-react";
@@ -29,6 +29,7 @@ interface DataTableProps<TData, TValue> {
   limit: number;
   isLoading: boolean;
   isError: boolean;
+  errorMessage: string;
   onRetry: () => void;
 }
 
@@ -40,6 +41,7 @@ export function DataTable<TData, TValue>({
   limit = 10,
   isLoading,
   isError,
+  errorMessage,
   onRetry,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
@@ -92,8 +94,9 @@ export function DataTable<TData, TValue>({
                       خطا در دریافت اطلاعات
                     </p>
                     <p className="mt-1 text-200 text-muted-foreground">
-                      متأسفانه اطلاعات در حال حاضر قابل دریافت نیست. لطفاً
-                      دوباره تلاش کنید.
+                      {errorMessage
+                        ? errorMessage
+                        : " متأسفانه اطلاعات در حال حاضر قابل دریافت نیست. لطفاً دوباره تلاش کنید"}
                     </p>
                   </div>
 

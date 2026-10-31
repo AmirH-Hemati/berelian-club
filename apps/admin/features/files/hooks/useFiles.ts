@@ -11,6 +11,7 @@ export function useFiles() {
     isLoading,
     isError,
     refetch,
+    error,
   } = useQuery({
     queryKey: ["files", query.page, query.limit, query.search],
     queryFn: () => getFiles(query),
@@ -21,5 +22,6 @@ export function useFiles() {
     isLoading,
     isError,
     refetch,
+    error,
   };
 }

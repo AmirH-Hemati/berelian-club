@@ -9,6 +9,7 @@ export function useAppointments() {
     isLoading,
     isError,
     refetch,
+    error,
   } = useQuery({
     queryFn: () => getAppointments(query),
     queryKey: [
@@ -26,5 +27,6 @@ export function useAppointments() {
     isLoading,
     isError,
     refetch,
+    error,
   };
 }

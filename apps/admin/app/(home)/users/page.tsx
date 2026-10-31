@@ -6,7 +6,7 @@ import UsersHeader from "@/features/users/components/UsersHeader";
 import { useGetUsers } from "@/features/users/hooks/useGetUsers";
 
 export default function Page() {
-  const { users, pagination, isLoading, isError, refetch } = useGetUsers();
+  const { users, pagination, isLoading, isError, refetch,error } = useGetUsers();
 
   return (
     <div className="space-y-6">
@@ -21,6 +21,7 @@ export default function Page() {
         isLoading={isLoading}
         isError={isError}
         onRetry={refetch}
+        errorMessage={error?.response?.data?.message as string}
       />
     </div>
   );

@@ -6,7 +6,7 @@ import { columns } from "@/features/appointments/components/columns";
 import { useAppointments } from "@/features/appointments/hooks/useAppointments";
 
 export default function Page() {
-  const { appointments, pagination, isLoading, isError, refetch } =
+  const { appointments, pagination, isLoading, isError, refetch, error } =
     useAppointments();
 
   return (
@@ -26,6 +26,7 @@ export default function Page() {
         isLoading={isLoading}
         isError={isError}
         onRetry={refetch}
+        errorMessage={error?.response?.data?.message as string}
       />
     </div>
   );

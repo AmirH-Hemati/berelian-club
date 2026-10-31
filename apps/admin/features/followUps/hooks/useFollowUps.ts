@@ -10,6 +10,7 @@ export function useFollowUps() {
     isLoading,
     isError,
     refetch,
+    error,
   } = useQuery({
     queryKey: ["followUps", query.page, query.limit, query.search],
 
@@ -22,5 +23,6 @@ export function useFollowUps() {
     isLoading,
     isError,
     refetch,
+    error,
   };
 }

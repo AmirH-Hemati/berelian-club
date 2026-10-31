@@ -6,7 +6,8 @@ import { columns } from "@/features/followUps/components/columns";
 import { useFollowUps } from "@/features/followUps/hooks/useFollowUps";
 
 export default function Page() {
-  const { followUps, pagination, isLoading, isError, refetch } = useFollowUps();
+  const { followUps, pagination, isLoading, isError, refetch, error } =
+    useFollowUps();
 
   return (
     <div className="overflow-auto space-y-4 mt-4">
@@ -21,6 +22,7 @@ export default function Page() {
         isLoading={isLoading}
         isError={isError}
         onRetry={refetch}
+        errorMessage={error?.response?.data?.message as string}
       />
     </div>
   );

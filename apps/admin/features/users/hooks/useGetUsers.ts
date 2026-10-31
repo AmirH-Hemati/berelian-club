@@ -11,6 +11,7 @@ export function useGetUsers() {
     isLoading,
     isError,
     refetch,
+    error,
   } = useQuery({
     queryKey: ["users", qeury.page, qeury.limit, qeury.search],
     queryFn: () => getAllUsers(qeury),
@@ -22,5 +23,6 @@ export function useGetUsers() {
     isLoading,
     isError,
     refetch,
+    error,
   };
 }
