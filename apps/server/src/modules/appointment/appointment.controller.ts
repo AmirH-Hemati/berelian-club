@@ -110,12 +110,13 @@ export const getUserAppointmentsController = CatchError(
   async (req: Request, res: Response) => {
     const userId = (req.user as UserDocument)._id.toString();
 
-    const appointments = await appointmentService.getUserAppointments(userId);
+    const { appointments, pagination } =
+      await appointmentService.getUserAppointments(userId, req.query);
 
     return res.status(200).json({
       status: "success",
-      results: appointments.length,
       data: appointments,
+      pagination,
     });
   },
 );

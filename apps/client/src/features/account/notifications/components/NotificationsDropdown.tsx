@@ -15,7 +15,6 @@ import { NotificationType } from "@repo/schema";
 import { Bell, Check, CheckCheck, ExternalLink, Inbox } from "lucide-react";
 
 import Link from "next/link";
-import { formatDate } from "@/utils/helper";
 
 import { useMarkAllNotificationsAsRead } from "../hooks/useMarkAllNotificationsAsRead";
 import { useMarkNotificationAsRead } from "../hooks/useMarkNotificationAsRead";
@@ -23,6 +22,7 @@ import { useMyNotifications } from "../hooks/useMyNotifications";
 import { useUnreadNotificationsCount } from "../hooks/useUnreadNotificationsCount";
 
 import { notificationTypes } from "../data/notificationTypes";
+import { convertDate } from "@/utils/helper";
 
 export default function NotificationsDropdown() {
   const { notifications, isLoading } = useMyNotifications();
@@ -184,7 +184,7 @@ export default function NotificationsDropdown() {
 
                         <div className="flex items-center justify-between gap-2 pt-1">
                           <span className="text-100 text-muted-foreground">
-                            {formatDate(notif.createdAt)}
+                            {convertDate(notif.createdAt)}
                           </span>
 
                           <div className="flex items-center gap-1">

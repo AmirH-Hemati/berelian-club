@@ -5,11 +5,14 @@ import { Suspense } from "react";
 
 export default function Page() {
   return (
-    <div className="space-y-6 mt-4">
-      <AppointmentsHeader />
-      <Suspense fallback={<Spinner />}>
-        <AppointmentsTable />
-      </Suspense>
+    <div className="mt-4">
+      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+        <AppointmentsHeader />
+
+        <Suspense fallback={<Spinner />}>
+          <AppointmentsTable />
+        </Suspense>
+      </div>
     </div>
   );
 }

@@ -220,11 +220,29 @@ export class AppointmentService {
     return appointment;
   }
 
-  async getUserAppointments(userId: string) {
-    return AppointmentModel.find({ user: userId }).sort({
-      appointmentDate: -1,
-      startAt: 1,
-    });
+  async getUserAppointments(userId: string, query: Record<string, any>) {
+    const features = new ApiFeatures(
+      AppointmentModel.find({ user: userId }),
+      query,
+    )
+      .filter()
+      .search()
+      .sort()
+      .fields();
+
+    const { total, limit, page, totalPages } = await features.pagination();
+
+    const appointments = await features.query;
+
+    return {
+      appointments,
+      pagination: {
+        total,
+        limit,
+        page,
+        totalPages,
+      },
+    };
   }
 
   async getTodayAppointments() {

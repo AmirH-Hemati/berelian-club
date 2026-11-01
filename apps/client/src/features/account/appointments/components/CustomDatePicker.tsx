@@ -18,8 +18,8 @@ export default function CustomDatePicker<T extends FieldValues>({
   label,
 }: Props<T>) {
   return (
-    <Field className="">
-      <FieldLabel className="text-sm font-medium">{label}</FieldLabel>
+    <Field >
+      <FieldLabel className="text-200 font-medium">{label}</FieldLabel>
 
       <Controller
         control={control}
@@ -28,7 +28,7 @@ export default function CustomDatePicker<T extends FieldValues>({
           <div className="grid ">
             <label
               htmlFor="datePicker"
-              className=" h-9 gap-1 flex items-center w-full   rounded-md border border-input bg-transparent/50 py-1 px-1.5  text-base sm:text-sm shadow-xs focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              className=" h-9 gap-1 flex items-center w-full   rounded-md border border-input bg-transparent/50 py-1 px-1.5  text-200 sm:text-300 shadow-xs focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               <Calendar className="size-4"/>
               <DatePicker

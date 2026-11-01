@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Table,
   TableBody,
@@ -13,120 +14,199 @@ import {
   DropdownMenuTrigger,
   Button,
   TableSkeleton,
-  StatusBadge
+  StatusBadge,
 } from "@repo/ui";
 
 import { PaginationControls } from "@/components/PaginationControls";
-
-import { convertDate } from "@/utils/helper";
 import { RequestType } from "@repo/schema";
-import { CircleAlert, MoreHorizontalIcon } from "lucide-react";
+
+import { MoreHorizontalIcon, MessageCircle, Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
+
 import { typesMap } from "../data/typesMap";
 import { useDeleteRequest } from "../hooks/useDeleteRequest";
 import { useRequests } from "../hooks/useRequests";
+
 import Typebadge from "./Typebadge";
+import ReceptionInfo from "./ReceptionInfo";
+import { convertDate } from "@/utils/helper";
 
 export default function RequestsTable() {
-  const { requests, pagination, isLoading, isError, refetch } = useRequests();
+  const { requests, pagination, isLoading, isError, error, refetch } =
+    useRequests();
+
   const { deleteRequest, isDeleting } = useDeleteRequest();
+
   if (isLoading) return <TableSkeleton />;
+
   return (
-    <div className="border border-border py-1 rounded-lg! flex flex-col gap-4">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>نوع درخواست</TableHead>
-            <TableHead>تاریخ ثبت</TableHead>
-            <TableHead>وضعیت</TableHead>
-            <TableHead className="text-center ">جزئیات / عملیات</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {isError && (
-            <TableRow>
-              <TableCell colSpan={4} className="py-10">
-                <div className="flex flex-col items-center justify-center gap-3 ">
-                  <CircleAlert className="size-8 text-destructive" />
+    <div className="flex flex-col">
+      <div className="w-full overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-muted/40 hover:bg-muted/40">
+              <TableHead className="h-12 px-4 text-right font-semibold">
+                مسئول پیگیری
+              </TableHead>
 
-                  <div className="flex flex-col items-center">
-                    <p className="font-medium text-300">
-                      خطا در دریافت اطلاعات
+              <TableHead className="h-12 px-4 text-right font-semibold">
+                نوع درخواست
+              </TableHead>
+
+              <TableHead className="h-12 px-4 text-right font-semibold">
+                تاریخ ثبت
+              </TableHead>
+
+              <TableHead className="h-12 px-4 text-right font-semibold">
+                زمان تکمیل
+              </TableHead>
+
+              <TableHead className="h-12 px-4 text-right font-semibold">
+                وضعیت
+              </TableHead>
+
+              <TableHead className="whitespace-nowrap text-center">
+                جزئیات / عملیات
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {isError ? (
+              <TableRow>
+                <TableCell colSpan={7} className="h-40 text-center">
+                  <div className="flex flex-col items-center justify-center gap-3">
+                    <div className="flex size-11 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+                      <MoreHorizontalIcon className="size-5" />
+                    </div>
+
+                    <p className="text-sm text-muted-foreground">
+                      {error?.message || "خطا در دریافت درخواست‌ها"}
                     </p>
-                    <p className="mt-1 text-200 text-muted-foreground">
-                      متأسفانه اطلاعات در حال حاضر قابل دریافت نیست. لطفاً
-                      دوباره تلاش کنید.
-                    </p>
+
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => refetch()}
+                    >
+                      تلاش مجدد
+                    </Button>
                   </div>
-
-                  <Button variant="outline" size="sm" onClick={() => refetch()}>
-                    تلاش مجدد
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          )}
-          {!isError && requests.length === 0 ? (
-            <TableRow>
-              <TableCell
-                colSpan={4}
-                className="text-center py-8  text-muted-foreground"
-              >
-                <p className="text-300"> درخواستی ای یافت نشد</p>
-              </TableCell>
-            </TableRow>
-          ) : (
-            requests?.map((request: RequestType) => (
-              <TableRow key={request._id}>
-                <TableCell className="font-medium">
-                  <Typebadge type={request.type} types={typesMap} />
-                </TableCell>
-                <TableCell>{convertDate(request.createdAt)}</TableCell>
-                <TableCell>
-                  <StatusBadge status={request.status} />
-                </TableCell>
-
-                <TableCell className="flex">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="mx-auto" asChild>
-                      <Button variant="ghost" size="icon" className="  ">
-                        <MoreHorizontalIcon />
-                        <span className="sr-only">باز کردن منو</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      {request.status == "approved" && (
-                        <DropdownMenuItem asChild>
-                          <Link href={`/account/chat/${request._id}`}>
-                            گفتگو
-                          </Link>
-                        </DropdownMenuItem>
-                      )}
-                      <DropdownMenuItem asChild>
-                        <Link href={`requests/${request._id}`}>
-                          مشاهده جزئیات
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        disabled={isDeleting}
-                        variant="destructive"
-                        onClick={() => deleteRequest(request._id)}
-                      >
-                        حذف درخواست
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
                 </TableCell>
               </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
-      <PaginationControls
-        page={pagination?.page}
-        totalPages={pagination?.totalPages}
-      />
+            ) : requests?.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={7} className="h-40 text-center">
+                  <div className="flex flex-col items-center justify-center gap-2">
+                    <div className="flex size-12 items-center justify-center rounded-full bg-muted text-muted-foreground">
+                      <MessageCircle className="size-5" />
+                    </div>
+
+                    <p className="text-sm font-medium text-foreground">
+                      هنوز درخواستی ثبت نکرده‌اید
+                    </p>
+
+                    <p className="text-xs text-muted-foreground">
+                      درخواست‌های ثبت‌شده شما در این قسمت نمایش داده می‌شوند.
+                    </p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              requests?.map((request) => (
+                <TableRow
+                  key={request._id}
+                  className="transition-colors hover:bg-muted/30"
+                >
+                  <TableCell className="px-4 py-4">
+                    <ReceptionInfo
+                      firstName={request.assignedTo?.firstName}
+                      lastName={request.assignedTo?.lastName}
+                    />
+                  </TableCell>
+
+                  <TableCell className="px-4 py-4">
+                    <Typebadge type={request.type} types={typesMap} />
+                  </TableCell>
+
+                  <TableCell className="px-4 py-4">
+                    {convertDate(request.createdAt)}
+                  </TableCell>
+
+                  <TableCell className="px-4 py-4">
+                    {convertDate(request.completedAt)}
+                  </TableCell>
+
+                  <TableCell className="px-4 py-4">
+                    <StatusBadge status={request.status} />
+                  </TableCell>
+
+                  <TableCell className="px-4 py-4">
+                    <div className="flex justify-center">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-9 rounded-lg"
+                          >
+                            <MoreHorizontalIcon className="size-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+
+                        <DropdownMenuContent align="end" className="w-48">
+                          {request.status === "approved" && (
+                            <DropdownMenuItem asChild>
+                              <Link
+                                href={`/account/chat/${request._id}`}
+                                className="flex cursor-pointer items-center gap-2"
+                              >
+                                <MessageCircle className="size-4" />
+                                گفتگو با پذیرش
+                              </Link>
+                            </DropdownMenuItem>
+                          )}
+
+                          <DropdownMenuItem asChild>
+                            <Link
+                              href={`requests/${request._id}`}
+                              className="flex cursor-pointer items-center gap-2"
+                            >
+                              <Eye className="size-4" />
+                              مشاهده جزئیات
+                            </Link>
+                          </DropdownMenuItem>
+
+                          <DropdownMenuSeparator />
+
+                          <DropdownMenuItem
+                            disabled={isDeleting}
+                            variant="destructive"
+                            onClick={() => deleteRequest(request._id)}
+                            className="flex cursor-pointer items-center gap-2"
+                          >
+                            <Trash2 className="size-4" />
+                            حذف درخواست
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {!isError && (pagination?.totalPages ?? 0) > 1 && (
+        <div className="border-t border-border px-4 py-3">
+          <PaginationControls
+            page={pagination?.page}
+            totalPages={pagination?.totalPages}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -6,12 +6,14 @@ import { Suspense } from "react";
 
 export default function Page() {
   return (
-    <div className="space-y-4 mt-4">
-      <RequestsHeader />
-      <Suspense fallback={<Spinner />}>
-        <SearchFilter />
-        <RequestsTable />
-      </Suspense>
+    <div className="mt-4">
+      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+        <RequestsHeader />
+
+        <Suspense fallback={<Spinner />}>
+          <RequestsTable />
+        </Suspense>
+      </div>
     </div>
   );
 }

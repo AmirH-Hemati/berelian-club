@@ -10,54 +10,73 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
   Button,
   TableSkeleton,
-  StatusBadge
+  StatusBadge,
 } from "@repo/ui";
 
 import { PaginationControls } from "@/components/PaginationControls";
 import { convertDate } from "@/utils/helper";
 import { AppointmentType } from "@repo/schema";
-import { CircleAlert, MoreHorizontalIcon } from "lucide-react";
+import {
+  CalendarDays,
+  CircleAlert,
+  Clock3,
+  MoreHorizontalIcon,
+  UserRound,
+} from "lucide-react";
 import Link from "next/link";
 import Typebadge from "../../requests/components/Typebadge";
 import { typesMap } from "../data/typesMap";
 import { useAppointments } from "../hooks/useAppointments";
-import { useDeleteAppointment } from "../hooks/useDeleteAppointment";
+import ConsultantInfo from "@/components/ConsultantInfo";
 
 export default function AppointmentsTable() {
-  const { appointments, pagination, isLoading, isError, refetch } =
+  const { appointments, pagination, isLoading, isError, refetch, error } =
     useAppointments();
-  const { deleteAppointment, isDeleting } = useDeleteAppointment();
+
   if (isLoading) return <TableSkeleton />;
 
   return (
-    <div className="border border-border py-2 rounded-lg! flex flex-col gap-4">
+    <div className="overflow-x-hidden">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>نوع مشاوره</TableHead>
-            <TableHead>تاریخ مشاوره</TableHead>
-            <TableHead>وضعیت</TableHead>
-            <TableHead className="text-center">جزئیات / عملیات</TableHead>
+          <TableRow className="bg-muted/40 hover:bg-muted/40">
+            <TableHead className="h-12 px-4 text-right font-semibold">
+              مشاور
+            </TableHead>
+            <TableHead className="h-12 px-4 text-right font-semibold">
+              نوع جلسه
+            </TableHead>
+            <TableHead className="h-12 px-4 text-right font-semibold">
+              تاریخ و ساعت
+            </TableHead>
+            <TableHead className="h-12 px-4 text-right font-semibold">
+              وضعیت
+            </TableHead>
+            <TableHead className="h-12 px-4 text-center font-semibold">
+              جزئیات
+            </TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {isError && (
-            <TableRow>
-              <TableCell colSpan={4} className="py-10">
-                <div className="flex flex-col items-center justify-center gap-3 ">
-                  <CircleAlert className="size-8 text-destructive" />
 
-                  <div className="flex flex-col items-center">
-                    <p className="font-medium text-300">
-                      خطا در دریافت اطلاعات
+        <TableBody>
+          {isError ? (
+            <TableRow>
+              <TableCell colSpan={5} className="py-14">
+                <div className="flex flex-col items-center justify-center gap-3 text-center">
+                  <div className="flex size-12 items-center justify-center rounded-full bg-destructive/10">
+                    <CircleAlert className="size-6 text-destructive" />
+                  </div>
+
+                  <div>
+                    <p className="font-semibold text-foreground">
+                      دریافت اطلاعات با خطا مواجه شد
                     </p>
-                    <p className="mt-1 text-200 text-muted-foreground">
-                      متأسفانه اطلاعات در حال حاضر قابل دریافت نیست. لطفاً
-                      دوباره تلاش کنید.
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {error?.response?.data?.message ||
+                        "متأسفانه اطلاعات در حال حاضر قابل دریافت نیست. لطفاً دوباره تلاش کنید."}
                     </p>
                   </div>
 
@@ -67,51 +86,88 @@ export default function AppointmentsTable() {
                 </div>
               </TableCell>
             </TableRow>
-          )}
-          {!isError && appointments.length === 0 ? (
+          ) : appointments.length === 0 ? (
             <TableRow>
-              <TableCell
-                colSpan={4}
-                className="text-center py-8 text-muted-foreground"
-              >
-                <p className="text-300"> جلسه مشاوره ای یافت نشد</p>
+              <TableCell colSpan={5} className="py-14">
+                <div className="flex flex-col items-center justify-center gap-3 text-center">
+                  <div className="flex size-12 items-center justify-center rounded-full bg-muted">
+                    <CalendarDays className="size-6 text-muted-foreground" />
+                  </div>
+
+                  <div>
+                    <p className="font-semibold text-foreground">
+                      هنوز مشاوره‌ای رزرو نکرده‌اید
+                    </p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      پس از رزرو مشاوره، اطلاعات جلسه در این قسمت نمایش داده
+                      می‌شود.
+                    </p>
+                  </div>
+                </div>
               </TableCell>
             </TableRow>
           ) : (
             appointments.map((appointment: AppointmentType) => (
-              <TableRow key={appointment._id}>
-                <TableCell className="font-medium">
+              <TableRow
+                key={appointment._id}
+                className="transition-colors hover:bg-muted/30"
+              >
+                <TableCell className="px-4 py-4">
+                  {appointment.consultant ? (
+                    <ConsultantInfo
+                      firstName={appointment.consultant.firstName}
+                      lastName={appointment.consultant.lastName}
+                    />
+                  ) : (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <div className="flex size-10 items-center justify-center rounded-full bg-muted">
+                        <UserRound className="size-5" />
+                      </div>
+                      در انتظار تخصیص مشاور
+                    </div>
+                  )}
+                </TableCell>
+
+                <TableCell className="px-4 py-4">
                   <Typebadge type={appointment.type} types={typesMap} />
                 </TableCell>
-                <TableCell>
-                  {convertDate(appointment.appointmentDate)}
+
+                <TableCell className="px-4 py-4">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                      <CalendarDays className="size-4 text-muted-foreground" />
+                      {convertDate(appointment.appointmentDate)}
+                    </div>
+
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Clock3 className="size-3.5" />
+                      {appointment.startAt} تا {appointment.endAt}
+                    </div>
+                  </div>
                 </TableCell>
-                <TableCell>
+
+                <TableCell className="px-4 py-4">
                   <StatusBadge status={appointment.status} />
                 </TableCell>
 
-                <TableCell className="text-center">
+                <TableCell className="px-4 py-4 text-center">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreHorizontalIcon className="h-4 w-4" />
-                        <span className="sr-only">باز کردن منو</span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-9 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+                        aria-label="عملیات مشاوره"
+                      >
+                        <MoreHorizontalIcon className="size-5" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+
+                    <DropdownMenuContent align="end" className="min-w-48">
                       <DropdownMenuItem asChild>
                         <Link href={`appointments/${appointment._id}`}>
                           مشاهده جزئیات مشاوره
                         </Link>
-                      </DropdownMenuItem>
-
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        variant="destructive"
-                        disabled={isDeleting}
-                        onClick={() => deleteAppointment(appointment._id)}
-                      >
-                        حذف مشاوره
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -121,10 +177,15 @@ export default function AppointmentsTable() {
           )}
         </TableBody>
       </Table>
-      <PaginationControls
-        page={pagination?.page}
-        totalPages={pagination?.totalPages}
-      />
+
+      {!isError && pagination && pagination.totalPages > 1 && (
+        <div className="border-t border-border px-4 py-3 sm:px-5">
+          <PaginationControls
+            page={pagination.page}
+            totalPages={pagination.totalPages}
+          />
+        </div>
+      )}
     </div>
   );
 }

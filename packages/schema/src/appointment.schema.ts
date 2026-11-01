@@ -67,8 +67,16 @@ export interface AppointmentType extends createAppointmentTypes {
     UserType,
     "_id" | "firstName" | "lastName" | "phoneNumber" | "nationalCode" | "photo"
   >;
+  consultant: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  } | null;
+  appointmentDate: Date;
+  startAt: string;
+  endAt: string;
+  type: "phone" | "online";
   status: "pending" | "approved" | "completed" | "cancelled";
-  type: "online" | "phone";
   meetingLink?: string;
   cancellationReason?: string;
   rescheduleReason?: string;

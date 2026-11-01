@@ -25,6 +25,11 @@ export type CreateRequestTypes = z.infer<typeof createRequestSchema>;
 export interface RequestType extends CreateRequestTypes {
   _id: string;
   user: UserType;
+  assignedTo: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  } | null;
   type:
     "consultation" | "renew_contract" | "increase_capital" | "decrease_capital";
   status: "pending" | "approved" | "completed" | "cancelled";

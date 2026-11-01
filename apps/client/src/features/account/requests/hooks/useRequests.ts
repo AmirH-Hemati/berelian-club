@@ -10,6 +10,7 @@ export function useRequests() {
     isLoading,
     isError,
     refetch,
+    error
   } = useQuery({
     queryFn: () => getRequests(query),
     queryKey: ["requests", query.page, query.limit, query.search],
@@ -21,5 +22,6 @@ export function useRequests() {
     isLoading,
     isError,
     refetch,
+    error
   };
 }
