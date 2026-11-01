@@ -4,6 +4,7 @@ import ContractStatus from "@/features/account/dashboard/components/ContractStat
 
 import NotificationsWidget from "@/features/account/dashboard/components/NotificationsWidget";
 import RecentRequests from "@/features/account/requests/components/RecentRequests";
+import RecentAppointments from "@/features/account/appointments/components/RecentAppointments";
 
 export default function DashboardOverview() {
   return (
@@ -11,9 +12,10 @@ export default function DashboardOverview() {
       <Stats />
       <ContractStatus />
       <div className="grid gap-6 lg:grid-cols-2">
-        <NotificationsWidget />
         <RecentRequests />
+        <RecentAppointments />
       </div>
+      <NotificationsWidget />
     </div>
   );
 }
