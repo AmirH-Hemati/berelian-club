@@ -11,139 +11,228 @@ import {
   cn,
 } from "@repo/ui";
 
-import { convertDate } from "@/utils/helper";
 import { NotificationType } from "@repo/schema";
-import { Bell, Check, CheckCheck } from "lucide-react";
+import { Bell, Check, CheckCheck, ExternalLink, Inbox } from "lucide-react";
+
+import Link from "next/link";
+import { formatDate } from "@/utils/helper";
+
 import { useMarkAllNotificationsAsRead } from "../hooks/useMarkAllNotificationsAsRead";
 import { useMarkNotificationAsRead } from "../hooks/useMarkNotificationAsRead";
 import { useMyNotifications } from "../hooks/useMyNotifications";
+import { useUnreadNotificationsCount } from "../hooks/useUnreadNotificationsCount";
+
 import { notificationTypes } from "../data/notificationTypes";
-import Link from "next/link";
 
 export default function NotificationsDropdown() {
   const { notifications, isLoading } = useMyNotifications();
+
   const { markAllAsRead, isMarkingAll } = useMarkAllNotificationsAsRead();
+
   const { markAsRead, isMarking } = useMarkNotificationAsRead();
-  if (isLoading) return <Spinner />;
+
+  const { unreadCount, isLoading: isCountLoading } =
+    useUnreadNotificationsCount();
+
+  const notificationList = notifications?.notifications ?? [];
+
+  const hasNotifications = notificationList.length > 0;
+  const hasUnread = unreadCount > 0;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" className="relative">
-          <Bell className="size-4" />
-          {notifications?.unreadCount > 0 && (
-            <Badge className="absolute -top-2 -right-2 h-5 w-5  flex items-center justify-center bg-red-500  text-white! text-100">
-              {notifications?.unreadCount > 99
-                ? "99+"
-                : notifications?.unreadCount}
+        <Button
+          variant="outline"
+          size="icon"
+          className="relative size-10 rounded-xl border-border/70 bg-background hover:bg-muted"
+          aria-label="اعلان‌ها"
+        >
+          <Bell />
+
+          {!isCountLoading && hasUnread && (
+            <Badge className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-background bg-destructive px-1 text-100 font-bold text-white">
+              {unreadCount > 99 ? "99+" : unreadCount}
             </Badge>
+          )}
+
+          {isCountLoading && (
+            <span className="absolute -right-1 -top-1 size-2 rounded-full bg-muted-foreground animate-pulse" />
           )}
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="md:w-96 w-full" align="end">
-        <div className="flex items-center justify-between p-3 border-b">
-          <h3 className="font-semibold text-300">اعلان‌ها</h3>
+      <DropdownMenuContent
+        align="end"
+        sideOffset={10}
+        className="w-[calc(100vw-2rem)] max-w-[400px] overflow-hidden rounded-2xl border-border/70 p-0 shadow-xl"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between border-b bg-muted/30 px-4 py-3">
+          <div className="flex items-center gap-2.5">
+            <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <Bell />
+            </div>
 
-          {notifications?.notifications?.length !== 0 && (
+            <div>
+              <h3 className="text-300 font-bold">اعلان‌ها</h3>
+
+              <p className="text-100 text-muted-foreground">
+                {isCountLoading
+                  ? "در حال دریافت..."
+                  : hasUnread
+                    ? `${unreadCount} اعلان خوانده‌نشده`
+                    : "همه اعلان‌ها خوانده شده‌اند"}
+              </p>
+            </div>
+          </div>
+
+          {hasUnread && (
             <Button
               variant="ghost"
               size="sm"
+              className="h-8 gap-1.5 rounded-lg text-100 text-primary hover:text-primary"
               onClick={() => markAllAsRead()}
               disabled={isMarkingAll}
             >
-              <CheckCheck className="size-4" />
+              {isMarkingAll ? (
+                <Spinner className="size-3.5" />
+              ) : (
+                <CheckCheck className="size-4" />
+              )}
               خواندن همه
             </Button>
           )}
         </div>
 
-        <ScrollArea
-          className={cn(
-            notifications?.notifications?.length === 0 ? "h-26" : "h-52",
-          )}
-        >
-          {notifications?.notifications?.length === 0 ? (
-            <div className="flex flex-col items-center mt-6 justify-center gap-2 ">
-              <Bell className="size-8 text-muted-foreground/50" />
-              <p className="text-200 text-muted-foreground">
-                هیچ اعلانی وجود ندارد
+        {/* Notification List */}
+        {isLoading ? (
+          <div className="flex h-48 items-center justify-center">
+            <Spinner />
+          </div>
+        ) : !hasNotifications ? (
+          <div className="flex h-52 flex-col items-center justify-center gap-3">
+            <div className="flex size-14 items-center justify-center rounded-2xl bg-muted">
+              <Inbox className="size-7 text-muted-foreground" />
+            </div>
+
+            <div className="text-center">
+              <p className="text-200 font-semibold">صندوق اعلان‌ها خالی است</p>
+
+              <p className="mt-1 text-100 text-muted-foreground">
+                در حال حاضر اعلان جدیدی ندارید.
               </p>
             </div>
-          ) : (
-            <div className="space-y-2 divide-y-2 divide-border p-1">
-              {notifications?.notifications.map((notif: NotificationType) => {
-                const Icon =
-                  notificationTypes[
-                    notif.type as keyof typeof notificationTypes
-                  ].icon;
-                const colorClass =
-                  notificationTypes[
-                    notif.type as keyof typeof notificationTypes
-                  ].className;
+          </div>
+        ) : (
+          <ScrollArea className="h-[360px]">
+            <div className="space-y-1 p-2">
+              {notificationList.map((notif: NotificationType) => {
+                const config = notificationTypes[
+                  notif.type as keyof typeof notificationTypes
+                ] ?? {
+                  icon: Bell,
+                  className: "bg-muted text-muted-foreground",
+                };
+
+                const Icon = config.icon;
+                const colorClass = config.className;
 
                 return (
                   <div
                     key={notif._id}
                     className={cn(
-                      "p-3  transition-colors relative rounded-md group",
-                      !notif.isRead && "bg-muted/30",
+                      "group relative rounded-xl p-3 transition-colors",
+                      notif.isRead
+                        ? "hover:bg-muted/60"
+                        : "bg-primary/[0.045] hover:bg-primary/[0.08]",
                     )}
                   >
-                    <div className="flex items-start gap-2">
-                      <div className={cn(" rounded-full p-2", colorClass)}>
-                        <Icon className="size-4" />
+                    <div className="flex items-start gap-3">
+                      {/* Icon */}
+                      <div
+                        className={cn(
+                          "flex size-10 shrink-0 items-center justify-center rounded-xl",
+                          colorClass,
+                        )}
+                      >
+                        <Icon />
                       </div>
 
-                      <div className="flex-1 flex flex-col">
+                      {/* Content */}
+                      <div className="min-w-0 flex-1 space-y-1.5">
                         <div className="flex items-start justify-between gap-2">
                           <p
                             className={cn(
-                              "text-300 font-medium",
-                              !notif.isRead && "text-primary",
+                              "text-200 leading-6",
+                              notif.isRead
+                                ? "font-medium"
+                                : "font-bold text-foreground",
                             )}
                           >
                             {notif.title}
                           </p>
-                          <span className="text-100 text-muted-foreground ">
-                            {convertDate(notif.createdAt)}
-                          </span>
+
+                          {!notif.isRead && (
+                            <span className="mt-1.5 size-2 shrink-0 rounded-full bg-primary" />
+                          )}
                         </div>
-                        <div className="flex items-center justify-between gap-4">
-                          <div className="space-y-1 flex-1 text-200 text-muted-foreground">
-                            <p>{notif.message}</p>
+
+                        <p className="text-100 leading-6 text-muted-foreground">
+                          {notif.message}
+                        </p>
+
+                        <div className="flex items-center justify-between gap-2 pt-1">
+                          <span className="text-100 text-muted-foreground">
+                            {formatDate(notif.createdAt)}
+                          </span>
+
+                          <div className="flex items-center gap-1">
                             {notif.link && (
-                              <Link href={`/account${notif.link}`}>
-                                <Button variant="link">مشاهده</Button>
+                              <Link
+                                href={`/account${notif.link}`}
+                                className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-100 font-medium text-primary transition-colors hover:bg-primary/10"
+                              >
+                                مشاهده
+                                <ExternalLink className="size-3" />
                               </Link>
                             )}
+
+                            {!notif.isRead && (
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="size-7 rounded-lg text-muted-foreground hover:text-primary"
+                                title="علامت‌گذاری به‌عنوان خوانده‌شده"
+                                aria-label="خوانده‌شدن اعلان"
+                                disabled={isMarking}
+                                onClick={() => markAsRead(notif._id)}
+                              >
+                                <Check className="size-4" />
+                              </Button>
+                            )}
                           </div>
-                          {!notif.isRead && (
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className=" opacity-0 group-hover:opacity-100 transition-opacity"
-                              disabled={isMarking}
-                              onClick={() => markAsRead(notif._id)}
-                            >
-                              <Check className="size-4" />
-                            </Button>
-                          )}
                         </div>
                       </div>
                     </div>
-
-                    {!notif.isRead && (
-                      <div className="absolute top-3 right-3">
-                        <div className="size-2 rounded-full bg-primary" />
-                      </div>
-                    )}
                   </div>
                 );
               })}
             </div>
-          )}
-        </ScrollArea>
+          </ScrollArea>
+        )}
+
+        {/* Footer */}
+        {hasNotifications && (
+          <div className="border-t bg-muted/20 p-2">
+            <Link
+              href="/account/notifications"
+              className="flex items-center justify-center rounded-lg py-2 text-100 font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
+            >
+              مشاهده همه اعلان‌ها
+            </Link>
+          </div>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

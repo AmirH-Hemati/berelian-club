@@ -16,13 +16,13 @@ export const createSessionReport = CatchError(
       followUpDate,
       followUpAction,
     } = req.body;
-    const advisor = req.user as UserDocument;
+    const consultant = req.user as UserDocument;
 
     const sessionReport = await sessionReportService.createSessionReport({
       appointment,
       summary,
       userId,
-      advisorId: advisor._id.toString(),
+      consultantId: consultant._id.toString(),
       result,
       resultDescription,
       notes,

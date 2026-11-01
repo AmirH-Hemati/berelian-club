@@ -9,6 +9,7 @@ import type { ConversationService } from "../conversation/conversation.service.j
 import type { NotificationService } from "../notification/notification.service.js";
 import type { Types } from "mongoose";
 import type { UserService } from "../user/user.service.js";
+import type { UserDocument } from "../../models/user.model.js";
 
 export const REQUEST_TYPE_LABELS = {
   renew_contract: "تمدید قرارداد",
@@ -35,8 +36,9 @@ export class RequestService {
     });
 
     const receptions = await this.userService.getUsersByRole("reception");
+    const receptionsIds = receptions.map((user) => user._id);
 
-    const notifications = receptions.map((reception) => ({
+    const notifications = receptionsIds.map((reception) => ({
       userId: reception._id.toString(),
       title: "درخواست جدید",
       message: "یک درخواست جدید ثبت شده است. برای بررسی وارد پنل شوید.",
@@ -56,10 +58,12 @@ export class RequestService {
         status: "pending",
         assignedTo: null,
       },
+
       {
         $set: {
           status: "approved",
           assignedTo: receptionId,
+          assignedAt: new Date(),
         },
       },
       {
@@ -115,9 +119,8 @@ export class RequestService {
     if (request.status !== "approved") {
       throw new AppError("فقط درخواست‌های تایید شده را می‌توان تکمیل کرد", 400);
     }
-
     request.status = "completed";
-
+    request.completedAt = new Date();
     await request.save();
 
     const conversation =
@@ -223,17 +226,170 @@ export class RequestService {
         createdAt: -1,
       });
   }
-  async countPendingRequests(userId?: string) {
-    const filter: Record<string, unknown> = {
-      status: "pending",
+  async getUnassignedPendingRequests(query: Record<string, unknown>) {
+    const features = new ApiFeatures(
+      RequestModel.find({
+        status: "pending",
+        assignedTo: null,
+      }),
+      query,
+    )
+      .filter()
+      .search()
+      .sort()
+      .fields();
+
+    const { total, limit, page, totalPages } = await features.pagination();
+
+    const requests = await features.query;
+
+    return {
+      requests,
+      pagination: {
+        total,
+        limit,
+        page,
+        totalPages,
+      },
     };
-
-    if (userId) {
-      filter.user = userId;
-    }
-
-    return RequestModel.countDocuments(filter);
   }
+
+  async getRequestsAssignedToUser(
+    userId: string,
+    query: Record<string, unknown>,
+  ) {
+    const features = new ApiFeatures(
+      RequestModel.find({
+        assignedTo: userId,
+      }),
+      query,
+    )
+      .filter()
+      .search()
+      .sort()
+      .fields();
+
+    const { total, limit, page, totalPages } = await features.pagination();
+
+    const requests = await features.query;
+
+    return {
+      requests,
+      pagination: {
+        total,
+        limit,
+        page,
+        totalPages,
+      },
+    };
+  }
+  async countNewRequests() {
+    return RequestModel.countDocuments({
+      status: "pending",
+      assignedTo: null,
+    });
+  }
+
+  async countAssignedRequests(userId: string) {
+    return RequestModel.countDocuments({
+      assignedTo: userId,
+    });
+  }
+
+  async countMonthlyCompletedRequests(
+    userId: string,
+    startDate: Date,
+    endDate: Date,
+  ) {
+    return RequestModel.countDocuments({
+      assignedTo: userId,
+      status: "completed",
+      completedAt: {
+        $gte: startDate,
+        $lt: endDate,
+      },
+    });
+  }
+  async getReceptionPerformance(
+    receptions: UserDocument[],
+    startDate: Date,
+    endDate: Date,
+  ) {
+    const receptionIds = receptions.map((user) => user._id);
+
+    const performance = await RequestModel.aggregate([
+      {
+        $match: {
+          assignedTo: { $in: receptionIds },
+        },
+      },
+      {
+        $group: {
+          _id: "$assignedTo",
+
+          totalAssigned: {
+            $sum: 1,
+          },
+
+          monthlyAssigned: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $gte: ["$assignedAt", startDate] },
+                    { $lt: ["$assignedAt", endDate] },
+                  ],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+
+          monthlyCompleted: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $eq: ["$status", "completed"] },
+                    { $gte: ["$completedAt", startDate] },
+                    { $lt: ["$completedAt", endDate] },
+                  ],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+
+          inProgress: {
+            $sum: {
+              $cond: [{ $eq: ["$status", "approved"] }, 1, 0],
+            },
+          },
+        },
+      },
+    ]);
+
+    const performanceMap = new Map(
+      performance.map((item) => [item._id.toString(), item]),
+    );
+
+    return receptions.map((reception) => {
+      const stats = performanceMap.get(reception._id.toString());
+
+      return {
+        user: reception,
+        stats: {
+          totalAssigned: stats?.totalAssigned ?? 0,
+          monthlyAssigned: stats?.monthlyAssigned ?? 0,
+          monthlyCompleted: stats?.monthlyCompleted ?? 0,
+          inProgress: stats?.inProgress ?? 0,
+        },
+      };
+    });
+  }
+
   async deleteRequest(requestId: string, userId: string, isAdmin: boolean) {
     const request = await RequestModel.findById(requestId);
     if (!request) {

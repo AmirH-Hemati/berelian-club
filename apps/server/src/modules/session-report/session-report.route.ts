@@ -14,7 +14,7 @@ const router = express.Router();
 
 /// restrict for only admin
 router.use(protectedRoute);
-router.use(restrictTo("admin"));
+router.use(restrictTo("admin", "consultant"));
 router.post(
   "/",
   convertDateFields(["followUpDate"]),

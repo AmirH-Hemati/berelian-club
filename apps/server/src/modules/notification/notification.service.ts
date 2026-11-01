@@ -60,7 +60,7 @@ export class NotificationService {
     }
   }
 
-  async getUserNotifications(userId: string, query: any) {
+  async getUserNotifications(userId: string, query: Record<string, unknown>) {
     const features = new ApiFeatures(
       NotificationModel.find({
         user: userId,
@@ -68,7 +68,6 @@ export class NotificationService {
       query,
     )
       .filter()
-      .search()
       .sort()
       .fields();
 
@@ -76,21 +75,22 @@ export class NotificationService {
 
     const notifications = await features.query;
 
-    const unreadCount = await NotificationModel.countDocuments({
-      user: userId,
-      isRead: false,
-    });
-
     return {
       notifications,
-      unreadCount,
       pagination: {
-        totalPages,
         total,
         limit,
         page,
+        totalPages,
       },
     };
+  }
+
+  async countUnread(userId: string) {
+    return NotificationModel.countDocuments({
+      user: userId,
+      isRead: false,
+    });
   }
 
   async markAsRead(notificationId: string, userId: string) {
@@ -125,12 +125,7 @@ export class NotificationService {
       },
     );
   }
-  async countUnread(userId: string) {
-    return NotificationModel.countDocuments({
-      user: userId,
-      isRead: false,
-    });
-  }
+
   async deleteNotification(notificationId: string, userId: string) {
     const notification = await NotificationModel.findOneAndDelete({
       _id: notificationId,

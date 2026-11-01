@@ -13,7 +13,7 @@ import { restrictTo } from "../../middlewares/authorization.middleware.js";
 const router = Router();
 
 router.use(protectedRoute);
-router.use(restrictTo("admin"));
+router.use(restrictTo("admin", "consultant"));
 
 router.get("/", getAllFollowUps);
 

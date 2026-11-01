@@ -76,7 +76,8 @@ export default function SessionReportCard({ appointmentId }: Props) {
           <div className="flex items-center gap-1">
             <User className="size-3" />
             <span>
-              ثبت توسط: {report.advisor?.firstName} {report.advisor?.lastName}
+              ثبت توسط: {report.consultant?.firstName}{" "}
+              {report.consultant?.lastName}
             </span>
           </div>
           <div className="flex items-center gap-1">

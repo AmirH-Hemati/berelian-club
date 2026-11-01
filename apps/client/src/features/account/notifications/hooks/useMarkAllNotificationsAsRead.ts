@@ -11,6 +11,9 @@ export function useMarkAllNotificationsAsRead() {
       queryClient.invalidateQueries({
         queryKey: ["notifications"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["unreadNotificationsCount"],
+      });
       toast.success("همه اعلان‌ها خوانده شدند.");
     },
     onError: () => {

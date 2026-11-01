@@ -16,7 +16,6 @@ export const getMyNotifications = CatchError(
       status: "success",
       data: {
         notifications: result.notifications,
-        unreadCount: result.unreadCount,
       },
       pagination: result.pagination,
     });
@@ -58,5 +57,20 @@ export const deleteNotification = CatchError(
     );
 
     return res.status(204).send();
+  },
+);
+
+export const countUnreadNotifications = CatchError(
+  async (req: Request, res: Response) => {
+    const user = (req.user as UserDocument)._id.toString();
+
+    const count = await notificationService.countUnread(user);
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        count,
+      },
+    });
   },
 );

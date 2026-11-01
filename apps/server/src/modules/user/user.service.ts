@@ -7,6 +7,12 @@ export class UserService {
     return user?.contractDaysRemaining ?? 0;
   }
   async getUsersByRole(role: UserRole) {
-    return UserModel.find({ role }).select("_id");
+    return UserModel.find({ role }).select(
+      "_id  firstName lastName phoneNumber role",
+    );
+  }
+
+  async countUsersByRole(role: UserRole) {
+    return UserModel.countDocuments({ role });
   }
 }

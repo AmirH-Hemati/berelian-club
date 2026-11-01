@@ -5,6 +5,8 @@ import AppointmentModel from "../../models/appointment.model.js";
 import { UserService } from "../user/user.service.js";
 import { NotificationService } from "../notification/notification.service.js";
 import { formatPersianDate } from "../../utils/date.js";
+import { ApiFeatures } from "../../utils/ApiFeatures.js";
+import type { UserDocument } from "../../models/user.model.js";
 
 const APPOINTMENT_DURATION = 60;
 
@@ -70,8 +72,9 @@ export class AppointmentService {
     });
 
     const consultants = await this.userService.getUsersByRole("consultant");
+    const consultantIds = consultants.map((user) => user._id);
 
-    const notifications = consultants.map((consultant) => ({
+    const notifications = consultantIds.map((consultant) => ({
       userId: consultant._id.toString(),
       title: "درخواست مشاوره جدید",
       message: "یک درخواست مشاوره جدید ثبت شده است. برای بررسی وارد پنل شوید.",
@@ -163,7 +166,7 @@ export class AppointmentService {
     await appointment.save();
 
     await this.notificationService.send({
-      userId: appointment.user.toString(),
+      userId: appointment.user._id.toString(),
       title: "تکمیل مشاوره",
       message: `مشاوره شما در تاریخ ${formatPersianDate(appointment.appointmentDate)} تکمیل شد.`,
       type: "appointment_completed",
@@ -244,24 +247,202 @@ export class AppointmentService {
   async countPendingAppointments() {
     return AppointmentModel.countDocuments({
       status: "pending",
+      consultant: null,
+    });
+  }
+  async countTodayApprovedAppointments(
+    consultantId: string,
+    startDate: Date,
+    endDate: Date,
+  ) {
+    return AppointmentModel.countDocuments({
+      consultant: consultantId,
+      status: "approved",
+      appointmentDate: {
+        $gte: startDate,
+        $lt: endDate,
+      },
+    });
+  }
+  async countMonthlyCompletedAppointments(
+    consultantId: string,
+    startDate: Date,
+    endDate: Date,
+  ) {
+    return AppointmentModel.countDocuments({
+      consultant: consultantId,
+      status: "completed",
+      appointmentDate: {
+        $gte: startDate,
+        $lt: endDate,
+      },
     });
   }
 
-  async countTodayApprovedAppointments() {
-    const now = new Date();
+  async getPendingAppointments(query: Record<string, unknown>) {
+    const features = new ApiFeatures(
+      AppointmentModel.find({
+        status: "pending",
+        consultant: null,
+      }),
+      query,
+    )
+      .filter()
+      .sort()
+      .fields();
 
-    const startOfDay = new Date(now);
-    startOfDay.setHours(0, 0, 0, 0);
+    const { total, limit, page, totalPages } = await features.pagination();
 
-    const endOfDay = new Date(now);
-    endOfDay.setHours(23, 59, 59, 999);
+    const appointments = await features.query;
 
-    return AppointmentModel.countDocuments({
-      status: "approved",
-      appointmentDate: {
-        $gte: startOfDay,
-        $lte: endOfDay,
+    return {
+      appointments,
+      pagination: {
+        total,
+        limit,
+        page,
+        totalPages,
       },
+    };
+  }
+  async getConsultantAppointments(
+    consultantId: string,
+    startDate: Date,
+    endDate: Date,
+    query: Record<string, unknown>,
+  ) {
+    const features = new ApiFeatures(
+      AppointmentModel.find({
+        consultant: consultantId,
+        appointmentDate: {
+          $gte: startDate,
+          $lt: endDate,
+        },
+      }),
+      query,
+    )
+      .filter()
+      .sort()
+      .fields();
+
+    const { total, limit, page, totalPages } = await features.pagination();
+
+    const appointments = await features.query;
+
+    return {
+      appointments,
+      pagination: {
+        total,
+        limit,
+        page,
+        totalPages,
+      },
+    };
+  }
+  async getConsultantPerformance(
+    consultants: UserDocument[],
+    startDate: Date,
+    endDate: Date,
+    todayStart: Date,
+    tomorrowStart: Date,
+  ) {
+    const consultantIds = consultants.map((user) => user._id);
+
+    const performance = await AppointmentModel.aggregate([
+      {
+        $match: {
+          consultant: { $in: consultantIds },
+        },
+      },
+      {
+        $group: {
+          _id: "$consultant",
+
+          monthlyAppointments: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $gte: ["$appointmentDate", startDate] },
+                    { $lt: ["$appointmentDate", endDate] },
+                    {
+                      $in: ["$status", ["approved", "completed"]],
+                    },
+                  ],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+
+          monthlyCompleted: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $eq: ["$status", "completed"] },
+                    { $gte: ["$appointmentDate", startDate] },
+                    { $lt: ["$appointmentDate", endDate] },
+                  ],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+
+          monthlyApproved: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $eq: ["$status", "approved"] },
+                    { $gte: ["$appointmentDate", startDate] },
+                    { $lt: ["$appointmentDate", endDate] },
+                  ],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+
+          todayAppointments: {
+            $sum: {
+              $cond: [
+                {
+                  $and: [
+                    { $eq: ["$status", "approved"] },
+                    { $gte: ["$appointmentDate", todayStart] },
+                    { $lt: ["$appointmentDate", tomorrowStart] },
+                  ],
+                },
+                1,
+                0,
+              ],
+            },
+          },
+        },
+      },
+    ]);
+
+    const performanceMap = new Map(
+      performance.map((item) => [item._id.toString(), item]),
+    );
+
+    return consultants.map((consultant) => {
+      const stats = performanceMap.get(consultant._id.toString());
+
+      return {
+        user: consultant,
+        stats: {
+          monthlyAppointments: stats?.monthlyAppointments ?? 0,
+          monthlyCompleted: stats?.monthlyCompleted ?? 0,
+          monthlyApproved: stats?.monthlyApproved ?? 0,
+          todayAppointments: stats?.todayAppointments ?? 0,
+        },
+      };
     });
   }
 }

@@ -8,7 +8,7 @@ type CreateSessionReportInput = {
   appointment: string;
   summary: string;
   userId: string;
-  advisorId: string;
+  consultantId: string;
   result: "completed" | "pending" | "cancelled" | "failed";
   resultDescription?: string;
   notes?: string;
@@ -32,7 +32,7 @@ export class SessionReportService {
     const sessionReport = await SessionReportModel.create({
       appointment: data.appointment,
       user: data.userId,
-      advisor: data.advisorId,
+      consultant: data.consultantId,
       summary: data.summary,
       result: data.result,
       resultDescription: data.resultDescription,

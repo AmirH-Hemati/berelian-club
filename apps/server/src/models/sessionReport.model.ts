@@ -3,7 +3,7 @@ import mongoose, { Query } from "mongoose";
 export interface SessionReportDocument extends mongoose.Document {
   appointment: mongoose.Types.ObjectId;
   user: mongoose.Types.ObjectId;
-  advisor: mongoose.Types.ObjectId;
+  consultant: mongoose.Types.ObjectId;
   summary: string;
   result: "completed" | "pending" | "cancelled" | "failed";
   resultDescription?: string;
@@ -26,10 +26,11 @@ const sessionReportSchema = new mongoose.Schema<SessionReportDocument>(
       required: true,
       index: true,
     },
-    advisor: {
+    consultant: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true,
     },
     summary: {
       type: String,
@@ -58,7 +59,7 @@ const sessionReportSchema = new mongoose.Schema<SessionReportDocument>(
 sessionReportSchema.pre<Query<SessionReportDocument, SessionReportDocument>>(
   /^find/,
   function () {
-    this.populate("advisor", "firstName lastName");
+    this.populate("consultant", "firstName lastName");
   },
 );
 

@@ -1,4 +1,8 @@
+import { DateTime } from "luxon";
+
 import FollowUpModel from "../../models/followUp.model.js";
+import SessionReportModel from "../../models/sessionReport.model.js";
+import { ApiFeatures } from "../../utils/ApiFeatures.js";
 
 import { AppError } from "../../utils/AppError.js";
 
@@ -15,29 +19,44 @@ export class FollowUpService {
     });
   }
 
-  async getTodayFollowUps() {
-    const start = new Date();
+  async getTodayFollowUps(
+    consultantId: string,
+    startDate: Date,
+    endDate: Date,
+    query: Record<string, unknown>,
+  ) {
+    const sessionReports = await SessionReportModel.find({
+      consultant: consultantId,
+    }).distinct("_id");
 
-    start.setHours(0, 0, 0, 0);
+    const features = new ApiFeatures(
+      FollowUpModel.find({
+        sessionReport: { $in: sessionReports },
+        dueDate: {
+          $gte: startDate,
+          $lt: endDate,
+        },
+      }),
+      query,
+    )
+      .filter()
+      .sort()
+      .fields();
 
-    const end = new Date(start);
+    const { total, limit, page, totalPages } = await features.pagination();
 
-    end.setHours(23, 59, 59, 999);
+    const followUps = await features.query;
 
-    return FollowUpModel.find({
-      isCompleted: false,
-
-      dueDate: {
-        $gte: start,
-        $lte: end,
+    return {
+      followUps,
+      pagination: {
+        total,
+        limit,
+        page,
+        totalPages,
       },
-    })
-      .populate("sessionReport")
-      .sort({
-        dueDate: 1,
-      });
+    };
   }
-
   async getOverdueFollowUps() {
     return FollowUpModel.find({
       isCompleted: false,
@@ -56,7 +75,10 @@ export class FollowUpService {
     const followUp = await FollowUpModel.findByIdAndUpdate(
       id,
       {
-        isCompleted: true,
+        $set: {
+          isCompleted: true,
+          status: "completed",
+        },
       },
       {
         new: true,
@@ -71,20 +93,16 @@ export class FollowUpService {
     return followUp;
   }
   async countTodayPendingFollowUps() {
-    const startOfDay = new Date();
+    const now = DateTime.now().setZone("Asia/Tehran");
 
-    startOfDay.setHours(0, 0, 0, 0);
-
-    const endOfDay = new Date(startOfDay);
-
-    endOfDay.setHours(23, 59, 59, 999);
+    const startDate = now.startOf("day").toUTC().toJSDate();
+    const endDate = now.plus({ days: 1 }).startOf("day").toUTC().toJSDate();
 
     return FollowUpModel.countDocuments({
-      isCompleted: false,
-
+      status: "pending",
       dueDate: {
-        $gte: startOfDay,
-        $lte: endOfDay,
+        $gte: startDate,
+        $lt: endDate,
       },
     });
   }

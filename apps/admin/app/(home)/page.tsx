@@ -1,20 +1,25 @@
-import RecentAppoinetments from "@/features/appointments/components/RecentAppoinetments";
-import { TodayAppointments } from "@/features/appointments/components/TodayAppointments";
-import Stats from "@/features/dashboard/components/Stats";
-import TodayFollowUps from "@/features/followUps/components/TodayFollowUps";
-import RecentRequests from "@/features/requests/components/RecentRequests";
+"use client";
 
-export default function Home() {
-  
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 my-4 text-right">
-      <div className="  lg:col-span-2  2xl:col-span-3">
-        <Stats />
-      </div>
-      <RecentRequests />
-      <RecentAppoinetments />
-      <TodayFollowUps />
-      <TodayAppointments />
-    </div>
-  );
+import PageSpinner from "@/components/PageSpinner";
+import AdminDashboard from "@/features/dashboard/components/AdminDashboard";
+import ConsultantDashboard from "@/features/dashboard/components/ConsultantDashboard";
+import ReceptionDashboard from "@/features/dashboard/components/ReceptionDashboard";
+import { useUser } from "@repo/auth";
+
+export default function DashboardPage() {
+  const { user, isLoading } = useUser();
+  if (isLoading) return <PageSpinner />;
+  switch (user?.role) {
+    case "admin":
+      return <AdminDashboard />;
+
+    case "reception":
+      return <ReceptionDashboard />;
+
+    case "consultant":
+      return <ConsultantDashboard />;
+
+    default:
+      return null;
+  }
 }

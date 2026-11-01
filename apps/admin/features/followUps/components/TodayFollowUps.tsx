@@ -1,58 +1,92 @@
 "use client";
 
 import {
-  AlertCircle,
-  Calendar,
-  CheckCircle,
+  CalendarDays,
   ClipboardCheck,
   Clock,
+  CheckCircle2,
+  XCircle,
+  ArrowLeft,
+  FileText,
 } from "lucide-react";
 
+import Link from "next/link";
+import type { FollowUpType } from "@repo/schema";
+
 import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardSkeleton,
   ScrollArea,
-  Alert,
-  AlertDescription,
-  AlertTitle,
   Badge,
   cn,
-  CardSkeleton,
 } from "@repo/ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
-import { useRouter } from "next/navigation";
-import { useTodayFollowUps } from "../hooks/useTodayFollowUps";
-import { FollowUpType } from "@repo/schema";
+
 import AsyncState from "@/components/AsyncState";
 
 const statusConfig = {
   pending: {
     label: "در انتظار",
-    className: "bg-gray-100 text-gray-700",
+    className:
+      "border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400",
     icon: Clock,
   },
   completed: {
-    label: "تکمیل شد",
-    className: "bg-green-100 text-green-700",
-    icon: CheckCircle,
+    label: "تکمیل شده",
+    className:
+      "border-green-500/20 bg-green-500/10 text-green-600 dark:text-green-400",
+    icon: CheckCircle2,
   },
   cancelled: {
-    label: "لغو شد",
-    className: "bg-red-100 text-red-700",
-    icon: AlertCircle,
+    label: "لغو شده",
+    className: "border-red-500/20 bg-red-500/10 text-red-600 dark:text-red-400",
+    icon: XCircle,
   },
 };
 
-export default function TodayFollowUps() {
-  const { followUps, isLoading, isError, refetch } = useTodayFollowUps();
-  const router = useRouter();
+interface TodayFollowUpsProps {
+  followUps?: FollowUpType[];
+  isLoading: boolean;
+  isError: boolean;
+  refetch: () => void;
+}
 
+export default function TodayFollowUps({
+  followUps,
+  isLoading,
+  isError,
+  refetch,
+}: TodayFollowUpsProps) {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Calendar className="size-5" />
-          پیگیری‌های روزانه
-        </CardTitle>
+      <CardHeader className="flex flex-row items-center justify-between gap-3 space-y-0 pb-3">
+        <div className="flex items-center gap-2.5">
+          <div className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <CalendarDays className="size-4" />
+          </div>
+
+          <div className="space-y-0.5">
+            <h3 className="text-300 font-semibold">
+              پیگیری‌های امروز
+            </h3>
+
+            <p className="text-100 text-muted-foreground">
+              {followUps?.length
+                ? `${followUps.length} پیگیری`
+                : "پیگیری‌ای برای نمایش وجود ندارد"}
+            </p>
+          </div>
+        </div>
+
+        {!!followUps?.length && (
+          <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-1 text-100 font-semibold text-primary">
+            امروز
+          </span>
+        )}
       </CardHeader>
+
       <CardContent>
         <AsyncState
           data={followUps}
@@ -60,61 +94,94 @@ export default function TodayFollowUps() {
           isError={isError}
           refetch={refetch}
           loading={<CardSkeleton />}
-          emptyTitle="هیچ پیگیری روزانه‌ای وجود ندارد"
-          emptyDescription="پیگیری روزانه جدیدی ثبت نشده است"
+          emptyTitle="پیگیری‌ای برای امروز وجود ندارد"
+          emptyDescription="در حال حاضر پیگیری برنامه‌ریزی‌شده‌ای ندارید."
           emptyIcon={ClipboardCheck}
         >
-          <ScrollArea className="h-80">
-            {followUps?.map((followUp: FollowUpType) => {
-              const status =
-                statusConfig[followUp.status as keyof typeof statusConfig] ||
-                statusConfig.pending;
+          <ScrollArea className="h-80 pl-2">
+            <div className="space-y-2">
+              {followUps?.map((followUp) => {
+                const status =
+                  statusConfig[followUp.status as keyof typeof statusConfig] ??
+                  statusConfig.pending;
 
-              const StatusIcon = status.icon;
-              return (
-                <Alert
-                  key={followUp._id}
-                  className={cn(
-                    "mb-3 cursor-pointer hover:border-primary/40 transition-all",
-                    followUp.isCompleted && "border-red-300 bg-red-50/50",
-                    followUp.status === "completed" && "opacity-70",
-                  )}
-                  onClick={() => router.push(`/followups/${followUp._id}`)}
-                >
-                  <div className="flex gap-3">
-                    <div className="flex-1 space-y-2">
-                      <div className="flex items-center justify-between gap-2 flex-wrap">
-                        <AlertTitle className="text-300 font-medium flex items-center gap-2">
-                          پیگیری گزارش
-                        </AlertTitle>
+                const StatusIcon = status.icon;
 
-                        <div className="flex items-center gap-2">
-                          <Badge className={status.className}>
-                            <StatusIcon className="size-3 " />
-                            {status.label}
-                          </Badge>
+                return (
+                  <div
+                    key={followUp._id}
+                    className={cn(
+                      "rounded-xl border p-3 transition-colors",
+                      followUp.status === "pending" &&
+                        "border-amber-500/15 bg-amber-500/[0.03] hover:bg-amber-500/[0.06]",
+                      followUp.status === "completed" &&
+                        "border-green-500/15 bg-green-500/[0.03] hover:bg-green-500/[0.06]",
+                      followUp.status === "cancelled" &&
+                        "border-border/60 bg-muted/20 opacity-80",
+                    )}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex min-w-0 items-center gap-2">
+                        <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-background text-primary shadow-sm">
+                          <ClipboardCheck className="size-4" />
+                        </div>
+
+                        <div className="min-w-0">
+                          <p className="truncate text-200 font-semibold">
+                            پیگیری گزارش جلسه
+                          </p>
+
+                          <p className="mt-0.5 text-100 text-muted-foreground">
+                            پیگیری و بررسی وضعیت جلسه
+                          </p>
                         </div>
                       </div>
 
-                      {followUp.note && (
-                        <AlertDescription className="line-clamp-1 text-200 text-muted-foreground">
-                          {followUp.note}
-                        </AlertDescription>
-                      )}
-
-                      <div className="flex flex-col  gap-1 text-100 text-muted-foreground/70 mt-1">
-                        {followUp.sessionReport && (
-                          <span className="flex items-center gap-1">
-                            <span className="w-1 h-1 rounded-full bg-muted-foreground/30" />
-                            گزارش جلسه: {followUp.sessionReport?.summary || "-"}
-                          </span>
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          "shrink-0 gap-1 font-medium",
+                          status.className,
                         )}
+                      >
+                        <StatusIcon className="size-3" />
+                        {status.label}
+                      </Badge>
+                    </div>
+
+                    {followUp.note && (
+                      <p className="mt-2 line-clamp-2 text-100 leading-5 text-muted-foreground">
+                        {followUp.note}
+                      </p>
+                    )}
+
+                    {followUp.sessionReport?.summary && (
+                      <div className="mt-2 flex items-start gap-2 rounded-lg bg-background/70 p-2">
+                        <FileText className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
+
+                        <p className="line-clamp-2 text-100 leading-5 text-muted-foreground">
+                          {followUp.sessionReport.summary}
+                        </p>
                       </div>
+                    )}
+
+                    <div className="mt-2 flex items-center justify-between border-t border-border/50 pt-2">
+                      <span className="text-100 text-muted-foreground">
+                        جزئیات پیگیری
+                      </span>
+
+                      <Link
+                        href={`/followups/${followUp._id}`}
+                        className="inline-flex items-center gap-1 text-100 font-medium text-primary transition-colors hover:text-primary/80"
+                      >
+                        مشاهده جزئیات
+                        <ArrowLeft className="size-3.5" />
+                      </Link>
                     </div>
                   </div>
-                </Alert>
-              );
-            })}
+                );
+              })}
+            </div>
           </ScrollArea>
         </AsyncState>
       </CardContent>
