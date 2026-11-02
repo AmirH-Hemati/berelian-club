@@ -25,42 +25,48 @@ export const tokenService = new TokenService();
 export const authService = new AuthService(otpService, tokenService);
 const userService = new UserService();
 
-export const notificationService = new NotificationService();
-export const appointmentService = new AppointmentService(
-  notificationService,
-  userService,
-);
 export const conversationService = new ConversationService();
 
+export let notificationService: NotificationService;
 export let socketService: SocketService;
 export let messageService: MessageService;
 
-export const requestService = new RequestService(
-  notificationService,
-  conversationService,
-  userService,
-);
+export let appointmentService: AppointmentService;
+export let requestService: RequestService;
 
-export const fileService = new FileService();
-export const userFileService = new UserFileService(
-  fileService,
-  notificationService,
-);
+export let fileService: FileService;
+export let userFileService: UserFileService;
+
+export let dashboardService: DashboardService;
+
 export const followUpService = new FollowUpService();
 export const sessionReportService = new SessionReportService(followUpService);
-
-export const dashboardService = new DashboardService(
-  userService,
-  requestService,
-  notificationService,
-  appointmentService,
-  followUpService,
-);
 
 export const initializeSocketServices = (io: Server) => {
   socketService = new SocketService(io);
 
+  notificationService = new NotificationService(socketService);
+
   messageService = new MessageService(conversationService, socketService);
+
+  appointmentService = new AppointmentService(notificationService, userService);
+  requestService = new RequestService(
+    notificationService,
+    conversationService,
+    userService,
+  );
+
+  fileService = new FileService();
+
+  userFileService = new UserFileService(fileService, notificationService);
+
+  dashboardService = new DashboardService(
+    userService,
+    requestService,
+    notificationService,
+    appointmentService,
+    followUpService,
+  );
 
   setupSocketGateway(io, socketService);
 };

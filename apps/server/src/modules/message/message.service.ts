@@ -29,6 +29,7 @@ export class MessageService {
       (participant) => participant._id.toString() !== senderId,
     );
 
+    console.log(receiverId);
     if (!receiverId) {
       throw new AppError("گیرنده یافت نشد", 404);
     }
@@ -36,7 +37,7 @@ export class MessageService {
     const message = await MessageModel.create({
       conversation: conversationId,
       sender: senderId,
-      receiver: receiverId,
+      receiver: receiverId._id,
       content: content.trim(),
       type: "text",
       isRead: false,
@@ -56,6 +57,19 @@ export class MessageService {
     // if (receiverSocketId) {
     // }
     this.socketService.emitNewMessage(conversationId, message);
+
+    console.log("receiverId", receiverId);
+    this.socketService.emitToUser(
+      receiverId._id.toString(),
+      "chat:notification",
+      {
+        _id: message._id.toString(),
+        conversationId,
+        sender: message.sender,
+        content: message.content,
+        createdAt: message.createdAt,
+      },
+    );
 
     return {
       message,

@@ -1,4 +1,3 @@
-import SearchFilter from "@/components/SearchFilter";
 import Spinner from "@/components/spinner/Spinner";
 import RequestsHeader from "@/features/account/requests/components/RequestsHeader";
 import RequestsTable from "@/features/account/requests/components/RequestsTable";

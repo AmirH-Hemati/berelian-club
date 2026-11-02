@@ -13,11 +13,12 @@ import { SidebarTrigger } from "@repo/ui";
 import { useLogout, useUser } from "@repo/auth";
 import { Spinner } from "@repo/ui";
 import NotificationsDropdown from "../features/notifications/components/NotificationsDropdown";
+import { useNotificationEvents } from "@/features/notifications/hooks/useNotificationEvents";
 export default function Navbar() {
   const { user, isLoading } = useUser();
   const { setTheme } = useTheme();
   const { logout, isLogouting } = useLogout();
-
+  
   return (
     <nav className="flex items-center justify-between p-4 sticky top-0 bg-background z-10">
       {/* left */}

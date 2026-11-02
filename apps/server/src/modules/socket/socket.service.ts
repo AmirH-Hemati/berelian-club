@@ -1,36 +1,33 @@
 import type { Server, Socket } from "socket.io";
 
 export class SocketService {
-  private io: Server;
+  constructor(private readonly io: Server) {}
 
-  private users = new Map<string, Socket>();
-
-  constructor(io: Server) {
-    this.io = io;
+  getUserRoom(userId: string) {
+    return `user-${userId}`;
   }
 
   registerUser(userId: string, socket: Socket) {
-    this.users.set(userId, socket);
-
-    this.emitOnlineUsers();
+    socket.join(this.getUserRoom(userId));
   }
 
-  removeUser(userId: string) {
-    this.users.delete(userId);
+  removeUser(userId: string, socket: Socket) {
+    const userRoom = this.getUserRoom(userId);
+    const remainingSockets =
+      this.io.sockets.adapter.rooms.get(userRoom)?.size ?? 0;
 
-    this.emitOnlineUsers();
-  }
-
-  getUserSocket(userId: string) {
-    return this.users.get(userId);
+    if (remainingSockets === 0) {
+      this.io.emit("user:offline", userId);
+    }
   }
 
   isUserOnline(userId: string) {
-    return this.users.has(userId);
+    const userRoom = this.getUserRoom(userId);
+    return (this.io.sockets.adapter.rooms.get(userRoom)?.size ?? 0) > 0;
   }
 
-  emitOnlineUsers() {
-    this.io.emit("onlineUsers", Array.from(this.users.keys()));
+  emitToUser(userId: string, event: string, payload: unknown) {
+    this.io.to(this.getUserRoom(userId)).emit(event, payload);
   }
 
   joinConversation(socket: Socket, conversationId: string) {
@@ -42,9 +39,7 @@ export class SocketService {
   }
 
   emitNewMessage(conversationId: string, message: unknown) {
-    const room = `conv-${conversationId}`;
-
-    this.io.to(room).emit("newMessage", message);
+    this.io.to(`conv-${conversationId}`).emit("newMessage", message);
   }
 
   emitConversationClosed(conversationId: string) {

@@ -7,8 +7,8 @@ export const createSocketServer = (server: HttpServer) => {
       origin: [
         "http://localhost:4001",
         "http://localhost:4002",
-        "https://berelianclub.onrender.com",
-        "https://berelianclub-admin.onrender.com",
+        "https://berelianbg.ir/",
+        "https://admin.berelianbg.ir/",
       ],
       credentials: true,
     },

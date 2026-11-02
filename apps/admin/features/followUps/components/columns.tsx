@@ -1,178 +1,320 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import {
+  Avatar,
+  AvatarFallback,
+  Badge,
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  StatusBadge
+  StatusBadge,
 } from "@repo/ui";
-import { Button } from "@repo/ui";
-import { Badge } from "@repo/ui";
+
 import {
-  MoreHorizontalIcon,
-  Calendar,
-  Clock,
-  Eye,
+  CalendarDays,
   CheckCircle2,
+  Clock3,
+  Eye,
+  FileText,
+  MoreHorizontal,
   Trash2,
+  UserRound,
 } from "lucide-react";
+
 import Link from "next/link";
 import { formatDate } from "@/utils/helper";
+import { FollowUpType } from "@repo/schema";
 import { useDeleteFollowUp } from "../hooks/useDeleteFollowUp";
 import { useCompleteFollowUp } from "../hooks/useCompleteFollowUp";
-import { FollowUpType } from "@repo/schema";
+
+function ConsultantInfo({
+  firstName,
+  lastName,
+}: {
+  firstName?: string;
+  lastName?: string;
+}) {
+  const fullName =
+    [firstName, lastName].filter(Boolean).join(" ") || "مشاور نامشخص";
+
+  const initials = `${firstName?.[0] ?? ""}${lastName?.[0] ?? ""}` || "?";
+
+  return (
+    <div className="flex min-w-40 items-center gap-3">
+      <Avatar className="size-10 shrink-0 rounded-xl border border-border">
+        <AvatarFallback className="rounded-xl bg-primary/10 text-xs font-bold text-primary">
+          {initials}
+        </AvatarFallback>
+      </Avatar>
+
+      <div className="min-w-0">
+        <p className="truncate text-sm font-semibold text-foreground">
+          {fullName}
+        </p>
+        <p className="mt-1 text-xs text-muted-foreground">مشاور جلسه</p>
+      </div>
+    </div>
+  );
+}
+
+const RESULT_CONFIG: Record<string, { label: string; className: string }> = {
+  completed: {
+    label: "جلسه انجام شده",
+    className:
+      "border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+  },
+  pending: {
+    label: "در انتظار نتیجه",
+    className:
+      "border-amber-500/20 bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  },
+  cancelled: {
+    label: "لغو شده",
+    className: "border-red-500/20 bg-red-500/10 text-red-600 dark:text-red-400",
+  },
+  failed: {
+    label: "ناموفق",
+    className:
+      "border-gray-500/20 bg-gray-500/10 text-gray-600 dark:text-gray-400",
+  },
+};
+
+function SessionReportInfo({
+  summary,
+  result,
+}: {
+  summary?: string;
+  result?: string;
+}) {
+  const resultConfig = result ? RESULT_CONFIG[result] : undefined;
+
+  return (
+    <div className="flex min-w-52 max-w-64 items-start gap-3">
+      <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted/60">
+        <FileText className="size-4 text-muted-foreground" />
+      </div>
+
+      <div className="min-w-0 space-y-2">
+        <p
+          className="line-clamp-2 text-sm font-medium leading-6 text-foreground"
+          title={summary}
+        >
+          {summary || "خلاصه‌ای برای جلسه ثبت نشده است"}
+        </p>
+
+        {resultConfig ? (
+          <Badge
+            variant="outline"
+            className={`text-[10px] ${resultConfig.className}`}
+          >
+            {resultConfig.label}
+          </Badge>
+        ) : (
+          <Badge variant="secondary" className="text-[10px]">
+            نتیجه مشخص نشده
+          </Badge>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function FollowUpNote({ note }: { note?: string }) {
+  return (
+    <div className="max-w-56">
+      <p
+        className="line-clamp-2 text-sm leading-6 text-foreground"
+        title={note}
+      >
+        {note || "توضیحی ثبت نشده است"}
+      </p>
+    </div>
+  );
+}
+
+function getTehranDateKey(date: Date | string) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Tehran",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(date));
+}
+
+function DueDateInfo({
+  dueDate,
+  status,
+}: {
+  dueDate: Date | string;
+  status: string;
+}) {
+  const todayKey = getTehranDateKey(new Date());
+  const dueDateKey = getTehranDateKey(dueDate);
+
+  const isCompleted = status === "completed";
+  const isOverdue = !isCompleted && dueDateKey < todayKey;
+  const isToday = !isCompleted && dueDateKey === todayKey;
+
+  return (
+    <div className="flex min-w-36 flex-col items-start gap-2">
+      <div className="flex items-center gap-2 whitespace-nowrap">
+        <CalendarDays className="size-4 text-muted-foreground" />
+        <span className="text-sm font-medium text-foreground">
+          {formatDate(dueDate)}
+        </span>
+      </div>
+
+      {isOverdue && (
+        <Badge variant="destructive" className="gap-1 text-[10px]">
+          <Clock3 className="size-3" />
+          دارای دیرکرد
+        </Badge>
+      )}
+
+      {isToday && (
+        <Badge className="gap-1 border-blue-500/20 bg-blue-500/10 text-[10px] text-blue-600 dark:text-blue-400">
+          <Clock3 className="size-3" />
+          موعد امروز
+        </Badge>
+      )}
+    </div>
+  );
+}
+
+function FollowUpActions({ followUp }: { followUp: FollowUpType }) {
+  const { completeFollowUps, isCompleting } = useCompleteFollowUp();
+  const { deleteFollowUp, isDeleting } = useDeleteFollowUp();
+
+  const isCompleted = followUp.status === "completed";
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-9 rounded-lg"
+          aria-label="عملیات پیگیری"
+        >
+          <MoreHorizontal className="size-4" />
+        </Button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent align="end" className="w-52">
+        <DropdownMenuLabel>عملیات پیگیری</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem asChild>
+          <Link
+            href={`/followups/${followUp._id}`}
+            className="flex cursor-pointer items-center gap-2"
+          >
+            <Eye className="size-4" />
+            مشاهده جزئیات پیگیری
+          </Link>
+        </DropdownMenuItem>
+
+        {followUp.sessionReport?._id && (
+          <DropdownMenuItem asChild>
+            <Link
+              href={`/appointments/${followUp.sessionReport.appointment}`}
+              className="flex cursor-pointer items-center gap-2"
+            >
+              <FileText className="size-4" />
+              مشاهده گزارش جلسه
+            </Link>
+          </DropdownMenuItem>
+        )}
+
+        <DropdownMenuSeparator />
+
+        {!isCompleted && (
+          <DropdownMenuItem
+            disabled={isCompleting}
+            onSelect={() => completeFollowUps(followUp._id)}
+            className="flex cursor-pointer items-center gap-2"
+          >
+            <CheckCircle2 className="size-4 text-emerald-600" />
+            تکمیل پیگیری
+          </DropdownMenuItem>
+        )}
+
+        <DropdownMenuItem
+          variant="destructive"
+          disabled={isDeleting}
+          onSelect={() => deleteFollowUp(followUp._id)}
+          className="flex cursor-pointer items-center gap-2"
+        >
+          <Trash2 className="size-4" />
+          حذف پیگیری
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 export const columns: ColumnDef<FollowUpType>[] = [
   {
-    accessorKey: "sessionReport",
-    header: "گزارش جلسه",
+    id: "consultant",
+    header: "مشاور مسئول",
     cell: ({ row }) => {
-      const followUp = row.original;
+      const consultant = row.original.sessionReport?.consultant;
+
       return (
-        <div className="flex items-center gap-2">
-          <div className="flex flex-col">
-            <span className="text-sm font-medium max-w-40  truncate">
-              {followUp.sessionReport?.summary || "گزارش جلسه"}
-            </span>
-            <span className="text-xs text-muted-foreground max-w-40  truncate">
-              {followUp.sessionReport?.result || "نتیجه مشخص نشده"}
-            </span>
-          </div>
-        </div>
+        <ConsultantInfo
+          firstName={consultant?.firstName}
+          lastName={consultant?.lastName}
+        />
       );
     },
+  },
+  {
+    accessorKey: "sessionReport.summary",
+    header: "گزارش جلسه",
+    cell: ({ row }) => (
+      <SessionReportInfo
+        summary={row.original.sessionReport?.summary}
+        result={row.original.sessionReport?.result}
+      />
+    ),
   },
   {
     accessorKey: "note",
-    header: "توضیحات",
-    cell: ({ row }) => {
-      const followUp = row.original;
-      return (
-        <span className="text-sm max-w-40  truncate block">
-          {followUp.note || "—"}
-        </span>
-      );
-    },
+    header: "موضوع پیگیری",
+    cell: ({ row }) => <FollowUpNote note={row.original.note} />,
   },
   {
     accessorKey: "dueDate",
-    header: "تاریخ سررسید",
-    cell: ({ row }) => {
-      const followUp = row.original;
-      const isOverdue =
-        new Date(followUp.dueDate) < new Date() &&
-        followUp.status !== "completed";
-      const isToday =
-        new Date(followUp.dueDate).toDateString() === new Date().toDateString();
-
-      return (
-        <div className="flex items-center gap-2">
-          <Calendar className="size-4 text-muted-foreground" />
-          <span className="text-sm font-medium">
-            {formatDate(followUp.dueDate)}
-          </span>
-          {isOverdue && (
-            <Badge variant="destructive" className="text-[10px] h-5">
-              <Clock className="size-3" />
-              دیرکرد
-            </Badge>
-          )}
-          {isToday && !isOverdue && followUp.status !== "completed" && (
-            <Badge className="bg-blue-100 text-blue-700 text-[10px] h-5">
-              امروز
-            </Badge>
-          )}
-        </div>
-      );
-    },
+    header: "موعد پیگیری",
+    cell: ({ row }) => (
+      <DueDateInfo
+        dueDate={row.original.dueDate}
+        status={row.original.status}
+      />
+    ),
   },
-
   {
     accessorKey: "status",
     header: "وضعیت",
-    cell: ({ row }) => {
-      const followUp = row.original;
-      return <StatusBadge status={followUp.status} />;
-    },
-  },
-  {
-    accessorKey: "isCompleted",
-    header: "تکمیل",
-    cell: ({ row }) => {
-      const followUp = row.original;
-      return (
-        <Badge variant={followUp.isCompleted ? "default" : "secondary"}>
-          {followUp.isCompleted ? " تکمیل شد" : " در انتظار"}
-        </Badge>
-      );
-    },
+    cell: ({ row }) => <StatusBadge status={row.original.status} />,
   },
   {
     accessorKey: "createdAt",
     header: "تاریخ ثبت",
-    cell: ({ row }) => {
-      const followUp = row.original;
-      return <div className="text-sm">{formatDate(followUp.createdAt)}</div>;
-    },
+    cell: ({ row }) => (
+      <span className="whitespace-nowrap text-sm text-muted-foreground">
+        {formatDate(row.original.createdAt)}
+      </span>
+    ),
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const followUp = row.original;
-      const { completeFollowUps, isCompleting } = useCompleteFollowUp();
-      const { deleteFollowUp, isDeleting } = useDeleteFollowUp();
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8">
-              <MoreHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-50">
-            <DropdownMenuLabel>فعالیت‌ها</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem asChild>
-              <Link
-                href={`/followups/${followUp._id}`}
-                className="flex items-center gap-2 font-semibold"
-              >
-                <Eye className="size-4" />
-                مشاهده جزئیات
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-
-            {followUp.status !== "completed" && (
-              <DropdownMenuItem
-                onClick={() => completeFollowUps(followUp._id)}
-                disabled={isCompleting}
-                className="flex items-center gap-2 font-semibold"
-              >
-                <CheckCircle2 className="size-4" />
-                تکمیل پیگیری
-              </DropdownMenuItem>
-            )}
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={() => deleteFollowUp(followUp._id)}
-              disabled={isDeleting}
-              className="flex items-center gap-2 font-semibold"
-            >
-              <Trash2 className="size-4" />
-              حذف پیگیری
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    header: "عملیات",
+    cell: ({ row }) => <FollowUpActions followUp={row.original} />,
   },
 ];

@@ -1,6 +1,7 @@
 "use client";
-import { cn } from "@repo/ui";
-import { ColumnDef } from "@tanstack/react-table";
+
+import type { ColumnDef } from "@tanstack/react-table";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,45 +9,128 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  StatusBadge
+  StatusBadge,
+  Button,
+  Avatar,
+  AvatarFallback,
+  Badge,
 } from "@repo/ui";
-import { Button } from "@repo/ui";
+
 import {
   CalendarDays,
+  Clock3,
   MoreHorizontalIcon,
   Trash2,
   UserRound,
+  Eye,
+  PhoneCall,
+  Video,
+  UserCheck,
 } from "lucide-react";
+
 import Link from "next/link";
-import { formatDate, formatToman } from "@/utils/helper";
-import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
-import Typebadge from "@/features/requests/components/Typebadge";
-import { useDeleteAppointment } from "../hooks/useDeleteAppointment";
+import { formatDate } from "@/utils/helper";
 import { AppointmentType } from "@repo/schema";
+import { useDeleteAppointment } from "../hooks/useDeleteAppointment";
+
+const appointmentTypesMap = {
+  phone: {
+    label: "تلفنی",
+    icon: PhoneCall,
+    className: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
+  },
+  online: {
+    label: "آنلاین",
+    icon: Video,
+    className: "bg-purple-500/10 text-purple-600 dark:text-purple-400",
+  },
+};
+
+function AppointmentActions({ appointment }: { appointment: AppointmentType }) {
+  const { deleteAppointment, isDeleting } = useDeleteAppointment();
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="size-9 rounded-lg">
+          <MoreHorizontalIcon className="size-4" />
+          <span className="sr-only">باز کردن منو</span>
+        </Button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent align="end" className="w-52">
+        <DropdownMenuLabel className="text-xs text-muted-foreground">
+          عملیات مشاوره
+        </DropdownMenuLabel>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem asChild>
+          <Link
+            href={`/users/${appointment.user?._id}`}
+            className="flex cursor-pointer items-center gap-2"
+          >
+            <UserRound className="size-4" />
+            مشاهده اطلاعات مشتری
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem asChild>
+          <Link
+            href={`/appointments/${appointment._id}`}
+            className="flex cursor-pointer items-center gap-2"
+          >
+            <Eye className="size-4" />
+            مشاهده جزئیات مشاوره
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuItem
+          variant="destructive"
+          disabled={isDeleting}
+          onClick={() => deleteAppointment(appointment._id)}
+          className="flex cursor-pointer items-center gap-2"
+        >
+          <Trash2 className="size-4" />
+          حذف مشاوره
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 export const columns: ColumnDef<AppointmentType>[] = [
   {
-    accessorKey: "userId.email",
+    accessorKey: "user",
     header: "اطلاعات مشتری",
     cell: ({ row }) => {
       const appointment = row.original;
+      const user = appointment.user;
+
+      const fullName =
+        [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
+        "کاربر ناشناس";
+
+      const initials =
+        `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}` || "?";
+
       return (
-        <div className="flex items-start gap-1">
-          <Avatar>
-            <AvatarImage
-              src={`http://localhost:5000/images/users/${appointment.user?.photo}`}
-            />
-            <AvatarFallback>
-              {appointment.user?.firstName[0] + appointment.user?.lastName[0]}
+        <div className="flex min-w-48 items-center gap-3">
+          <Avatar className="size-10 rounded-xl border border-border">
+            <AvatarFallback className="rounded-xl bg-primary/10 text-xs font-bold text-primary">
+              {initials}
             </AvatarFallback>
           </Avatar>
-          <div className="flex flex-col items-start gap-0.5 font-semibold">
-            <span>
-              {appointment.user?.firstName + " " + appointment.user?.lastName ||
-                "کاربر ناشناس"}
+
+          <div className="flex min-w-0 flex-col gap-1">
+            <span className="truncate text-sm font-semibold text-foreground">
+              {fullName}
             </span>
-            <span className="text-gray-400">
-              {appointment.user?.phoneNumber}
+
+            <span className="text-xs text-muted-foreground" dir="ltr">
+              {user?.phoneNumber || "شماره ثبت نشده"}
             </span>
           </div>
         </div>
@@ -55,14 +139,80 @@ export const columns: ColumnDef<AppointmentType>[] = [
   },
 
   {
+    accessorKey: "type",
+    header: "نوع مشاوره",
+    cell: ({ row }) => {
+      const type = row.original.type;
+
+      const config =
+        appointmentTypesMap[type as keyof typeof appointmentTypesMap];
+
+      if (!config) {
+        return <Badge variant="secondary">نامشخص</Badge>;
+      }
+
+      const Icon = config.icon;
+
+      return (
+        <Badge className={`gap-1.5 border-0 ${config.className}`}>
+          <Icon className="size-3.5" />
+          {config.label}
+        </Badge>
+      );
+    },
+  },
+
+  {
     accessorKey: "appointmentDate",
-    header: " تاریخ مشاوره",
+    header: "زمان مشاوره",
     cell: ({ row }) => {
       const appointment = row.original;
 
       return (
-        <div className=" font-semibold">
-          {formatDate(appointment.appointmentDate)}
+        <div className="flex min-w-36 flex-col gap-1.5">
+          <span className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
+            <CalendarDays className="size-3.5 text-muted-foreground" />
+            {formatDate(appointment.appointmentDate)}
+          </span>
+
+          <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Clock3 className="size-3.5" />
+            {appointment.startAt} تا {appointment.endAt}
+          </span>
+        </div>
+      );
+    },
+  },
+
+  {
+    accessorKey: "consultant",
+    header: "مشاور",
+    cell: ({ row }) => {
+      const consultant = row.original.consultant;
+
+      const fullName = [consultant?.firstName, consultant?.lastName]
+        .filter(Boolean)
+        .join(" ");
+
+      return (
+        <div className="flex min-w-36 items-center gap-2">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+            {consultant ? (
+              <UserCheck className="size-4" />
+            ) : (
+              <UserRound className="size-4" />
+            )}
+          </div>
+
+          <div className="flex flex-col gap-0.5">
+            <span className="text-sm font-medium text-foreground">
+              {fullName || "تخصیص داده نشده"}
+            </span>
+
+            <span className="text-xs text-muted-foreground">
+              {consultant ? "مشاور جلسه" : "در انتظار تخصیص"}
+            </span>
+          </div>
         </div>
       );
     },
@@ -71,60 +221,16 @@ export const columns: ColumnDef<AppointmentType>[] = [
   {
     accessorKey: "status",
     header: "وضعیت",
-    cell: ({ row }) => {
-      const appointment = row.original;
-      return <StatusBadge status={appointment.status} />;
-    },
+    cell: ({ row }) => <StatusBadge status={row.original.status} />,
   },
 
   {
     id: "actions",
-    cell: ({ row }) => {
-      const { deleteAppointment, isDeleting } = useDeleteAppointment();
-      const appointment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 ">
-              <MoreHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-50">
-            <DropdownMenuLabel>فعالیت ها </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link
-                href={`/users/${appointment?.user?._id}`}
-                className="flex items-center gap-2 font-semibold"
-              >
-                <UserRound className="size-4" />
-                مشاهده جزئیات کاربر
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem asChild>
-              <Link
-                href={`/appointments/${appointment._id}`}
-                className="flex items-center gap-2 font-semibold"
-              >
-                <CalendarDays className="size-4" />
-                مشاهده جزئیات مشاوره
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              variant="destructive"
-              disabled={isDeleting}
-              onClick={() => deleteAppointment(appointment._id)}
-            >
-              <Trash2 className="size-4" />
-              حذف مشاوره
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    header: () => <div className="text-center">عملیات</div>,
+    cell: ({ row }) => (
+      <div className="flex justify-center">
+        <AppointmentActions appointment={row.original} />
+      </div>
+    ),
   },
 ];

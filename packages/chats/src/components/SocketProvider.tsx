@@ -29,7 +29,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
     const socket = io(
       process.env.NEXT_PUBLIC_SOCKET_URL ||
-        // "https://monorepo-bashgah-moshtarian.onrender.com",
+        // "https://api.berelianbg.ir",
         "http://localhost:5000",
       {
         withCredentials: true,

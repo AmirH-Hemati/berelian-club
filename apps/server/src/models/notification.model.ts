@@ -87,13 +87,9 @@ notificationSchema.index(
 );
 
 notificationSchema.index(
-  {
-    user: 1,
-    deduplicationKey: 1,
-  },
-  { unique: true },
+  { user: 1, deduplicationKey: 1 },
+  { unique: true, sparse: true },
 );
-
 const NotificationModel = mongoose.model<NotificationDocument>(
   "Notification",
   notificationSchema,

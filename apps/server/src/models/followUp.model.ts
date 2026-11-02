@@ -46,7 +46,7 @@ followUpSchema.index({ dueDate: 1, status: 1 });
 followUpSchema.pre<Query<FollowUpDocument, FollowUpDocument[]>>(
   /find/,
   function () {
-    this.populate("sessionReport", "summary result ");
+    this.populate("sessionReport", "summary result appointment");
   },
 );
 const FollowUpModel = mongoose.model<FollowUpDocument>(

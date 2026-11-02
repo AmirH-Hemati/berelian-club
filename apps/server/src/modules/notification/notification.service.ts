@@ -1,6 +1,7 @@
 import NotificationModel from "../../models/notification.model.js";
 import { AppError } from "../../utils/AppError.js";
 import { ApiFeatures } from "../../utils/ApiFeatures.js";
+import type { SocketService } from "../socket/socket.service.js";
 
 export type SendNotification = {
   userId: string;
@@ -26,8 +27,9 @@ export type SendNotification = {
 };
 
 export class NotificationService {
+  constructor(private readonly socketService: SocketService) {}
   async send(data: SendNotification) {
-    return NotificationModel.create({
+    const notification = await NotificationModel.create({
       user: data.userId,
       title: data.title,
       message: data.message,
@@ -35,29 +37,39 @@ export class NotificationService {
       link: data.link,
       deduplicationKey: data.deduplicationKey,
     });
+
+    this.emitNotification(notification);
+
+    return notification;
   }
 
   async sendMany(notifications: SendNotification[]) {
-    if (!notifications.length) return;
+    const createdNotifications = [];
 
-    const docs = notifications.map((notification) => ({
-      user: notification.userId,
-      title: notification.title,
-      message: notification.message,
-      type: notification.type,
-      link: notification.link,
-      deduplicationKey: notification.deduplicationKey,
-    }));
+    for (const data of notifications) {
+      try {
+        const notification = await NotificationModel.create({
+          user: data.userId,
+          title: data.title,
+          message: data.message,
+          type: data.type,
+          link: data.link,
+          deduplicationKey: data.deduplicationKey,
+        });
 
-    try {
-      await NotificationModel.insertMany(docs, {
-        ordered: false,
-      });
-    } catch (error: any) {
-      if (error.code !== 11000) {
+        createdNotifications.push(notification);
+
+        this.emitNotification(notification);
+      } catch (error: any) {
+        if (error.code === 11000) {
+          continue;
+        }
+
         throw error;
       }
     }
+
+    return createdNotifications;
   }
 
   async getUserNotifications(userId: string, query: Record<string, unknown>) {
@@ -137,5 +149,21 @@ export class NotificationService {
     }
 
     return notification;
+  }
+
+  private emitNotification(notification: any) {
+    this.socketService.emitToUser(
+      notification.user.toString(),
+      "notification:new",
+      {
+        _id: notification._id.toString(),
+        title: notification.title,
+        message: notification.message,
+        type: notification.type,
+        link: notification.link,
+        isRead: notification.isRead,
+        createdAt: notification.createdAt,
+      },
+    );
   }
 }

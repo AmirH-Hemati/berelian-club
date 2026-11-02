@@ -52,11 +52,21 @@ export interface SessionReportType extends SessionReportFormValues {
 }
 export interface FollowUpType {
   _id: string;
-  sessionReport: Pick<SessionReportType, "summary" | "result">;
-  dueDate: Date;
+  sessionReport: {
+    _id: string;
+    appointment:string;
+    consultant: {
+      _id: string;
+      firstName: string;
+      lastName: string;
+    } | null;
+    summary: string;
+    result: "completed" | "pending" | "cancelled" | "failed";
+  } | null;
+  dueDate: string;
   note: string;
   status: "pending" | "completed" | "cancelled";
   isCompleted: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
