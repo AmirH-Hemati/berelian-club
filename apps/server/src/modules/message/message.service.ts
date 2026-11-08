@@ -29,7 +29,6 @@ export class MessageService {
       (participant) => participant._id.toString() !== senderId,
     );
 
-    console.log(receiverId);
     if (!receiverId) {
       throw new AppError("گیرنده یافت نشد", 404);
     }
@@ -58,7 +57,6 @@ export class MessageService {
     // }
     this.socketService.emitNewMessage(conversationId, message);
 
-    console.log("receiverId", receiverId);
     this.socketService.emitToUser(
       receiverId._id.toString(),
       "chat:notification",

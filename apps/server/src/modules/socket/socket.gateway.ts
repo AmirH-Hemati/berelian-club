@@ -10,7 +10,6 @@ export const setupSocketGateway = (
   io.on("connection", (socket) => {
     const userId = socket.userId;
 
-    console.log("user online", userId);
     socketService.registerUser(userId, socket);
 
     socket.on("join-conversation", (conversationId: string) => {
@@ -22,7 +21,7 @@ export const setupSocketGateway = (
     });
 
     socket.on("disconnect", () => {
-      socketService.removeUser(userId);
+      socketService.removeUser(userId, socket);
     });
   });
 };

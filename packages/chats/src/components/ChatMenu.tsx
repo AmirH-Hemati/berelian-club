@@ -6,10 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@repo/ui";
-import { Button } from "@repo/ui";
-import { MoreVertical, XCircle, Trash2 } from "lucide-react";
-import {
+  Button,
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -19,8 +16,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@repo/ui";
+import { MoreVertical, XCircle } from "lucide-react";
 import { useCloseConversation } from "../hooks/useCloseConversation";
-// import { DeleteRequestDialog } from "@/features/requests/components/DeleteRequestDialog";
 
 interface ChatMenuProps {
   conversationId: string;
@@ -45,43 +42,56 @@ export function ChatMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="size-8">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-9 rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground"
+          >
             <MoreVertical className="size-5" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48">
+
+        <DropdownMenuContent
+          align="end"
+          className="w-52 rounded-xl p-1.5 shadow-lg"
+        >
           {isActive && (
             <DropdownMenuItem
               onClick={() => setCloseDialogOpen(true)}
-              className="cursor-pointer"
+              className="cursor-pointer gap-2 rounded-lg px-3 py-2.5 text-sm text-destructive focus:bg-destructive/10 focus:text-destructive"
             >
-              <XCircle className="size-4 ml-2" />
+              <XCircle className="size-4" />
               بستن گفتگو
             </DropdownMenuItem>
           )}
-
-          {/* <DeleteRequestDialog requestId={requestId} /> */}
         </DropdownMenuContent>
       </DropdownMenu>
 
       <AlertDialog open={closeDialogOpen} onOpenChange={setCloseDialogOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="rounded-2xl sm:max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle>آیا از بستن گفتگو مطمئن هستید؟</AlertDialogTitle>
-            <AlertDialogDescription>
-              با بستن گفتگو، دیگر نمی‌توانید پیام جدیدی ارسال یا دریافت کنید. در
-              صورت نیاز میتوانید مجدداً گفتگو را باز کنید.
+            <AlertDialogTitle className="text-right text-lg">
+              بستن گفتگو
+            </AlertDialogTitle>
+
+            <AlertDialogDescription className="text-right leading-7">
+              آیا از بستن این گفتگو مطمئن هستید؟ پس از بستن، امکان ارسال پیام
+              جدید وجود نخواهد داشت.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isClosing}>انصراف</AlertDialogCancel>
+
+          <AlertDialogFooter className="flex-row-reverse gap-2">
             <AlertDialogAction
               onClick={handleClose}
               disabled={isClosing}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {isClosing ? "در حال بستن..." : "بستن گفتگو"}
+              {isClosing ? "در حال بستن..." : "بله، گفتگو بسته شود"}
             </AlertDialogAction>
+
+            <AlertDialogCancel disabled={isClosing} className="mt-0">
+              انصراف
+            </AlertDialogCancel>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

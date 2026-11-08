@@ -1,9 +1,7 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
-import { Button } from "@repo/ui";
-import { ArrowRight } from "lucide-react";
-import { useOnlineStatus } from "../hooks/useOnlineStatus";
+import { Avatar, AvatarFallback, AvatarImage, Button, Badge } from "@repo/ui";
+import { ArrowRight, FileText } from "lucide-react";
 import { ChatMenu } from "./ChatMenu";
 
 interface ChatHeaderProps {
@@ -21,46 +19,55 @@ export function ChatHeader({
   requestId,
   isActive,
 }: ChatHeaderProps) {
-  const { isOnline } = useOnlineStatus(otherUser?._id);
-
   return (
-    <div className="flex items-center justify-between p-4 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="flex items-center gap-3 ">
-        <Button variant="ghost" size="icon" onClick={onBack}>
+    <header className="relative z-10 flex shrink-0 items-center justify-between gap-3 border-b bg-background/95 px-3 py-3 shadow-sm backdrop-blur-xl sm:px-5">
+      <div className="flex min-w-0 items-center gap-3">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onBack}
+          className="size-9 shrink-0 rounded-xl text-muted-foreground hover:bg-muted hover:text-foreground"
+        >
           <ArrowRight className="size-5" />
         </Button>
 
-        <Avatar className="size-9">
+        <Avatar className="size-11 shrink-0 rounded-2xl border shadow-sm">
           <AvatarImage
             src={`http://localhost:5000/images/users/${otherUser?.photo}`}
+            alt={`${otherUser?.firstName ?? ""} ${otherUser?.lastName ?? ""}`}
           />
-          <AvatarFallback className="bg-primary/10 text-primary">
-            {otherUser?.firstName?.[0] + otherUser?.lastName?.[0]}
+          <AvatarFallback className="rounded-2xl bg-primary/10 font-semibold text-primary">
+            {otherUser?.firstName?.[0]}
+            {otherUser?.lastName?.[0]}
           </AvatarFallback>
         </Avatar>
 
-        <div>
-          <p className="font-semibold text-200">
+        <div className="min-w-0">
+          <p className="truncate text-sm font-bold text-foreground sm:text-base">
             {otherUser?.firstName} {otherUser?.lastName}
           </p>
-          <div className="flex items-center gap-1">
-            <span
-              className={`size-1.5 rounded-full ${isOnline ? "bg-green-500" : "bg-gray-400"}`}
-            />
-            <span className="text-100 text-muted-foreground">
-              {isOnline ? "آنلاین" : "آفلاین"}
+
+          <div className="mt-1 flex flex-wrap items-center gap-2">
+            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <FileText className="size-3.5" />
+              درخواست #{requestId}
             </span>
+
+            <Badge
+              variant={isActive ? "default" : "secondary"}
+              className="h-5 rounded-md px-1.5 text-[10px]"
+            >
+              {isActive ? "گفتگو فعال" : "گفتگو بسته شده"}
+            </Badge>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-1">
-        <ChatMenu
-          requestId={requestId}
-          conversationId={conversationId}
-          isActive={isActive}
-        />
-      </div>
-    </div>
+      <ChatMenu
+        requestId={requestId}
+        conversationId={conversationId}
+        isActive={isActive}
+      />
+    </header>
   );
 }

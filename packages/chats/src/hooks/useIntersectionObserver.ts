@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 
 type Options = IntersectionObserverInit & {
   enabled?: boolean;
+  root?: Element | null;
 };
 
 export function useIntersectionObserver(
@@ -13,11 +14,7 @@ export function useIntersectionObserver(
   const { enabled = true, root = null, rootMargin, threshold } = options;
 
   useEffect(() => {
-    if (!enabled) return;
-
-    const target = targetRef.current;
-
-    if (!target) return;
+    if (!enabled || !targetRef.current) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -32,7 +29,7 @@ export function useIntersectionObserver(
       },
     );
 
-    observer.observe(target);
+    observer.observe(targetRef.current);
 
     return () => {
       observer.disconnect();
