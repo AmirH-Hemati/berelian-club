@@ -90,11 +90,13 @@ export const handleVerifyOtp = CatchError(async (req, res, next) => {
 
   const cookieOption: CookieOptions = {
     expires: thirtyDaysFromNow(),
-    secure: true,
+    secure: process.env.APP_ENV === "production" ? true : false,
     httpOnly: true,
     sameSite: "lax",
-    domain: "berelianbg.ir",
+    // domain: "berelianbg.ir",
   };
+
+  console.log(cookieOption);
   res.cookie("token", token, cookieOption);
   return res.status(200).json({
     message: "خوش آمدید",
@@ -104,10 +106,10 @@ export const handleVerifyOtp = CatchError(async (req, res, next) => {
 
 export const logout = (req: Request, res: Response, next: NextFunction) => {
   res.clearCookie("token", {
-    secure: true,
+    secure: process.env.APP_ENV === "production" ? true : false,
     httpOnly: true,
     sameSite: "lax",
-    domain: "berelianbg.ir",
+    // domain: "berelianbg.ir",
   });
   res.status(200).json({
     status: "success",
@@ -115,9 +117,37 @@ export const logout = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
+export const updateProfileAvatarController = CatchError(
+  async (req, res, next) => {
+    const userId = (req.user as UserDocument)._id.toString();
+
+    if (typeof req.body.photo !== "string" || !req.body.photo.trim()) {
+      return next(new AppError("تصویر پروفایل معتبر نیست.", 400));
+    }
+
+    const user = await authService.updateMe(userId, {
+      photo: req.body.photo,
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: user,
+    });
+  },
+);
+
 export const updateMe = CatchError(async (req, res, next) => {
   const userId = (req.user as UserDocument)._id.toString();
-  const forbiddenFields = ["role", "isActive", "createdAt", "_id", "password"];
+  const forbiddenFields = [
+    "role",
+    "isActive",
+    "createdAt",
+    "_id",
+    "password",
+    "photo",
+    "contractStartDate",
+    "contractEndDate",
+  ];
 
   const filtersBody: Record<string, string> = {};
   Object.keys(req.body).forEach((key) => {

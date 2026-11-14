@@ -1,4 +1,6 @@
 "use client";
+
+import type { ChangeEvent } from "react";
 import {
   Card,
   CardContent,
@@ -8,63 +10,94 @@ import {
   Badge,
 } from "@repo/ui";
 
-import { ChangeEvent } from "react";
-import { useUpdateMe } from "../hooks/useUpdateMe";
+import { Camera, Phone, UserRound } from "lucide-react";
+import { useRef } from "react";
 import { UserType } from "@repo/schema";
+import { useUpdateAvatar } from "../hooks/useUpdateAvatar";
 
-type Props = { user: UserType };
+type Props = {
+  user: UserType;
+};
+
 export default function ProfileHeader({ user }: Props) {
-  const { updateMe, isUpdating } = useUpdateMe();
+  const { updateAvatar, isUpdating } = useUpdateAvatar();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleUpdateImage(e: ChangeEvent<HTMLInputElement>) {
-    updateMe({ photo: e.target.files?.[0] });
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    updateAvatar({ photo: file });
+
+    e.target.value = "";
   }
+
+  const fullName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
+
+  const imageUrl = user.photo
+    ? `${process.env.NEXT_PUBLIC_API_URL}/images/users/${user.photo}`
+    : undefined;
+
   return (
-    <Card>
-      <CardContent className="flex flex-col items-start gap-2 md:flex-row ">
-        <Avatar className="w-14 h-14">
-          <AvatarImage
-            src={`http://localhost:5000/images/users/${user?.photo}`}
+    <Card className="overflow-hidden">
+      <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:p-5">
+        <div className="relative shrink-0">
+          <Avatar className="size-[76px] border-2 border-background shadow-md">
+            <AvatarImage src={imageUrl} alt={fullName} />
+            <AvatarFallback className="bg-primary/10 text-primary">
+              {fullName ? (
+                `${user.firstName?.[0] || ""}${user.lastName?.[0] || ""}`
+              ) : (
+                <UserRound className="size-8" />
+              )}
+            </AvatarFallback>
+          </Avatar>
+
+          <button
+            type="button"
+            disabled={isUpdating}
+            onClick={() => fileInputRef.current?.click()}
+            className="absolute -bottom-1 -left-1 flex size-8 items-center justify-center rounded-full border-2 border-background bg-primary text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 disabled:opacity-50"
+            aria-label="تغییر تصویر پروفایل"
+          >
+            <Camera className="size-4" />
+          </button>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleUpdateImage}
+            disabled={isUpdating}
           />
-          <AvatarFallback>
-            {user.firstName[0] + user.lastName[0]}
-          </AvatarFallback>
-        </Avatar>
+        </div>
 
-        <div className="flex-1 space-y-0.5">
-          <h1 className="text-400 font-semibold">
-            {user.firstName} {user.lastName}
-          </h1>
-
-          <p className="text-muted-foreground">مشتری طلایی</p>
-
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Badge>100 امتیاز</Badge>
+        <div className="min-w-0 flex-1 space-y-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-400 font-bold">{fullName || "کاربر برلیان"}</h1>
 
             <Badge
               variant={
                 user.contractStatus === "active" ? "outline" : "destructive"
               }
             >
-              {user.contractStatus === "active" ? "فعال" : "غیر فعال"}
+              {user.contractStatus === "active"
+                ? "قرارداد فعال"
+                : "قرارداد غیرفعال"}
             </Badge>
           </div>
-        </div>
 
-        <label
-          htmlFor="photo"
-          className="border-border border rounded-md h-fit px-2 py-1 cursor-pointer hover:bg-muted"
-        >
-          <input
-            type="file"
-            disabled={isUpdating}
-            id="photo"
-            onChange={handleUpdateImage}
-            name="photo"
-            className="hidden"
-          />
-          ویرایش تصویر
-        </label>
+          <div className="flex items-center gap-2 text-200 text-muted-foreground">
+            <Phone className="size-4 shrink-0" />
+            <span dir="ltr">{user.phoneNumber}</span>
+          </div>
+
+          <p className="text-100 text-muted-foreground">
+            برای تغییر تصویر پروفایل، روی آیکون دوربین کلیک کنید.
+          </p>
+        </div>
       </CardContent>
     </Card>
   );

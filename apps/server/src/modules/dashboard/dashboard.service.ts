@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import { toJalaali, toGregorian } from "jalaali-js";
 
 import type { UserService } from "../user/user.service.js";
 import type { RequestService } from "../request/request.service.js";
@@ -50,18 +51,29 @@ export class DashboardService {
       .toUTC()
       .toJSDate();
 
+    const yearBoundaries = this.getPersianYearBoundaries(now);
+
     const [
       investorsCount,
       pendingRequestsCount,
       pendingAppointmentsCount,
       receptions,
       consultants,
+      monthlyRequests,
+      monthlyAppointments,
+      unreadNotificationsCount,
     ] = await Promise.all([
       this.userService.countUsersByRole("investor"),
       this.requestService.countNewRequests(),
       this.appointmentService.countPendingAppointments(),
       this.userService.getUsersByRole("reception"),
       this.userService.getUsersByRole("consultant"),
+
+      this.requestService.getYearlyRequestStats(yearBoundaries),
+
+      this.appointmentService.getYearlyAppointmentStats(yearBoundaries),
+
+      this.notificationService.countUnread(userId),
     ]);
 
     const [receptionPerformance, consultantPerformance] = await Promise.all([
@@ -79,8 +91,10 @@ export class DashboardService {
       ),
     ]);
 
-    const unreadNotificationsCount =
-      await this.notificationService.countUnread(userId);
+    const activityChart = {
+      requests: this.fillYearlyChartData(monthlyRequests),
+      appointments: this.fillYearlyChartData(monthlyAppointments),
+    };
 
     return {
       stats: {
@@ -89,6 +103,8 @@ export class DashboardService {
         pendingAppointments: pendingAppointmentsCount,
         unreadNotifications: unreadNotificationsCount,
       },
+
+      activityChart,
 
       receptionPerformance: receptionPerformance.sort(
         (a, b) => b.stats.monthlyCompleted - a.stats.monthlyCompleted,
@@ -232,5 +248,44 @@ export class DashboardService {
       todayFollowUps,
       notifications,
     };
+  }
+
+  private fillYearlyChartData(data: { month: number; count: number }[]) {
+    const dataMap = new Map(data.map((item) => [item.month, item.count]));
+
+    return Array.from({ length: 12 }, (_, index) => ({
+      month: index + 1,
+      count: dataMap.get(index + 1) ?? 0,
+    }));
+  }
+
+  private getPersianYearBoundaries(now: DateTime): Date[] {
+    const { jy } = toJalaali(now.year, now.month, now.day);
+
+    return [
+      ...Array.from({ length: 12 }, (_, index) => {
+        const { gy, gm, gd } = toGregorian(jy, index + 1, 1);
+
+        return DateTime.fromObject(
+          { year: gy, month: gm, day: gd },
+          { zone: "Asia/Tehran" },
+        )
+          .startOf("day")
+          .toUTC()
+          .toJSDate();
+      }),
+
+      (() => {
+        const { gy, gm, gd } = toGregorian(jy + 1, 1, 1);
+
+        return DateTime.fromObject(
+          { year: gy, month: gm, day: gd },
+          { zone: "Asia/Tehran" },
+        )
+          .startOf("day")
+          .toUTC()
+          .toJSDate();
+      })(),
+    ];
   }
 }

@@ -36,7 +36,7 @@ export default function ProfilePage() {
     );
   }
   return (
-    <div className="space-y-6 ">
+    <div className="space-y-6">
       <ProfileHeader user={user} />
 
       <PersonalInformation user={user} />

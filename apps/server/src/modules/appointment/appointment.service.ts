@@ -220,6 +220,7 @@ export class AppointmentService {
     return appointment;
   }
 
+
   async getUserAppointments(userId: string, query: Record<string, any>) {
     const features = new ApiFeatures(
       AppointmentModel.find({ user: userId }),
@@ -462,5 +463,38 @@ export class AppointmentService {
         },
       };
     });
+  }
+
+  async getYearlyAppointmentStats(boundaries: Date[]) {
+    const result = await AppointmentModel.aggregate<{
+      _id: Date;
+      count: number;
+    }>([
+      {
+        $match: {
+          appointmentDate: {
+            $gte: boundaries[0],
+            $lt: boundaries[12],
+          },
+        },
+      },
+      {
+        $bucket: {
+          groupBy: "$appointmentDate",
+          boundaries,
+          output: {
+            count: { $sum: 1 },
+          },
+        },
+      },
+    ]);
+
+    return result.map((item) => ({
+      month:
+        boundaries.findIndex(
+          (boundary) => boundary.getTime() === new Date(item._id).getTime(),
+        ) + 1,
+      count: item.count,
+    }));
   }
 }

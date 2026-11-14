@@ -13,6 +13,7 @@ import {
   getAppointment,
   getAppointments,
   getTodayAppointmentsController,
+  getUserAppointmentsByParamsController,
   getUserAppointmentsController,
   rejectAppointmentController,
   rescheduleAppointmentController,
@@ -45,6 +46,7 @@ router.route("/:id").get(getAppointment);
 // restrit for only admin
 router.use(restrictTo("admin", "consultant"));
 
+router.get("/userAppointments/:id/", getUserAppointmentsByParamsController);
 router.patch("/:id/approve", approveAppointmentController);
 router.patch("/:id/reject", rejectAppointmentController);
 router.patch("/:id/complete", completeAppointmentController);

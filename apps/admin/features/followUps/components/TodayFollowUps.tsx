@@ -68,9 +68,7 @@ export default function TodayFollowUps({
           </div>
 
           <div className="space-y-0.5">
-            <h3 className="text-300 font-semibold">
-              پیگیری‌های امروز
-            </h3>
+            <h3 className="text-300 font-semibold">پیگیری‌های امروز</h3>
 
             <p className="text-100 text-muted-foreground">
               {followUps?.length
@@ -156,11 +154,16 @@ export default function TodayFollowUps({
                     )}
 
                     {followUp.sessionReport?.summary && (
-                      <div className="mt-2 flex items-start gap-2 rounded-lg bg-background/70 p-2">
-                        <FileText className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
+                      <div className="mt-2 flex w-full max-w-full min-w-0 items-center gap-2 overflow-hidden rounded-lg bg-background/70 p-2">
+                        <FileText className="size-3.5 shrink-0 text-muted-foreground" />
 
                         <p className="line-clamp-2 text-100 leading-5 text-muted-foreground">
-                          {followUp.sessionReport.summary}
+                          {followUp.sessionReport.summary} Lorem ipsum dolor sit
+                          amet consectetur adipisicing elit. Impedit laboriosam
+                          deleniti repellendus aut, suscipit maxime accusamus
+                          culpa. Dolorum, cupiditate nulla dolorem libero
+                          explicabo natus, facere perferendis laudantium
+                          architecto tempora minima!
                         </p>
                       </div>
                     )}

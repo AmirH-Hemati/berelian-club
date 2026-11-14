@@ -11,6 +11,7 @@ import {
   getUserRequests,
   getTodayRequests,
   completeRequest,
+  getUserRequestsByParams,
 } from "./request.controller.js";
 import { createRequestSchema } from "@repo/schema";
 import { protectedRoute } from "../../middlewares/auth.middleware.js";
@@ -33,7 +34,7 @@ router.delete("/:id", deleteRequest);
 router.use(restrictTo("admin", "reception"));
 
 router.get("/today", getTodayRequests);
-router.get("/userRequests/:id/", getUserRequests);
+router.get("/userRequests/:id/", getUserRequestsByParams);
 router.patch("/:id/complete", completeRequest);
 router.patch("/:id/approve", approveRequest);
 router.patch("/:id/reject", rejectRequest);

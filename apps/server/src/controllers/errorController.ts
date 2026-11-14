@@ -8,10 +8,16 @@ const handleDuplicateFieldsDb = (err: any) => {
   return new AppError(message, 400);
 };
 function handleJWTError(err: Error) {
-  return new AppError(`توکن نامعتبر است: ${err.message}، دوباره وارد شوید`, 401);
+  return new AppError(
+    `توکن نامعتبر است: ${err.message}، دوباره وارد شوید`,
+    401,
+  );
 }
 function handleJWTExpiredError(err: Error) {
-  return new AppError(`توکن منقضی شده است: ${err.message}، دوباره وارد شوید`, 401);
+  return new AppError(
+    `توکن منقضی شده است: ${err.message}، دوباره وارد شوید`,
+    401,
+  );
 }
 const sendErrorDev = (res: Response, err: any) => {
   if (err instanceof z.ZodError) {

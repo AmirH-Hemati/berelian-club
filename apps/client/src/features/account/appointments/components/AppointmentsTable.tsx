@@ -117,6 +117,7 @@ export default function AppointmentsTable() {
                     <ConsultantInfo
                       firstName={appointment.consultant.firstName}
                       lastName={appointment.consultant.lastName}
+                      photo={appointment.consultant.photo}
                     />
                   ) : (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">

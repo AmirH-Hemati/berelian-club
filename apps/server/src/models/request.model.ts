@@ -69,8 +69,8 @@ requestSchema.pre<Query<RequestDocument, RequestDocument>>(
       "user",
       "firstName lastName photo _id phoneNumber nationalCode ",
     )
-      .populate("cancelledBy", "firstName lastName")
-      .populate("assignedTo", "firstName lastName ");
+      .populate("cancelledBy", "firstName lastName photo")
+      .populate("assignedTo", "firstName lastName photo");
   },
 );
 

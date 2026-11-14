@@ -4,7 +4,7 @@ import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import DatePicker from "react-multi-date-picker";
 
-import { Calendar } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import { Field, FieldError, FieldLabel } from "@repo/ui";
 
 type Props<T extends FieldValues> = {
@@ -28,9 +28,9 @@ export default function CustomDatePicker<T extends FieldValues>({
           <div className="grid ">
             <label
               htmlFor={name}
-              className=" h-9 gap-1 flex items-center w-full  rounded-md border border-input bg-transparent/50 py-1 px-2.5 text-base sm:text-sm shadow-xs focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              className=" h-8 gap-1 flex items-center w-full  rounded-lg border border-input bg-transparent/50 py-1 px-2 text-base sm:text-sm shadow-xs focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             >
-              <Calendar />
+              <CalendarDays className="size-4 text-muted-foreground" />
               <DatePicker
                 id={name}
                 calendar={persian}

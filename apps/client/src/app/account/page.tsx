@@ -15,6 +15,7 @@ export default function DashboardOverview() {
         <RecentRequests />
         <RecentAppointments />
       </div>
+
       <NotificationsWidget />
     </div>
   );

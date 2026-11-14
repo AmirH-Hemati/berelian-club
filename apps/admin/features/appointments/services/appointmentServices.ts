@@ -57,6 +57,14 @@ export const completeAppointment = async (appointmentsId: string) => {
   return data.data;
 };
 
+export async function getUserAppointments(userId: string) {
+  const { data } = await axiosInstance.get(
+    `/appointments/userAppointments/${userId}`,
+  );
+
+  return data.data;
+}
+
 export const createSessionReport = async (data: SessionReportFormValues) => {
   const { data: response } = await axiosInstance.post("/sessionReports", data);
   return response.data;

@@ -1,4 +1,4 @@
-import type { Model, Query } from "mongoose";
+import type {  Query } from "mongoose";
 import qs from "qs";
 export class ApiFeatures<T> {
   constructor(

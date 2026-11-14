@@ -3,7 +3,6 @@ import { updateMeTypes, verifyOtpTypes } from "@repo/schema";
 
 export const sendOtp = async (phoneNumber: string) => {
   const { data } = await axiosInstance.post("/auth/sendOtp", { phoneNumber });
-  console.log(data);
   return data;
 };
 
@@ -16,10 +15,18 @@ export const verifyOtp = async ({ phoneNumber, otp }: verifyOtpTypes) => {
   return data.data;
 };
 
+export const updateProfileAvatar = async (photo: { photo: File }) => {
+  const { data } = await axiosInstance.patch(
+    "/auth/updateProfileAvatar",
+    photo,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    },
+  );
+  return data.data;
+};
 export const updateMe = async (updateUser: updateMeTypes) => {
-  const { data } = await axiosInstance.patch("/auth/updateMe", updateUser, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+  const { data } = await axiosInstance.patch("/auth/updateMe", updateUser);
   return data.data;
 };
 

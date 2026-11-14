@@ -73,7 +73,7 @@ export default function AppointmentList({
           </div>
 
           <div className="space-y-0.5">
-            <h3 className="text-300 font-semibold">{title}</h3>
+            <CardTitle>{title}</CardTitle>
 
             <p className="text-100 text-muted-foreground">
               {appointments?.length

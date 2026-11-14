@@ -25,6 +25,10 @@ export default function Navbar() {
   const { logout, isLogouting } = useLogout();
 
   if (isError) return null;
+
+  const imageUrl = user?.photo
+    ? `${process.env.NEXT_PUBLIC_API_URL}/images/users/${user?.photo}`
+    : undefined;
   return (
     <nav className="flex items-center justify-between mb-4">
       <SidebarTrigger />
@@ -64,12 +68,7 @@ export default function Navbar() {
           <DropdownMenu>
             <DropdownMenuTrigger className="cursor-pointer">
               <Avatar className="relative size-10 rounded-xl border-border/70 bg-background hover:bg-muted">
-                <AvatarImage
-                  src={
-                    `https://berelianclub-server.onrender.com/images/users/${user?.photo}` ||
-                    ""
-                  }
-                />
+                <AvatarImage src={imageUrl} />
                 <AvatarFallback>
                   {user?.firstName?.[0] + user?.lastName?.[0]}
                 </AvatarFallback>

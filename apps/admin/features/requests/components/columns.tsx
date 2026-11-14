@@ -4,6 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import {
   Avatar,
   AvatarFallback,
+  AvatarImage,
   Badge,
   Button,
   DropdownMenu,
@@ -33,19 +34,26 @@ function UserInfo({
   firstName,
   lastName,
   phoneNumber,
+  photo,
 }: {
   firstName?: string;
   lastName?: string;
   phoneNumber?: string;
+  photo?: string;
 }) {
   const fullName =
     [firstName, lastName].filter(Boolean).join(" ") || "کاربر ناشناس";
 
   const initials = `${firstName?.[0] ?? ""}${lastName?.[0] ?? ""}` || "?";
+  const imageUrl = photo
+    ? `${process.env.NEXT_PUBLIC_API_URL}/images/users/${photo}`
+    : undefined;
 
   return (
     <div className="flex min-w-44 items-center gap-3">
       <Avatar className="size-10 rounded-xl border border-border">
+        <AvatarImage src={imageUrl} />
+
         <AvatarFallback className="rounded-xl bg-primary/10 text-xs font-bold text-primary">
           {initials}
         </AvatarFallback>
@@ -168,6 +176,7 @@ export const columns: ColumnDef<RequestType>[] = [
           firstName={user?.firstName}
           lastName={user?.lastName}
           phoneNumber={user?.phoneNumber}
+          photo={user?.photo}
         />
       );
     },

@@ -390,6 +390,39 @@ export class RequestService {
     });
   }
 
+  async getYearlyRequestStats(boundaries: Date[]) {
+    const result = await RequestModel.aggregate<{
+      _id: Date;
+      count: number;
+    }>([
+      {
+        $match: {
+          createdAt: {
+            $gte: boundaries[0],
+            $lt: boundaries[12],
+          },
+        },
+      },
+      {
+        $bucket: {
+          groupBy: "$createdAt",
+          boundaries,
+          output: {
+            count: { $sum: 1 },
+          },
+        },
+      },
+    ]);
+
+    return result.map((item) => ({
+      month:
+        boundaries.findIndex(
+          (boundary) => boundary.getTime() === new Date(item._id).getTime(),
+        ) + 1,
+      count: item.count,
+    }));
+  }
+
   async deleteRequest(requestId: string, userId: string, isAdmin: boolean) {
     const request = await RequestModel.findById(requestId);
     if (!request) {

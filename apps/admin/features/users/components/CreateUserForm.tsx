@@ -39,9 +39,11 @@ type Props = { user?: UserType; onCloseDialog: () => void };
 export function CreateUserForm({ user, onCloseDialog }: Props) {
   const { createUser, isCreating } = useCreateUser();
   const { updateUser, isUpdating } = useUpdateUser();
+  
   const editId = user?._id || "";
   const isEditSession = Boolean(editId);
   const isWorking = isCreating || isUpdating;
+
   const form = useForm<CreateUserInputTypes>({
     resolver: zodResolver(createUserSchema),
     defaultValues: isEditSession
@@ -90,7 +92,9 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
   return (
     <>
       <DialogHeader>
-        <DialogTitle>ایجاد کاربر جدید</DialogTitle>
+        <DialogTitle>
+          {isEditSession ? "ویرایش اطلاعات کاربر" : "ایجاد کاربر جدید"}
+        </DialogTitle>
         <DialogDescription>
           اطلاعات کاربر جدید را وارد کنید. تمامی فیلد ها الزامی هستند.
         </DialogDescription>

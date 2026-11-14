@@ -6,6 +6,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   Avatar,
   AvatarFallback,
+  AvatarImage,
   Badge,
   Button,
   DropdownMenu,
@@ -28,6 +29,7 @@ import {
 
 import Link from "next/link";
 import { UserType } from "@repo/schema";
+import { useDeleteUser } from "../hooks/useDeleteUser";
 
 type UserRole = "admin" | "investor" | "reception" | "consultant";
 
@@ -70,19 +72,25 @@ function UserInfo({ user }: { user: UserType }) {
   const initials =
     `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}` || "?";
 
+  const imageUrl = user.photo
+    ? `${process.env.NEXT_PUBLIC_API_URL}/images/users/${user.photo}`
+    : undefined;
+
   return (
     <div className="flex min-w-48 items-center gap-3">
       <Avatar className="size-10 shrink-0 rounded-xl border border-border">
-        <AvatarFallback className="rounded-xl bg-primary/10 text-xs font-bold text-primary">
+        <AvatarImage src={imageUrl} alt={fullName} />
+
+        <AvatarFallback className="rounded-xl bg-primary/10 text-100 font-bold text-primary">
           {initials}
         </AvatarFallback>
       </Avatar>
 
       <div className="min-w-0">
-        <p className="truncate text-sm font-semibold text-foreground">
+        <p className="truncate text-200 font-semibold text-foreground">
           {fullName}
         </p>
-        <p className="mt-1 truncate text-xs text-muted-foreground">
+        <p className="mt-1 truncate text-100 text-muted-foreground">
           شناسه: {user._id.slice(-8)}
         </p>
       </div>
@@ -111,6 +119,10 @@ function UserRoleBadge({ role }: { role: string }) {
 }
 
 function UserActions({ user }: { user: UserType }) {
+  const { deleteUser, isDeleting } = useDeleteUser();
+  function handleDeleteUser(id: string) {
+    deleteUser(id);
+  }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -143,7 +155,8 @@ function UserActions({ user }: { user: UserType }) {
         <DropdownMenuItem
           variant="destructive"
           className="cursor-pointer gap-2"
-          disabled
+          onClick={() => handleDeleteUser(user._id)}
+          disabled={isDeleting}
         >
           <Trash2 className="size-4" />
           حذف کاربر

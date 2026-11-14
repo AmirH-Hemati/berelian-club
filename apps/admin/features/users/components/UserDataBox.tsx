@@ -9,6 +9,9 @@ import EditUserDialog from "./EditUserDialog";
 
 type Props = { user: UserType };
 export default function UserDataBox({ user }: Props) {
+  const imageUrl = user.photo
+    ? `${process.env.NEXT_PUBLIC_API_URL}/images/users/${user.photo}`
+    : undefined;
   return (
     <Card>
       <CardHeader className="flex gap-3 flex-col md:flex-row md:items-center justify-between">
@@ -27,11 +30,7 @@ export default function UserDataBox({ user }: Props) {
       <CardContent className="space-y-4">
         <div className="flex items-center gap-2  ">
           <Avatar className="size-10 ring-2 ring-primary/10">
-            <AvatarImage
-              alt="avatar user image"
-              src={`http://localhost:3000/img/users/${user.photo}`}
-              className="object-cover"
-            />
+            <AvatarImage src={imageUrl} />
             <AvatarFallback className="bg-primary/10 text-primary font-medium text-400">
               {user.firstName?.[0]}
               {user.lastName?.[0]}

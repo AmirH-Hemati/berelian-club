@@ -1,10 +1,10 @@
 import { axiosInstance } from "@repo/auth";
 import { buildQueryParams, GetRequestsParams } from "@/utils/buildQueryParams";
 
-export async function getRequests(qeury: GetRequestsParams) {
+export async function getRequests(query: GetRequestsParams) {
   const searchFields = ["user.firstName", "user.lastName"];
   const params = buildQueryParams({
-    ...qeury,
+    ...query,
     searchFields: searchFields.join(",").trim(),
   });
   const { data } = await axiosInstance.get(`/requests?${params}`);

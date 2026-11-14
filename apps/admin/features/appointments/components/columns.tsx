@@ -14,6 +14,7 @@ import {
   Avatar,
   AvatarFallback,
   Badge,
+  AvatarImage,
 } from "@repo/ui";
 
 import {
@@ -116,20 +117,26 @@ export const columns: ColumnDef<AppointmentType>[] = [
       const initials =
         `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}` || "?";
 
+      const imageUrl = user.photo
+        ? `${process.env.NEXT_PUBLIC_API_URL}/images/users/${user.photo}`
+        : undefined;
+
       return (
         <div className="flex min-w-48 items-center gap-3">
           <Avatar className="size-10 rounded-xl border border-border">
-            <AvatarFallback className="rounded-xl bg-primary/10 text-xs font-bold text-primary">
+            <AvatarImage src={imageUrl} />
+
+            <AvatarFallback className="rounded-xl bg-primary/10 text-100 font-bold text-primary">
               {initials}
             </AvatarFallback>
           </Avatar>
 
           <div className="flex min-w-0 flex-col gap-1">
-            <span className="truncate text-sm font-semibold text-foreground">
+            <span className="truncate text-200 font-semibold text-foreground">
               {fullName}
             </span>
 
-            <span className="text-xs text-muted-foreground" dir="ltr">
+            <span className="text-100 text-muted-foreground" dir="ltr">
               {user?.phoneNumber || "شماره ثبت نشده"}
             </span>
           </div>

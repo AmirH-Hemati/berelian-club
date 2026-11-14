@@ -18,7 +18,6 @@ import {
 } from "@repo/ui";
 
 import { PaginationControls } from "@/components/PaginationControls";
-import { RequestType } from "@repo/schema";
 
 import { MoreHorizontalIcon, MessageCircle, Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -122,6 +121,7 @@ export default function RequestsTable() {
                     <ReceptionInfo
                       firstName={request.assignedTo?.firstName}
                       lastName={request.assignedTo?.lastName}
+                      photo={request.assignedTo?.photo}
                     />
                   </TableCell>
 

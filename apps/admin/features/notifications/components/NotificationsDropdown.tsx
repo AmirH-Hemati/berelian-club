@@ -34,7 +34,7 @@ export default function NotificationsDropdown() {
   const { unreadCount, isLoading: isCountLoading } =
     useUnreadNotificationsCount();
 
-  const notificationList = notifications?.notifications ?? [];
+  const notificationList = notifications ?? [];
 
   const hasNotifications = notificationList.length > 0;
   const hasUnread = unreadCount > 0;
@@ -190,7 +190,7 @@ export default function NotificationsDropdown() {
                           <div className="flex items-center gap-1">
                             {notif.link && (
                               <Link
-                                href={`/account${notif.link}`}
+                                href={`${notif.link}`}
                                 className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-100 font-medium text-primary transition-colors hover:bg-primary/10"
                               >
                                 مشاهده
@@ -226,7 +226,7 @@ export default function NotificationsDropdown() {
         {hasNotifications && (
           <div className="border-t bg-muted/20 p-2">
             <Link
-              href="/account/notifications"
+              href="/notifications"
               className="flex items-center justify-center rounded-lg py-2 text-100 font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
             >
               مشاهده همه اعلان‌ها

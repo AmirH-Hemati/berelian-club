@@ -1,9 +1,12 @@
+import { buildQueryParams } from "@/utils/buildQueryParams";
 import { axiosInstance } from "@repo/auth";
 
-export const getMyNotifications = async () => {
-  const { data } = await axiosInstance.get("/notifications");
-  return data.data;
-};
+export async function getMyNotifications(query: any) {
+  const params = buildQueryParams(query);
+  const { data } = await axiosInstance.get(`/notifications?${params}`);
+
+  return data;
+}
 export async function getUnreadNotificationsCount(): Promise<number> {
   const { data } = await axiosInstance.get("/notifications/unread-count");
 

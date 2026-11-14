@@ -1,6 +1,6 @@
 "use client";
 
-import { LucideIcon } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import {
   Empty,
   EmptyContent,
@@ -24,18 +24,27 @@ export default function EmptyState({
   children,
 }: EmptyStateProps) {
   return (
-    <Empty>
-      <EmptyHeader>
-        <EmptyMedia variant="icon">
-          <Icon className="size-10 text-muted-foreground" />
+    <Empty className="min-h-[260px] rounded-xl border border-dashed border-border/70 bg-muted/20 px-5 py-10">
+      <EmptyHeader className="max-w-sm items-center gap-3">
+        <EmptyMedia
+          variant="icon"
+          className="mb-1 flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary ring-8 ring-primary/[0.03]"
+        >
+          <Icon className="size-7" strokeWidth={1.7} />
         </EmptyMedia>
-        <EmptyTitle className="text-center text-300">{title}</EmptyTitle>
-        <EmptyDescription className="text-center text-200 text-muted-foreground">
+
+        <EmptyTitle >
+          {title}
+        </EmptyTitle>
+
+        <EmptyDescription className="text-center text-200
+         leading-7 text-muted-foreground">
           {description}
         </EmptyDescription>
       </EmptyHeader>
+
       {children && (
-        <EmptyContent className="flex-row justify-center gap-2">
+        <EmptyContent className="mt-2 flex-row flex-wrap justify-center gap-2">
           {children}
         </EmptyContent>
       )}

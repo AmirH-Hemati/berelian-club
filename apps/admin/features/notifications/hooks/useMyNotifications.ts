@@ -1,16 +1,35 @@
+"use client";
+
 import { useQuery } from "@tanstack/react-query";
 import { getMyNotifications } from "../services/notificationsService";
+import { useTableQuery } from "@/hooks/useTableQuery";
 
 export function useMyNotifications() {
+  const query = useTableQuery();
+
   const {
-    data: notifications,
+    data = {},
     isLoading,
     isError,
     refetch,
+    error,
   } = useQuery({
-    queryKey: ["notifications"],
-    queryFn: getMyNotifications,
+    queryKey: [
+      "notifications",
+      query.page,
+      query.limit,
+      query.search,
+      query.status,
+    ],
+    queryFn: () => getMyNotifications(query),
   });
 
-  return { notifications, isLoading, isError, refetch };
+  return {
+    notifications: data?.data?.notifications ?? [],
+    pagination: data?.pagination ?? null,
+    isLoading,
+    isError,
+    refetch,
+    error,
+  };
 }

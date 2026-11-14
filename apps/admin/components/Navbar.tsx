@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@repo/ui";
-import { LogOut, Moon, Sun, User } from "lucide-react";
+import { LogOut, Moon, Sun, User, UserRound } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui";
 import { Button } from "@repo/ui";
@@ -14,11 +14,16 @@ import { useLogout, useUser } from "@repo/auth";
 import { Spinner } from "@repo/ui";
 import NotificationsDropdown from "../features/notifications/components/NotificationsDropdown";
 import { useNotificationEvents } from "@/features/notifications/hooks/useNotificationEvents";
+import Link from "next/link";
 export default function Navbar() {
   const { user, isLoading } = useUser();
   const { setTheme } = useTheme();
   const { logout, isLogouting } = useLogout();
-  
+
+  const imageUrl = user?.photo
+    ? `${process.env.NEXT_PUBLIC_API_URL}/images/users/${user?.photo}`
+    : undefined;
+
   return (
     <nav className="flex items-center justify-between p-4 sticky top-0 bg-background z-10">
       {/* left */}
@@ -65,14 +70,24 @@ export default function Navbar() {
           ) : (
             <DropdownMenuTrigger className="cursor-pointer">
               <Avatar className="relative size-10 rounded-xl border-border/70 bg-background hover:bg-muted">
-                <AvatarImage src={user?.photo || ""} />
+                <AvatarImage src={imageUrl} />
                 <AvatarFallback>
                   {user?.firstName[0] + user?.lastName[0]}
                 </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
           )}
+
           <DropdownMenuContent className=" w-44" sideOffset={15}>
+            <DropdownMenuItem asChild>
+              <Link
+                href="/profile"
+                className="flex cursor-pointer items-center gap-2"
+              >
+                <UserRound className="size-4" />
+                پروفایل
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem
               variant="destructive"
               disabled={isLogouting}

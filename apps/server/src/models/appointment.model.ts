@@ -123,8 +123,8 @@ appointmentSchema.pre<Query<appointmentDocument, appointmentDocument>>(
       "_id firstName lastName photo phoneNumber nationalCode",
     )
       .populate("consultant", "_id firstName lastName photo")
-      .populate("cancelledBy", "firstName lastName")
-      .populate("rescheduledBy", "firstName lastName");
+      .populate("cancelledBy", "firstName lastName photo")
+      .populate("rescheduledBy", "firstName lastName photo");
   },
 );
 

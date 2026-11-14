@@ -84,51 +84,11 @@ const RESULT_CONFIG: Record<string, { label: string; className: string }> = {
   },
 };
 
-function SessionReportInfo({
-  summary,
-  result,
-}: {
-  summary?: string;
-  result?: string;
-}) {
-  const resultConfig = result ? RESULT_CONFIG[result] : undefined;
-
-  return (
-    <div className="flex min-w-52 max-w-64 items-start gap-3">
-      <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted/60">
-        <FileText className="size-4 text-muted-foreground" />
-      </div>
-
-      <div className="min-w-0 space-y-2">
-        <p
-          className="line-clamp-2 text-sm font-medium leading-6 text-foreground"
-          title={summary}
-        >
-          {summary || "خلاصه‌ای برای جلسه ثبت نشده است"}
-        </p>
-
-        {resultConfig ? (
-          <Badge
-            variant="outline"
-            className={`text-[10px] ${resultConfig.className}`}
-          >
-            {resultConfig.label}
-          </Badge>
-        ) : (
-          <Badge variant="secondary" className="text-[10px]">
-            نتیجه مشخص نشده
-          </Badge>
-        )}
-      </div>
-    </div>
-  );
-}
-
 function FollowUpNote({ note }: { note?: string }) {
   return (
     <div className="max-w-56">
       <p
-        className="line-clamp-2 text-sm leading-6 text-foreground"
+        className="line-clamp-2 text-200 leading-6 text-foreground"
         title={note}
       >
         {note || "توضیحی ثبت نشده است"}
@@ -164,20 +124,20 @@ function DueDateInfo({
     <div className="flex min-w-36 flex-col items-start gap-2">
       <div className="flex items-center gap-2 whitespace-nowrap">
         <CalendarDays className="size-4 text-muted-foreground" />
-        <span className="text-sm font-medium text-foreground">
+        <span className="text-200 font-medium text-foreground">
           {formatDate(dueDate)}
         </span>
       </div>
 
       {isOverdue && (
-        <Badge variant="destructive" className="gap-1 text-[10px]">
+        <Badge variant="destructive" className="gap-1 text-100">
           <Clock3 className="size-3" />
           دارای دیرکرد
         </Badge>
       )}
 
       {isToday && (
-        <Badge className="gap-1 border-blue-500/20 bg-blue-500/10 text-[10px] text-blue-600 dark:text-blue-400">
+        <Badge className="gap-1 border-blue-500/20 bg-blue-500/10 text-100 text-blue-600 dark:text-blue-400">
           <Clock3 className="size-3" />
           موعد امروز
         </Badge>
@@ -273,16 +233,7 @@ export const columns: ColumnDef<FollowUpType>[] = [
       );
     },
   },
-  {
-    accessorKey: "sessionReport.summary",
-    header: "گزارش جلسه",
-    cell: ({ row }) => (
-      <SessionReportInfo
-        summary={row.original.sessionReport?.summary}
-        result={row.original.sessionReport?.result}
-      />
-    ),
-  },
+
   {
     accessorKey: "note",
     header: "موضوع پیگیری",
@@ -307,7 +258,7 @@ export const columns: ColumnDef<FollowUpType>[] = [
     accessorKey: "createdAt",
     header: "تاریخ ثبت",
     cell: ({ row }) => (
-      <span className="whitespace-nowrap text-sm text-muted-foreground">
+      <span className="whitespace-nowrap text-200 text-muted-foreground">
         {formatDate(row.original.createdAt)}
       </span>
     ),

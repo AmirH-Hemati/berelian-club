@@ -3,11 +3,7 @@ import RequestModel, {
   type RequestDocument,
 } from "../../models/request.model.js";
 import type { UserDocument } from "../../models/user.model.js";
-import {
-  getAll,
-  getOne,
-  updateOne,
-} from "../../controllers/handlerFactory.js";
+import { getAll, getOne, updateOne } from "../../controllers/handlerFactory.js";
 import { requestService } from "../../container/index.js";
 import CatchError from "../../utils/catchAsync.js";
 
@@ -78,6 +74,18 @@ export const rejectRequest = CatchError(async (req, res) => {
 
 export const getUserRequests = CatchError(async (req, res) => {
   const userId = (req.user as UserDocument)._id.toString();
+
+  const result = await requestService.getUserRequests(userId, req.query);
+
+  return res.status(200).json({
+    status: "success",
+    data: result.requests,
+    pagination: result.pagination,
+  });
+});
+
+export const getUserRequestsByParams = CatchError(async (req, res) => {
+  const userId = req.params.id as string;
 
   const result = await requestService.getUserRequests(userId, req.query);
 

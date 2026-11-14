@@ -27,3 +27,9 @@ export async function updateUser(newUser: updateUserInputTypes, id: string) {
 
   return data.data;
 }
+
+export async function deleteUser(id: string) {
+  const { data } = await axiosInstance.delete(`/users/${id}`);
+
+  return data.data;
+}

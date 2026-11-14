@@ -8,6 +8,7 @@ import {
   logout,
   resizeUserImage,
   updateMe,
+  updateProfileAvatarController,
   uploadUserImage,
 } from "./auth.controller.js";
 import { validateZod } from "../../middlewares/validateZod.js";
@@ -17,6 +18,7 @@ import {
   sendOtpLimiter,
   verifyOtpLimiter,
 } from "../../middlewares/rateLimiter.js";
+import { restrictTo } from "../../middlewares/authorization.middleware.js";
 
 const router = express.Router();
 router.post(
@@ -36,13 +38,20 @@ router.post(
 
 router.use(protectedRoute);
 router.patch(
-  "/updateMe",
-  convertDateFields(["birthDate"]),
-  validateZod(updateMeSchema),
+  "/updateProfileAvatar",
   uploadUserImage,
   resizeUserImage,
+  updateProfileAvatarController,
+);
+
+router.patch(
+  "/updateMe",
+  restrictTo("admin", "consultant", "reception"),
+  convertDateFields(["birthDate"]),
+  validateZod(updateMeSchema),
   updateMe,
 );
+
 router.post("/logout", logout);
 // router.route("/:id").get(getUser).patch(updateUser).delete(deleteUser);
 

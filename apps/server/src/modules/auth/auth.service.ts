@@ -2,7 +2,7 @@ import UserModel from "../../models/user.model.js";
 import { AppError } from "../../utils/AppError.js";
 import type { TokenService } from "../token/TokenService.js";
 import type { OtpService } from "../verification/verification.service.js";
-
+import type { updateMeTypes } from "@repo/schema";
 export class AuthService {
   constructor(
     private readonly otpService: OtpService,
@@ -35,11 +35,18 @@ export class AuthService {
     return { user, token };
   }
 
-  async updateMe(userId: string, filtersBody: Record<string, string>) {
-    const user = await UserModel.findByIdAndUpdate(userId, filtersBody, {
-      new: true,
-      runValidators: true,
-    }).select("-password");
+  async updateMe(
+    userId: string,
+    data: Partial<updateMeTypes & { photo: string }>,
+  ) {
+    const user = await UserModel.findByIdAndUpdate(
+      userId,
+      { $set: data },
+      {
+        new: true,
+        runValidators: true,
+      },
+    ).select("-password");
 
     if (!user) {
       throw new AppError("کاربری یافت نشد", 404);

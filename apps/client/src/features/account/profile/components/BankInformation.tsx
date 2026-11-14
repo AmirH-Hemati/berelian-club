@@ -1,51 +1,73 @@
 "use client";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@repo/ui";
-import { UserType } from "@repo/schema";
-import { Banknote } from "lucide-react";
 
-type Props = { user: UserType };
+import { Card, CardContent, CardHeader, CardTitle } from "@repo/ui";
+
+import { Banknote, CreditCard } from "lucide-react";
+import type { UserType } from "@repo/schema";
+
+type Props = {
+  user: UserType;
+};
+
 export default function BankInformation({ user }: Props) {
+  const items = [
+    {
+      label: "شماره حساب",
+      value: user.bankAccountNumber,
+      icon: Banknote,
+    },
+    {
+      label: "شماره شبا",
+      value: user.shabaNumber,
+      icon: CreditCard,
+    },
+  ];
+
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>اطلاعات بانکی</CardTitle>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <div className="space-y-1">
+          <CardTitle>اطلاعات بانکی</CardTitle>
+          <p className="text-100 text-muted-foreground">
+            مشخصات حساب بانکی ثبت‌شده شما
+          </p>
+        </div>
+
+        <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <Banknote className="size-5" />
+        </div>
       </CardHeader>
 
       <CardContent>
-        <div className="grid gap-4 md:grid-cols-2">
-          <div>
-            <label className="mb-1 block text-200 font-medium">
-              شماره حساب
-            </label>
+        <div className="grid gap-5 sm:grid-cols-2">
+          {items.map((item) => {
+            const Icon = item.icon;
 
-            <InputGroup>
-              <InputGroupAddon>
-                <Banknote className="size-4" />
-              </InputGroupAddon>
+            return (
+              <div key={item.label} className="flex min-w-0 items-start gap-3">
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+                  <Icon className="size-4" strokeWidth={1.8} />
+                </div>
 
-              <InputGroupInput disabled value={user.bankAccountNumber} />
-            </InputGroup>
-          </div>
+                <div className="min-w-0 flex-1 space-y-1">
+                  <p className="text-200 text-muted-foreground">{item.label}</p>
 
-          <div>
-            <label className="mb-1 block text-200 font-medium">شماره شبا</label>
+                  <p
+                    className="truncate text-300 text-right font-medium"
+                    dir="ltr"
+                  >
+                    {item.value || "ثبت نشده"}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
-            <InputGroup>
-              <InputGroupAddon>
-                <Banknote className="size-4" />
-              </InputGroupAddon>
-
-              <InputGroupInput disabled value={user.shabaNumber} />
-            </InputGroup>
-          </div>
+        <div className="mt-6 border-t pt-3">
+          <p className="text-100 leading-6 text-muted-foreground">
+            اطلاعات بانکی شما توسط واحد مدیریت ثبت و به‌روزرسانی می‌شود.
+          </p>
         </div>
       </CardContent>
     </Card>

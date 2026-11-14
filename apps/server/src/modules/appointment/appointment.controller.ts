@@ -121,6 +121,21 @@ export const getUserAppointmentsController = CatchError(
   },
 );
 
+export const getUserAppointmentsByParamsController = CatchError(
+  async (req: Request, res: Response) => {
+    const userId = req.params.id;
+
+    const { appointments, pagination } =
+      await appointmentService.getUserAppointments(userId, req.query);
+
+    return res.status(200).json({
+      status: "success",
+      data: appointments,
+      pagination,
+    });
+  },
+);
+
 export const getTodayAppointmentsController = CatchError(
   async (_req: Request, res: Response) => {
     const appointments = await appointmentService.getTodayAppointments();
