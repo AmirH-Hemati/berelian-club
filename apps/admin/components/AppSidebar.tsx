@@ -1,7 +1,7 @@
 "use client";
 
 import { sidebarData } from "@/lib/constanst/SidebarItem";
-import { ChevronUp, Gem, LogOut, User, User2 } from "lucide-react";
+import { ChevronUp, LogOut, User2, UserRound } from "lucide-react";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -23,6 +23,7 @@ import {
   useSidebar,
 } from "@repo/ui";
 import { useLogout } from "@repo/auth";
+import Image from "next/image";
 
 export default function AppSidebar() {
   const { logout, isLogouting } = useLogout();
@@ -45,7 +46,14 @@ export default function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton asChild onClick={handleNavigation}>
               <Link href="/">
-                <Gem />
+                <Image
+                  src="/berelian-logo.svg"
+                  alt="لوگوی برلیان"
+                  width={42}
+                  height={42}
+                  priority
+                  className="h-10 w-10 object-contain"
+                />
                 <span className="text-lg font-bold ">پنل ادمین برلیان</span>
               </Link>
             </SidebarMenuButton>
@@ -89,6 +97,15 @@ export default function AppSidebar() {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent>
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/profile"
+                    className="flex cursor-pointer items-center gap-2"
+                  >
+                    <UserRound className="size-4" />
+                    پروفایل
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   disabled={isLogouting}
                   onClick={() => logout()}

@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { Moon, Sun, TrendingUp, User } from "lucide-react";
+import Image from "next/image";
+import { Moon, Sun, User } from "lucide-react";
 import { LoginForm, useUser } from "@repo/auth";
 import {
   DropdownMenu,
@@ -17,12 +18,23 @@ import { useTheme } from "next-themes";
 export default function Header() {
   const { setTheme } = useTheme();
   const { user, isLoading } = useUser();
+
+  const isInvestor = user?.role === "investor";
+  const profilePath = isInvestor ? "/account" : "http://localhost:4001";
   return (
     <header className="border-b py-4  border-border/40 bg-background/95  ">
       <div className="flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2  font-bold">
-          <TrendingUp className="h-6 w-6 text-primary" />
-          <span className="md:block hidden text-300">
+        <Link href="/" className="flex items-center gap-2 font-bold">
+          <Image
+            src="/berelian-logo.svg"
+            alt="لوگوی برلیان"
+            width={42}
+            height={42}
+            priority
+            className="h-10 w-10 object-contain"
+          />
+
+          <span className="hidden text-base font-bold md:block">
             باشگاه مشتریان برلیان
           </span>
         </Link>
@@ -52,7 +64,11 @@ export default function Header() {
           {isLoading ? (
             <Spinner />
           ) : user ? (
-            <Link href="/account">
+            <Link
+              href={profilePath}
+              target={isInvestor ? undefined : "_blank"}
+              rel={isInvestor ? undefined : "noopener noreferrer"}
+            >
               <Button size="icon" variant="outline">
                 <User />
               </Button>

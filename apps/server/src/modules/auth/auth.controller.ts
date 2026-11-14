@@ -90,10 +90,10 @@ export const handleVerifyOtp = CatchError(async (req, res, next) => {
 
   const cookieOption: CookieOptions = {
     expires: thirtyDaysFromNow(),
-    secure: process.env.APP_ENV === "production" ? true : false,
+    secure: process.env.APP_ENV === "production",
     httpOnly: true,
     sameSite: "lax",
-    // domain: "berelianbg.ir",
+    domain: process.env.APP_ENV === "production" ? ".berelianbg.ir" : undefined,
   };
 
   console.log(cookieOption);

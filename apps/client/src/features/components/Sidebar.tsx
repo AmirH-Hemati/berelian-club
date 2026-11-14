@@ -1,5 +1,8 @@
 "use client";
+import { sidebarItems } from "@/lib/constants/sidebarItems";
+import { useLogout } from "@repo/auth";
 import {
+  cn,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -15,12 +18,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@repo/ui";
-import { sidebarItems } from "@/lib/constants/sidebarItems";
-import { cn } from "@repo/ui";
-import { ChevronUp, Gem, LogOut, User, User2 } from "lucide-react";
+import { ChevronUp, LogOut, User, User2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useLogout } from "@repo/auth";
 
 export function AppSidebar() {
   const pathName = usePathname();
@@ -37,7 +38,14 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton asChild onClick={handleNavigation}>
               <Link href="/account">
-                <Gem />
+                <Image
+                  src="/berelian-logo.svg"
+                  alt="لوگوی برلیان"
+                  width={42}
+                  height={42}
+                  priority
+                  className="h-10 w-10 object-contain"
+                />
                 <span className="text-400 font-bold ">
                   شرکت سبدگردان برلیان
                 </span>

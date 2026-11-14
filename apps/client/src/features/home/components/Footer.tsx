@@ -1,4 +1,5 @@
 import { Mail, MapPin, Phone, TrendingUp } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Footer() {
@@ -9,7 +10,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <TrendingUp className="h-6 w-6 text-primary" />
+              <Image
+                src="/berelian-logo.svg"
+                alt="لوگوی برلیان"
+                width={42}
+                height={42}
+                priority
+                className="h-10 w-10 object-contain"
+              />
+
               <h4 className="font-semibold text-400">باشگاه مشتریان برلیان</h4>
             </div>
             <div className="space-y-3 text-300 text-muted-foreground leading-relaxed">
@@ -86,7 +95,9 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-border/40 mt-10 pt-6 text-center text-200 text-muted-foreground">
-          <p>&copy;{year} کلیه حقوق برای باشگاه سرمایه‌گذاری برلیان محفوظ است.</p>
+          <p>
+            &copy;{year} کلیه حقوق برای باشگاه سرمایه‌گذاری برلیان محفوظ است.
+          </p>
         </div>
       </div>
     </footer>
