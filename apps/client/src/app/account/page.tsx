@@ -2,7 +2,7 @@ import Stats from "@/features/account/dashboard/components/Stats";
 
 import ContractStatus from "@/features/account/dashboard/components/ContractStatus";
 
-import NotificationsWidget from "@/features/account/dashboard/components/NotificationsWidget";
+import NotificationsWidget from "@/features/account/notifications/components/NotificationsList";
 import RecentRequests from "@/features/account/requests/components/RecentRequests";
 import RecentAppointments from "@/features/account/appointments/components/RecentAppointments";
 

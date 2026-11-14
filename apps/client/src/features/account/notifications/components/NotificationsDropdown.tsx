@@ -34,7 +34,7 @@ export default function NotificationsDropdown() {
   const { unreadCount, isLoading: isCountLoading } =
     useUnreadNotificationsCount();
 
-  const notificationList = notifications?.notifications ?? [];
+  const notificationList = notifications ?? [];
 
   const hasNotifications = notificationList.length > 0;
   const hasUnread = unreadCount > 0;
