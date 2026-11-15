@@ -9,6 +9,5 @@ export function useTableQuery() {
     page: searchParams.get("page") ?? "1",
     limit: searchParams.get("limit") ?? "10",
     search: searchParams.get("search") ?? "",
-    status: searchParams.get("status") ?? "",
   };
 }

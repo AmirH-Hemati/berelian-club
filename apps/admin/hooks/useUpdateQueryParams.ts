@@ -13,7 +13,7 @@ export function useUpdateQueryParams() {
       const urlParams = new URLSearchParams(searchParams.toString());
 
       Object.entries(params).forEach(([key, value]) => {
-        if (value) {
+        if (value !== "" && value !== null && value !== undefined) {
           urlParams.set(key, String(value));
         } else {
           urlParams.delete(key);

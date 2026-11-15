@@ -137,7 +137,7 @@ export default function SessionReportDialog({
             control={form.control}
             label="توضیحات نتیجه"
             name="resultDescription"
-            placeholder="مثلاً: مشتری با شرایط جدید موافقت کرد..."
+            placeholder="مثلاً: سرمایه گذاران با شرایط جدید موافقت کرد..."
           />
           <TextareaFiled
             name="notes"
@@ -175,7 +175,7 @@ export default function SessionReportDialog({
                 name="followUpAction"
                 control={form.control}
                 label="اقدام بعدی"
-                placeholder="مثلاً: تماس مجدد با مشتری و ارسال پیش‌فاکتور..."
+                placeholder="مثلاً: تماس مجدد با سرمایه گذاران و ارسال پیش‌فاکتور..."
               />
             </div>
           )}

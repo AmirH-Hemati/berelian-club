@@ -44,7 +44,7 @@ export default function CustomDatePicker<T extends FieldValues>({
                       : new Date(),
                   )
                 }
-                calendarPosition="top-left"
+                calendarPosition="bottom-left"
               />
             </label>
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

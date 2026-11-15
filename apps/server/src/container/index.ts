@@ -23,7 +23,7 @@ const otpService = new OtpService(SmsProvider);
 
 export const tokenService = new TokenService();
 export const authService = new AuthService(otpService, tokenService);
-const userService = new UserService();
+export const userService = new UserService();
 
 export const conversationService = new ConversationService();
 

@@ -1,8 +1,4 @@
-export type GetRequestsParams = {
-  page: string;
-  limit: string;
-  search?: string;
-};
+export type GetRequestsParams = Record<string, string>;
 
 export function buildQueryParams(query: Record<string, string>) {
   const params = new URLSearchParams();

@@ -54,7 +54,7 @@ export default function AppSidebar() {
                   priority
                   className="h-10 w-10 object-contain"
                 />
-                <span className="text-lg font-bold ">پنل ادمین برلیان</span>
+                <span className="text-400 font-bold ">پنل ادمین برلیان</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

@@ -72,7 +72,7 @@ function AppointmentActions({ appointment }: { appointment: AppointmentType }) {
             className="flex cursor-pointer items-center gap-2"
           >
             <UserRound className="size-4" />
-            مشاهده اطلاعات مشتری
+            مشاهده اطلاعات سرمایه گذاران
           </Link>
         </DropdownMenuItem>
 
@@ -105,7 +105,7 @@ function AppointmentActions({ appointment }: { appointment: AppointmentType }) {
 export const columns: ColumnDef<AppointmentType>[] = [
   {
     accessorKey: "user",
-    header: "اطلاعات مشتری",
+    header: "اطلاعات سرمایه گذاران",
     cell: ({ row }) => {
       const appointment = row.original;
       const user = appointment.user;

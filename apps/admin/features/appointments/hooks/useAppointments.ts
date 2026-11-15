@@ -1,9 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAppointments } from "../services/appointmentServices";
 import { useTableQuery } from "@/hooks/useTableQuery";
+import { useSearchParams } from "next/navigation";
 
 export function useAppointments() {
-  const query = useTableQuery();
+  const searchParams = useSearchParams();
+  const tableQuery = useTableQuery();
+
+  const query = {
+    ...tableQuery,
+    status: searchParams.get("status") ?? "",
+    type: searchParams.get("type") ?? "",
+    consultant: searchParams.get("consultant") ?? "",
+    investor: searchParams.get("investor") ?? "",
+    "appointmentDate[gte]": searchParams.get("appointmentDate[gte]") ?? "",
+    "appointmentDate[lte]": searchParams.get("appointmentDate[lte]") ?? "",
+  };
+
   const {
     data = {},
     isLoading,
@@ -12,13 +25,7 @@ export function useAppointments() {
     error,
   } = useQuery({
     queryFn: () => getAppointments(query),
-    queryKey: [
-      "appointments",
-      query.page,
-      query.limit,
-      query.search,
-      query.status,
-    ],
+    queryKey: ["appointments", query],
   });
 
   return {

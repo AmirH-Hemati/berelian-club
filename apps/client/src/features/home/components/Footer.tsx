@@ -19,11 +19,14 @@ export default function Footer() {
                 className="h-10 w-10 object-contain"
               />
 
-              <h4 className="font-semibold text-400">باشگاه مشتریان برلیان</h4>
+              <h4 className="font-semibold text-400">
+                باشگاه سرمایه گذارانان برلیان
+              </h4>
             </div>
             <div className="space-y-3 text-300 text-muted-foreground leading-relaxed">
               <p>
-                باشگاه مشتریان ما فراتر از یک پنل مدیریت دارایی، بستری برای
+                باشگاه سرمایه گذارانان ما فراتر از یک پنل مدیریت دارایی، بستری
+                برای
                 <span className="text-primary font-medium">
                   {" "}
                   رشد هوشمندانه

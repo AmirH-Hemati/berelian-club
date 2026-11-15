@@ -44,6 +44,9 @@ export * from "./components/ui/tabs";
 export * from "./components/ui/textarea";
 export * from "./components/ui/tooltip";
 export * from "./components/ui/chart";
+export * from "./components/ui/command";
+export * from "./components/ui/popover";
+export * from "./components/ui/combobox";
 
 export * from "./lib/utils";
 export * from "./lib/use-mobile";

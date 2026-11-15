@@ -2,8 +2,8 @@ import { axiosInstance } from "@repo/auth";
 import { buildQueryParams, GetRequestsParams } from "@/utils/buildQueryParams";
 import { SessionReportFormValues } from "@repo/schema";
 
-export async function getAppointments(qeury: GetRequestsParams) {
-  const params = buildQueryParams(qeury);
+export async function getAppointments(query: GetRequestsParams) {
+  const params = buildQueryParams(query);
   const { data } = await axiosInstance.get(`/appointments?${params}`);
 
   return data;

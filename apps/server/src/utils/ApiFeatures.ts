@@ -1,4 +1,4 @@
-import type {  Query } from "mongoose";
+import type { Query } from "mongoose";
 import qs from "qs";
 export class ApiFeatures<T> {
   constructor(
@@ -8,6 +8,7 @@ export class ApiFeatures<T> {
 
   filter() {
     const queryObj = { ...qs.parse(this.queryString) };
+
     const excludedField = [
       "page",
       "sort",
@@ -16,13 +17,24 @@ export class ApiFeatures<T> {
       "search",
       "searchFields",
     ];
+
     excludedField.forEach((field) => delete queryObj[field]);
+
+    Object.entries(queryObj).forEach(([key, value]) => {
+      if (typeof value === "string" && value.includes(",")) {
+        queryObj[key] = {
+          $in: value.split(",").map((item) => item.trim()),
+        };
+      }
+    });
+
     let queryStr = JSON.stringify(queryObj);
+
     queryStr = queryStr.replace(/\b(lt|lte|gt|gte)\b/g, (match) => `$${match}`);
+
     this.query = this.query.find(JSON.parse(queryStr));
     return this;
   }
-
   search() {
     if (this.queryString.search) {
       const searchTerm = this.queryString.search;

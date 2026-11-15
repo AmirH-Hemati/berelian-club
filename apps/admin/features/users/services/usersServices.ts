@@ -12,6 +12,22 @@ export async function getAllUsers(query: GetRequestsParams) {
   return data;
 }
 
+export type UserRole = "investor" | "consultant";
+
+export type UserOption = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  role: UserRole;
+};
+
+export async function getUsersByRole(role: UserRole) {
+  const { data } = await axiosInstance.get(`/users/by-role/${role}`);
+
+  return data.data as UserOption[];
+}
+
 export async function getUser(id: string) {
   const { data } = await axiosInstance.get(`/users/${id}`);
 
