@@ -36,41 +36,36 @@ export class ApiFeatures<T> {
     this.query = this.query.find(JSON.parse(queryStr));
     return this;
   }
+
   search() {
-    if (this.queryString.search) {
-      const searchTerm = this.queryString.search;
-      const searchFields = this.queryString.searchFields?.split(",") || [];
+    if (!this.queryString.search) return this;
 
-      const directFields = ["originalName", "firstName", "lastName"];
+    const searchTerm = this.queryString.search;
+    const searchFields = this.queryString.searchFields?.split(",") || [];
 
-      const safeDirectFields = searchFields.filter((field: string) =>
-        directFields.includes(field),
-      );
+    const directFields = [
+      "fileName",
+      "originalName",
+      "firstName",
+      "lastName",
+      "nationalCode",
+      "phoneNumber",
+      "email",
+    ];
+    const safeFields = searchFields.filter((field: string) =>
+      directFields.includes(field),
+    );
 
-      if (safeDirectFields.length > 0) {
-        const directConditions = safeDirectFields.map((field: string) => ({
-          [field]: { $regex: searchTerm, $options: "i" },
-        }));
-        this.query = this.query.find({ $or: directConditions });
-      }
+    if (safeFields.length > 0) {
+      const conditions = safeFields.map((field: string) => ({
+        [field]: { $regex: searchTerm, $options: "i" },
+      }));
 
-      // const populateFields = ["user.firstName", "user.lastName"];
-      // const safePopulateFields = searchFields.filter((field: string) =>
-      //   populateFields.includes(field),
-      // );
-      // if (safePopulateFields.length > 0) {
-      //   const populateConditions = safePopulateFields.map((field: string) => ({
-      //     [field.split(".")[1]]: { $regex: searchTerm, $options: "i" },
-      //   }));
-
-      //   this.query = this.query
-      //     .populate("user")
-      //     .find({ $or: populateConditions });
-      // }
+      this.query = this.query.find({ $or: conditions });
     }
+
     return this;
   }
-
   sort() {
     if (this.queryString.sort) {
       const sortBy = this.queryString.sort.split(",").join(" ");

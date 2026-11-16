@@ -3,7 +3,7 @@ import { buildQueryParams, GetRequestsParams } from "@/utils/buildQueryParams";
 import { CreateUserInputTypes, updateUserInputTypes } from "@repo/schema";
 
 export async function getAllUsers(query: GetRequestsParams) {
-  const searchFields = ["firstName", "lastName"];
+  const searchFields = ["firstName", "lastName", "email", "phoneNumber"];
   const params = buildQueryParams({
     ...query,
     searchFields: searchFields.join(","),
