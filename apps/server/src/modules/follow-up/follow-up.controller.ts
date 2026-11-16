@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 import CatchError from "../../utils/catchAsync.js";
 
 import { followUpService } from "../../container/index.js";
-import { getAll } from "../../controllers/handlerFactory.js";
+import { getAll, getOne } from "../../controllers/handlerFactory.js";
 import type { FollowUpDocument } from "../../models/followUp.model.js";
 import FollowUpModel from "../../models/followUp.model.js";
 
@@ -53,3 +53,4 @@ export const deleteFollowUp = CatchError(
 );
 
 export const getAllFollowUps = getAll<FollowUpDocument>(FollowUpModel);
+export const getFollowUp = getOne<FollowUpDocument>(FollowUpModel);

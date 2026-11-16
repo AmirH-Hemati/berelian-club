@@ -4,6 +4,7 @@ import {
   completeFollowUp,
   deleteFollowUp,
   getAllFollowUps,
+  getFollowUp,
   getOverdueFollowUps,
   getTodayFollowUps,
 } from "./follow-up.controller.js";
@@ -23,6 +24,6 @@ router.get("/overdue", getOverdueFollowUps);
 
 router.patch("/:id/complete", completeFollowUp);
 
-router.route("/:id").delete(deleteFollowUp);
+router.route("/:id").get(getFollowUp).delete(deleteFollowUp);
 
 export default router;

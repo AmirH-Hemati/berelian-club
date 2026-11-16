@@ -9,10 +9,10 @@ import { useDebounce } from "use-debounce";
 
 export default function SearchFilter() {
   const searchParams = useSearchParams();
-  const search = searchParams.get("search") || "";
   const updateQueryParams = useUpdateQueryParams();
+
+  const search = searchParams.get("search") || "";
   const [searchValue, setSearchValue] = useState(search);
-  const [isOpen, setIsOpen] = useState(false);
   const [debounceValue] = useDebounce(searchValue, 300);
 
   useEffect(() => {

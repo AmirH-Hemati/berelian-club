@@ -10,6 +10,12 @@ export const getFollowUps = async (query: GetRequestsParams) => {
   const { data } = await axiosInstance.get(`/followUps?${params}`);
   return data;
 };
+
+export async function getFollowup(followupId: string) {
+  const { data } = await axiosInstance.get(`/followUps/${followupId}`);
+  return data.data;
+}
+
 export const getTodayFollowUps = async () => {
   const { data } = await axiosInstance.get("/followUps/today");
   return data.data;

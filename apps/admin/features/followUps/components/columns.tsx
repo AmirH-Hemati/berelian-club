@@ -23,7 +23,6 @@ import {
   FileText,
   MoreHorizontal,
   Trash2,
-  UserRound,
 } from "lucide-react";
 
 import Link from "next/link";
@@ -171,7 +170,7 @@ function FollowUpActions({ followUp }: { followUp: FollowUpType }) {
 
         <DropdownMenuItem asChild>
           <Link
-            href={`/followups/${followUp._id}`}
+            href={`/followUps/${followUp._id}`}
             className="flex cursor-pointer items-center gap-2"
           >
             <Eye className="size-4" />
