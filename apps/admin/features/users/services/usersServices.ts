@@ -12,7 +12,7 @@ export async function getAllUsers(query: GetRequestsParams) {
   return data;
 }
 
-export type UserRole = "investor" | "consultant";
+export type UserRole = "investor" | "consultant" | "reception";
 
 export type UserOption = {
   _id: string;

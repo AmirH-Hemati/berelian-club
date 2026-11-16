@@ -1,14 +1,40 @@
 "use client";
 
 import { DataTable } from "@/components/DataTable";
-import TabsComponents from "@/components/TabsComponents";
+import FilterButton from "@/features/filters/components/FilterButton";
+import { requestFiltersConfig } from "@/features/filters/config/filters.config";
 import { columns } from "@/features/requests/components/columns";
 import { useRequests } from "@/features/requests/hooks/useRequests";
+import { useGetInvestors } from "@/features/users/hooks/useGetInvestors";
+import { useGetReceptions } from "@/features/users/hooks/useGetReceptions";
 import { ClipboardList } from "lucide-react";
 
 export default function Page() {
   const { requests, pagination, isLoading, isError, refetch, error } =
     useRequests();
+
+  const { investors, isLoading: investorsLoading } = useGetInvestors();
+  const { receptions, isLoading: receptionsLoading } = useGetReceptions();
+
+  const filterOptions = {
+    investor: {
+      options: investors.map((user) => ({
+        label: `${user.firstName} ${user.lastName}`,
+        value: user._id,
+        description: user.phoneNumber,
+      })),
+      isLoading: investorsLoading,
+    },
+
+    assignedTo: {
+      options: receptions.map((user) => ({
+        label: `${user.firstName} ${user.lastName}`,
+        value: user._id,
+        description: user.phoneNumber,
+      })),
+      isLoading: receptionsLoading,
+    },
+  };
 
   return (
     <div className="mt-5 space-y-5">
@@ -28,12 +54,16 @@ export default function Page() {
             </p>
           </div>
         </div>
+        {/* Filters */}
+        <FilterButton
+          config={requestFiltersConfig}
+          filterOptions={filterOptions}
+        />
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+      {/* <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <TabsComponents />
-      </div>
+      </div> */}
 
       {/* Requests Table */}
       <DataTable

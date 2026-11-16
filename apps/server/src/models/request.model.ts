@@ -1,7 +1,7 @@
 import mongoose, { Query } from "mongoose";
 
 export interface RequestDocument extends mongoose.Document {
-  user: mongoose.Types.ObjectId;
+  investor: mongoose.Types.ObjectId;
   assignedTo: mongoose.Types.ObjectId | null;
   assignedAt: Date | null;
   description: string;
@@ -15,7 +15,7 @@ export interface RequestDocument extends mongoose.Document {
 }
 const requestSchema = new mongoose.Schema<RequestDocument>(
   {
-    user: {
+    investor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -66,7 +66,7 @@ requestSchema.pre<Query<RequestDocument, RequestDocument>>(
   /^find/,
   function () {
     this.populate(
-      "user",
+      "investor",
       "firstName lastName photo _id phoneNumber nationalCode ",
     )
       .populate("cancelledBy", "firstName lastName photo")

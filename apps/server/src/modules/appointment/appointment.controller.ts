@@ -23,10 +23,10 @@ export const setAppointmentUserId = (
 
 export const createAppointmentController = CatchError(
   async (req: Request, res: Response) => {
-    const userId = (req.user as UserDocument)._id.toString();
+    const investorId = (req.user as UserDocument)._id.toString();
 
     const appointment = await appointmentService.createAppointment(
-      userId,
+      investorId,
       req.body,
     );
 

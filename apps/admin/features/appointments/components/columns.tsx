@@ -68,7 +68,7 @@ function AppointmentActions({ appointment }: { appointment: AppointmentType }) {
 
         <DropdownMenuItem asChild>
           <Link
-            href={`/users/${appointment.user?._id}`}
+            href={`/users/${appointment.investor?._id}`}
             className="flex cursor-pointer items-center gap-2"
           >
             <UserRound className="size-4" />
@@ -104,11 +104,11 @@ function AppointmentActions({ appointment }: { appointment: AppointmentType }) {
 
 export const columns: ColumnDef<AppointmentType>[] = [
   {
-    accessorKey: "user",
+    accessorKey: "investor",
     header: "اطلاعات سرمایه گذاران",
     cell: ({ row }) => {
       const appointment = row.original;
-      const user = appointment.user;
+      const user = appointment.investor;
 
       const fullName =
         [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||

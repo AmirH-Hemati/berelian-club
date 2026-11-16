@@ -136,7 +136,7 @@ function RequestActions({ request }: { request: RequestType }) {
 
         <DropdownMenuItem asChild>
           <Link
-            href={`/users/${request.user?._id}`}
+            href={`/users/${request.investor?._id}`}
             className="flex cursor-pointer items-center gap-2"
           >
             <UserRound className="size-4" />
@@ -166,10 +166,10 @@ function RequestActions({ request }: { request: RequestType }) {
 
 export const columns: ColumnDef<RequestType>[] = [
   {
-    accessorKey: "user",
+    accessorKey: "investor",
     header: "اطلاعات کاربر",
     cell: ({ row }) => {
-      const user = row.original.user;
+      const user = row.original.investor;
 
       return (
         <UserInfo

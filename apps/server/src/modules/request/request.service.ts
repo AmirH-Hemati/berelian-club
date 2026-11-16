@@ -28,7 +28,7 @@ export class RequestService {
     data: Pick<RequestDocument, "type" | "description">,
   ) {
     const request = await RequestModel.create({
-      user: userId,
+      investor: userId,
       type: data.type,
       description: data.description,
       status: "pending",
@@ -88,14 +88,14 @@ export class RequestService {
     const conversation =
       await this.conversationService.createOrActivateForRequest(
         request._id.toString(),
-        request.user._id.toString(),
+        request.investor._id.toString(),
         receptionId,
       );
 
     const requestTypeLabel = REQUEST_TYPE_LABELS[request.type];
 
     await this.notificationService.send({
-      userId: request.user._id.toString(),
+      userId: request.investor._id.toString(),
       title: "درخواست شما تایید شد",
       message: `درخواست ${requestTypeLabel} شما تأیید شد. برای ادامه گفتگو وارد چت شوید.`,
       type: "request_approved",
@@ -127,7 +127,7 @@ export class RequestService {
       await this.conversationService.closeByRequest(requestId);
 
     await this.notificationService.send({
-      userId: request.user._id.toString(),
+      userId: request.investor._id.toString(),
       title: "درخواست شما تکمیل شد",
       message:
         "درخواست شما با موفقیت تکمیل شد و مکالمه مربوط به این درخواست بسته شد.",
@@ -168,7 +168,7 @@ export class RequestService {
     await request.save();
 
     await this.notificationService.send({
-      userId: request.user._id.toString(),
+      userId: request.investor._id.toString(),
       title: "درخواست شما لغو شد",
       message: `درخواست ${REQUEST_TYPE_LABELS[request.type]} شما لغو شد.`,
       type: "request_rejected",
@@ -221,7 +221,7 @@ export class RequestService {
         $lte: endOfDay,
       },
     })
-      .populate("user", "firstName lastName phoneNumber email")
+      .populate("investor", "firstName lastName phoneNumber email")
       .sort({
         createdAt: -1,
       });
@@ -428,7 +428,7 @@ export class RequestService {
     if (!request) {
       throw new AppError("درخواست یافت نشد", 404);
     }
-    if (!isAdmin && request.user.toString() !== userId) {
+    if (!isAdmin && request.investor.toString() !== userId) {
       throw new AppError("شما دسترسی به این درخواست ندارید", 403);
     }
     const conversation =

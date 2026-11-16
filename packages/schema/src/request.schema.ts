@@ -24,7 +24,7 @@ export type CreateRequestTypes = z.infer<typeof createRequestSchema>;
 
 export interface RequestType extends CreateRequestTypes {
   _id: string;
-  user: UserType;
+  investor: UserType;
   assignedTo: {
     _id: string;
     firstName: string;

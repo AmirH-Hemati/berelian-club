@@ -61,7 +61,7 @@ export class AppointmentService {
     const endAt = this.calculateEndAt(startAt);
 
     const appointment = await AppointmentModel.create({
-      user: userId,
+      investor: userId,
       consultant: null,
       appointmentDate,
       startAt,
@@ -108,7 +108,7 @@ export class AppointmentService {
     await appointment.save();
 
     await this.notificationService.send({
-      userId: appointment.user._id.toString(),
+      userId: appointment.investor._id.toString(),
       title: "تأیید نوبت مشاوره",
       message: `نوبت مشاوره شما در تاریخ ${formatPersianDate(appointment.appointmentDate)} تأیید شد.`,
       type: "appointment_approved",
@@ -140,7 +140,7 @@ export class AppointmentService {
     await appointment.save();
 
     await this.notificationService.send({
-      userId: appointment.user._id.toString(),
+      userId: appointment.investor._id.toString(),
       title: "رد درخواست مشاوره",
       message: `درخواست مشاوره شما در تاریخ ${formatPersianDate(appointment.appointmentDate)} رد شد. دلیل: ${reason}`,
       type: "appointment_rejected",
@@ -166,7 +166,7 @@ export class AppointmentService {
     await appointment.save();
 
     await this.notificationService.send({
-      userId: appointment.user._id.toString(),
+      userId: appointment.investor._id.toString(),
       title: "تکمیل مشاوره",
       message: `مشاوره شما در تاریخ ${formatPersianDate(appointment.appointmentDate)} تکمیل شد.`,
       type: "appointment_completed",
@@ -210,7 +210,7 @@ export class AppointmentService {
     await appointment.save();
 
     await this.notificationService.send({
-      userId: appointment.user._id.toString(),
+      userId: appointment.investor._id.toString(),
       title: "تغییر زمان مشاوره",
       message: `زمان مشاوره شما به ${formatPersianDate(appointment.appointmentDate)} ساعت ${startAt} تغییر کرد.`,
       type: "appointment_rescheduled",
@@ -223,7 +223,7 @@ export class AppointmentService {
 
   async getUserAppointments(userId: string, query: Record<string, any>) {
     const features = new ApiFeatures(
-      AppointmentModel.find({ user: userId }),
+      AppointmentModel.find({ investor: userId }),
       query,
     )
       .filter()

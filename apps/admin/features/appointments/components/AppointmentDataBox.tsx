@@ -46,7 +46,7 @@ export default function AppointmentDataBox({ appointment }: Props) {
           </div>
           <AdminRescheduleAppointment
             appointmentId={appointment._id}
-            userName={`${appointment.user.firstName} ${appointment.user.lastName}`}
+            userName={`${appointment.investor.firstName} ${appointment.investor.lastName}`}
             currentDate={appointment.appointmentDate}
             status={appointment.status}
           />
@@ -75,8 +75,8 @@ export default function AppointmentDataBox({ appointment }: Props) {
               <User className="size-4 text-muted-foreground" />
               <span className="text-muted-foreground">نام:</span>
               <span className="font-medium">
-                {appointment.user?.firstName}{" "}
-                {appointment.user?.lastName || "نامشخص"}
+                {appointment.investor?.firstName}{" "}
+                {appointment.investor?.lastName || "نامشخص"}
               </span>
             </div>
 
@@ -84,7 +84,7 @@ export default function AppointmentDataBox({ appointment }: Props) {
               <Phone className="size-4 text-muted-foreground" />
               <span className="text-muted-foreground">موبایل:</span>
               <span className="font-medium dir-ltr">
-                {appointment.user?.phoneNumber || "نامشخص"}
+                {appointment.investor?.phoneNumber || "نامشخص"}
               </span>
             </div>
 
@@ -92,7 +92,7 @@ export default function AppointmentDataBox({ appointment }: Props) {
               <FileText className="size-4 text-muted-foreground" />
               <span className="text-muted-foreground">کد ملی:</span>
               <span className="font-medium font-mono">
-                {appointment.user?.nationalCode || "نامشخص"}
+                {appointment.investor?.nationalCode || "نامشخص"}
               </span>
             </div>
           </div>
@@ -213,8 +213,8 @@ export default function AppointmentDataBox({ appointment }: Props) {
         {appointment.status === "completed" && (
           <SessionReportDialog
             appointmentId={appointment._id}
-            userName={`${appointment.user.firstName} ${appointment.user.lastName}`}
-            userId={appointment.user._id}
+            userName={`${appointment.investor.firstName} ${appointment.investor.lastName}`}
+            userId={appointment.investor._id}
           />
         )}
       </CardFooter>

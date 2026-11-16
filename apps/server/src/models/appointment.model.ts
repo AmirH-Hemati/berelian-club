@@ -1,7 +1,7 @@
 import mongoose, { Query } from "mongoose";
 
 export interface appointmentDocument extends mongoose.Document {
-  user: mongoose.Types.ObjectId;
+  investor: mongoose.Types.ObjectId;
   consultant: mongoose.Types.ObjectId | null;
 
   description: string;
@@ -27,7 +27,7 @@ export interface appointmentDocument extends mongoose.Document {
 
 const appointmentSchema = new mongoose.Schema<appointmentDocument>(
   {
-    user: {
+    investor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -119,7 +119,7 @@ appointmentSchema.pre<Query<appointmentDocument, appointmentDocument>>(
   /^find/,
   function () {
     this.populate(
-      "user",
+      "investor",
       "_id firstName lastName photo phoneNumber nationalCode",
     )
       .populate("consultant", "_id firstName lastName photo")
