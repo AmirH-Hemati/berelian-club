@@ -195,24 +195,16 @@ export const followupFiltersConfig: FilterDefinition = {
         { label: "لغو شده", value: "cancelled" },
       ],
     },
-    {
-      key: "isCompleted",
-      label: "وضعیت تکمیل",
-      type: "select",
-      options: [
-        { label: "تکمیل شده", value: "true" },
-        { label: "تکمیل نشده", value: "false" },
-      ],
-    },
+
     {
       key: "dueDate",
-      label: "بازه تاریخ سررسید",
+      label: "بازه موعد پیگیری ",
       type: "dateRange",
-      placeholder: "انتخاب بازه سررسید",
+      placeholder: "انتخاب بازه موعد پیگیری",
     },
     {
       key: "createdAt",
-      label: "بازه تاریخ ثبت",
+      label: "بازه تاریخ ثبت پیگیری",
       type: "dateRange",
       placeholder: "انتخاب بازه تاریخ ثبت",
     },
@@ -221,17 +213,6 @@ export const followupFiltersConfig: FilterDefinition = {
       label: "مشاور",
       type: "combobox",
       placeholder: "جستجوی مشاور...",
-    },
-    {
-      key: "sessionReport.result",
-      label: "نتیجه جلسه",
-      type: "multiSelect",
-      options: [
-        { label: "موفق", value: "completed" },
-        { label: "نیاز به پیگیری", value: "pending" },
-        { label: "لغو شده", value: "cancelled" },
-        { label: "بدون نتیجه", value: "failed" },
-      ],
     },
   ],
 };

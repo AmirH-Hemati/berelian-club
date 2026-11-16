@@ -5,10 +5,26 @@ import SearchFilter from "@/components/SearchFilter";
 import { columns } from "@/features/followUps/components/columns";
 import { useFollowUps } from "@/features/followUps/hooks/useFollowUps";
 import { ClipboardCheck } from "lucide-react";
+import { followupFiltersConfig } from "@/features/filters/config/filters.config";
+import FilterButton from "@/features/filters/components/FilterButton";
+import { useGetConsultant } from "@/features/users/hooks/useGetConsultant";
 
 export default function Page() {
   const { followUps, pagination, isLoading, isError, refetch, error } =
     useFollowUps();
+
+  const { consultants, isLoading: consultantsLoading } = useGetConsultant();
+
+  const filterOptions = {
+    consultant: {
+      options: consultants.map((user) => ({
+        label: `${user.firstName} ${user.lastName}`,
+        value: user._id,
+        description: user.phoneNumber,
+      })),
+      isLoading: consultantsLoading,
+    },
+  };
 
   return (
     <div className="mt-5 space-y-5">
@@ -29,8 +45,12 @@ export default function Page() {
       </div>
 
       {/* Search */}
-      <div className="rounded-xl border border-border bg-card p-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <SearchFilter />
+        <FilterButton
+          config={followupFiltersConfig}
+          filterOptions={filterOptions}
+        />
       </div>
 
       {/* Follow Ups Table */}
