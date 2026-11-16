@@ -12,7 +12,7 @@ import { validateZod } from "../../middlewares/validateZod.js";
 
 const router = express.Router();
 
-/// restrict for only admin
+/// restrict for only admin & consultant
 router.use(protectedRoute);
 router.use(restrictTo("admin", "consultant"));
 router.post(

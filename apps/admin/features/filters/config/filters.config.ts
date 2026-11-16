@@ -180,3 +180,58 @@ export const fileFiltersConfig: FilterDefinition = {
     },
   ],
 };
+
+export const followupFiltersConfig: FilterDefinition = {
+  title: "فیلتر پیگیری‌ها",
+  description: "با استفاده از فیلترها پیگیری موردنظرت رو پیدا کن.",
+  filters: [
+    {
+      key: "status",
+      label: "وضعیت پیگیری",
+      type: "multiSelect",
+      options: [
+        { label: "در انتظار پیگیری", value: "pending" },
+        { label: "تکمیل شده", value: "completed" },
+        { label: "لغو شده", value: "cancelled" },
+      ],
+    },
+    {
+      key: "isCompleted",
+      label: "وضعیت تکمیل",
+      type: "select",
+      options: [
+        { label: "تکمیل شده", value: "true" },
+        { label: "تکمیل نشده", value: "false" },
+      ],
+    },
+    {
+      key: "dueDate",
+      label: "بازه تاریخ سررسید",
+      type: "dateRange",
+      placeholder: "انتخاب بازه سررسید",
+    },
+    {
+      key: "createdAt",
+      label: "بازه تاریخ ثبت",
+      type: "dateRange",
+      placeholder: "انتخاب بازه تاریخ ثبت",
+    },
+    {
+      key: "consultant",
+      label: "مشاور",
+      type: "combobox",
+      placeholder: "جستجوی مشاور...",
+    },
+    {
+      key: "sessionReport.result",
+      label: "نتیجه جلسه",
+      type: "multiSelect",
+      options: [
+        { label: "موفق", value: "completed" },
+        { label: "نیاز به پیگیری", value: "pending" },
+        { label: "لغو شده", value: "cancelled" },
+        { label: "بدون نتیجه", value: "failed" },
+      ],
+    },
+  ],
+};

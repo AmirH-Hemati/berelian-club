@@ -10,7 +10,7 @@ export function useCompleteFollowUp() {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["followUps"],
+        queryKey: ["followUp"],
       });
       toast.success("پیگیری انجام شد.");
     },

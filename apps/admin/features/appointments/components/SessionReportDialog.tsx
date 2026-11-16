@@ -2,19 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import CustomDatePicker from "@/components/CustomDatePicker";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  TextareaFiled,
-  Field,
-  FieldError,
-  FieldLabel,
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
@@ -23,13 +15,13 @@ import {
   DialogTitle,
   DialogTrigger,
   FormField,
-  Button,
   Label,
   Switch,
+  TextareaFiled,
 } from "@repo/ui";
 
-import { FilePenLine, Files } from "lucide-react";
 import { SessionReportFormValues, sessionReportSchema } from "@repo/schema";
+import { FilePenLine, Files } from "lucide-react";
 import { useCreateSessionReport } from "../hooks/useCreateSessionReport";
 
 interface SessionReportDialogProps {
@@ -53,7 +45,6 @@ export default function SessionReportDialog({
       appointment: appointmentId,
       userId: userId,
       summary: "",
-      result: "pending",
       resultDescription: "",
       notes: "",
       needFollowUp: false,
@@ -103,46 +94,17 @@ export default function SessionReportDialog({
             placeholder="خلاصه‌ای از مباحث مطرح شده در جلسه..."
           />
 
-          <Controller
-            name="result"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field orientation="responsive" data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="result">نتیجه جلسه</FieldLabel>
-                <Select
-                  name={field.name}
-                  value={field.value}
-                  onValueChange={field.onChange}
-                >
-                  <SelectTrigger aria-invalid={fieldState.invalid} id="result">
-                    <SelectValue placeholder="انتخاب نتیجه جلسه" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="completed"> موفق</SelectItem>
-                    <SelectItem value="pending"> نیاز به پیگیری</SelectItem>
-                    <SelectItem value="cancelled"> لغو شد</SelectItem>
-                    <SelectItem value="failed"> بدون نتیجه</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
-
           <FormField
             icon={FilePenLine}
             control={form.control}
-            label="توضیحات نتیجه"
+            label="نتیجه جلسه"
             name="resultDescription"
             placeholder="مثلاً: سرمایه گذاران با شرایط جدید موافقت کرد..."
           />
           <TextareaFiled
             name="notes"
             control={form.control}
-            label="نتیجه جلسه"
+            label="توضیحات کامل نتیجه جلسه"
             placeholder="جزئیات کامل جلسه، نکات مهم، تصمیمات گرفته شده..."
           />
 
@@ -174,7 +136,7 @@ export default function SessionReportDialog({
               <TextareaFiled
                 name="followUpAction"
                 control={form.control}
-                label="اقدام بعدی"
+                label="اقدامات مورد نیاز بعدی"
                 placeholder="مثلاً: تماس مجدد با سرمایه گذاران و ارسال پیش‌فاکتور..."
               />
             </div>

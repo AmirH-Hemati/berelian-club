@@ -5,7 +5,6 @@ export interface FollowUpDocument extends mongoose.Document {
   dueDate: Date;
   note: string;
   status: "pending" | "completed" | "cancelled";
-  isCompleted: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -28,14 +27,11 @@ const followUpSchema = new mongoose.Schema<FollowUpDocument>(
       trim: true,
       required: true,
     },
+
     status: {
       type: String,
       enum: ["pending", "completed", "cancelled"],
       default: "pending",
-    },
-    isCompleted: {
-      type: Boolean,
-      default: false,
     },
   },
   { timestamps: true },

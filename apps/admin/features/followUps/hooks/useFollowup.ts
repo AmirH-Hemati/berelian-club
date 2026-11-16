@@ -14,7 +14,7 @@ export function useFollowup() {
     refetch,
   } = useQuery({
     queryFn: () => getFollowup(followUp),
-    queryKey: ["followups", followUp],
+    queryKey: ["followUp", followUp],
     enabled: !!followUp,
   });
 

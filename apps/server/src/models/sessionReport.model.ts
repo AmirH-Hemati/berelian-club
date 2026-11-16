@@ -5,7 +5,6 @@ export interface SessionReportDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;
   consultant: mongoose.Types.ObjectId;
   summary: string;
-  result: "completed" | "pending" | "cancelled" | "failed";
   resultDescription?: string;
   notes?: string;
   createdAt: Date;
@@ -37,11 +36,7 @@ const sessionReportSchema = new mongoose.Schema<SessionReportDocument>(
       required: [true, "خلاصه جلسه الزامی است"],
       trim: true,
     },
-    result: {
-      type: String,
-      enum: ["completed", "pending", "cancelled", "failed"],
-      required: [true, "نتیجه جلسه الزامی است"],
-    },
+
     resultDescription: {
       type: String,
       default: null,

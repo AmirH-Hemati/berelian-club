@@ -8,16 +8,6 @@ import Spinner from "@/components/PageSpinner";
 import { Button } from "@repo/ui";
 import { useDeleteReportSession } from "../hooks/useDeleteReportSession";
 
-const resultConfig = {
-  completed: { label: "موفق", className: "bg-green-100 text-green-700" },
-  pending: {
-    label: "نیاز به پیگیری",
-    className: "bg-yellow-100 text-yellow-700",
-  },
-  cancelled: { label: "لغو شد", className: "bg-red-100 text-red-700" },
-  failed: { label: "بدون نتیجه", className: "bg-gray-100 text-gray-700" },
-};
-
 type Props = {
   appointmentId: string;
 };
@@ -30,10 +20,6 @@ export default function SessionReportCard({ appointmentId }: Props) {
 
   if (!report) return null;
 
-  const result =
-    resultConfig[report.result as keyof typeof resultConfig] ||
-    resultConfig.failed;
-
   return (
     <Card className="border-l-4 border-l-primary my-6">
       <CardHeader className="pb-2 flex flex-wrap items-center justify-between">
@@ -41,7 +27,6 @@ export default function SessionReportCard({ appointmentId }: Props) {
           <FileText className="size-4 text-primary" />
           گزارش جلسه مشاوره
         </CardTitle>
-        <Badge className={result.className}>{result.label}</Badge>
       </CardHeader>
 
       <CardContent className="space-y-3">

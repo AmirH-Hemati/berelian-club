@@ -4,17 +4,14 @@ export const sessionReportSchema = z
     appointment: z.string().min(1, "شناسه جلسه الزامی است"),
     userId: z.string().min(1, "شناسه کاربر الزامی است"),
     summary: z.string().min(3, "خلاصه جلسه حداقل ۳ کاراکتر است"),
-    result: z.enum(["completed", "pending", "cancelled", "failed"], {
-      error: "نتیجه جلسه الزامی است",
-    }),
     resultDescription: z
       .string()
-      .nonempty("توضیحات نتیجه جلسه الزامی است")
-      .min(3, "توضیحات نتیجه جلسه حداقل ۳ کاراکتر است"),
+      .nonempty(" نتیجه جلسه الزامی است")
+      .min(3, " نتیجه جلسه حداقل ۳ کاراکتر است"),
     notes: z
       .string()
-      .nonempty("یادداشت های  جلسه الزامی است")
-      .min(3, "یادداشت جلسه حداقل ۳ کاراکتر است"),
+      .nonempty("توضیحات کامل جلسه الزامی است")
+      .min(3, "توضیحات کامل جلسه حداقل ۳ کاراکتر است"),
     needFollowUp: z.boolean(),
     followUpDate: z.date().optional(),
     followUpAction: z.string().optional(),
@@ -28,6 +25,20 @@ export const sessionReportSchema = z
         message: "تاریخ پیگیری الزامی است",
         code: "custom",
       });
+    } else {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const followUpDate = new Date(data.followUpDate);
+      followUpDate.setHours(0, 0, 0, 0);
+
+      if (followUpDate < today) {
+        ctx.addIssue({
+          path: ["followUpDate"],
+          message: "تاریخ پیگیری نمی‌تواند در گذشته باشد",
+          code: "custom",
+        });
+      }
     }
 
     if (!data.followUpAction?.trim()) {
@@ -54,14 +65,13 @@ export interface FollowUpType {
   _id: string;
   sessionReport: {
     _id: string;
-    appointment:string;
+    appointment: string;
     consultant: {
       _id: string;
       firstName: string;
       lastName: string;
     } | null;
     summary: string;
-    result: "completed" | "pending" | "cancelled" | "failed";
   } | null;
   dueDate: string;
   note: string;

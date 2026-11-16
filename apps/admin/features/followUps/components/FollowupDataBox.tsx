@@ -1,4 +1,11 @@
-import { Card, CardContent, CardHeader, Separator, Badge } from "@repo/ui";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Separator,
+  Badge,
+  Button,
+} from "@repo/ui";
 
 import {
   CalendarDays,
@@ -13,61 +20,66 @@ import {
 } from "lucide-react";
 
 import { formatDate } from "@/utils/helper";
+import { useCompleteFollowUp } from "../hooks/useCompleteFollowUp";
+
+type FollowupStatus = "pending" | "completed" | "cancelled";
 
 type Props = {
-  followup: any;
+  followup: {
+    _id: string;
+    sessionReport?: {
+      consultant?: {
+        firstName?: string;
+        lastName?: string;
+      };
+      summary?: string;
+      result?: "completed" | "pending" | "cancelled" | "failed";
+      resultDescription?: string;
+      notes?: string;
+      createdAt?: string;
+    };
+    dueDate: string;
+    note?: string;
+    status: FollowupStatus;
+    createdAt: string;
+    updatedAt: string;
+  };
 };
 
-const resultConfig = {
-  completed: {
-    label: "موفق",
-    className: "bg-green-100 text-green-700",
-  },
+const statusConfig = {
   pending: {
-    label: "نیاز به پیگیری",
+    label: "در انتظار پیگیری",
+    icon: Clock3,
     className: "bg-yellow-100 text-yellow-700",
+  },
+  completed: {
+    label: "تکمیل شده",
+    icon: CheckCircle2,
+    className: "bg-green-100 text-green-700",
   },
   cancelled: {
     label: "لغو شده",
+    icon: AlertCircle,
     className: "bg-red-100 text-red-700",
-  },
-  failed: {
-    label: "بدون نتیجه",
-    className: "bg-gray-100 text-gray-700",
   },
 };
 
 export default function FollowupDataBox({ followup }: Props) {
-  const isCompleted = followup.isCompleted;
+  const { completeFollowUps, isCompleting } = useCompleteFollowUp();
 
-  const isOverdue =
-    !isCompleted && new Date(followup.dueDate).getTime() < Date.now();
-
-  const status = isCompleted
-    ? {
-        label: "تکمیل شده",
-        icon: CheckCircle2,
-        className: "bg-green-100 text-green-700",
-      }
-    : isOverdue
-      ? {
-          label: "سررسید گذشته",
-          icon: AlertCircle,
-          className: "bg-red-100 text-red-700",
-        }
-      : {
-          label: "در انتظار پیگیری",
-          icon: Clock3,
-          className: "bg-yellow-100 text-yellow-700",
-        };
-
+  const status = statusConfig[followup.status];
   const StatusIcon = status.icon;
 
-  const reportResult =
-    resultConfig[followup.sessionReport?.result as keyof typeof resultConfig] ||
-    resultConfig.failed;
+  const sessionReport = followup.sessionReport;
+  const consultant = sessionReport?.consultant;
 
-  const consultant = followup.sessionReport?.consultant;
+  const consultantName = consultant
+    ? `${consultant.firstName || ""} ${consultant.lastName || ""}`.trim()
+    : "";
+
+  const handleCompleteFollowUp = () => {
+    completeFollowUps(followup._id);
+  };
 
   return (
     <Card className="mt-2">
@@ -112,84 +124,100 @@ export default function FollowupDataBox({ followup }: Props) {
           </div>
         </div>
 
-        <Separator />
-
         {/* Session Report Info */}
-        <div className="space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h3 className="flex items-center gap-2 text-200 font-semibold">
-              <FileText className="size-4" />
-              گزارش جلسه مرتبط
-            </h3>
-
-            <Badge className={reportResult.className}>
-              {reportResult.label}
-            </Badge>
-          </div>
-
-          <div className="space-y-4 rounded-lg bg-muted/30 p-4">
-            {/* Summary */}
-            <div className="space-y-2">
-              <p className="text-200 font-medium">خلاصه جلسه</p>
-
-              <p className="whitespace-pre-wrap text-200 text-muted-foreground leading-relaxed">
-                {followup.sessionReport?.summary ||
-                  "خلاصه‌ای برای این جلسه ثبت نشده است."}
-              </p>
-            </div>
-
+        {sessionReport && Object.keys(sessionReport).length > 0 && (
+          <>
             <Separator />
 
-            {/* Result Description */}
-            <div className="space-y-2">
-              <p className="text-200 font-medium">توضیحات نتیجه جلسه</p>
-
-              <p className="whitespace-pre-wrap text-200 text-muted-foreground leading-relaxed">
-                {followup.sessionReport?.resultDescription ||
-                  "توضیحی درباره نتیجه جلسه ثبت نشده است."}
-              </p>
-            </div>
-
-            <Separator />
-
-            {/* Notes */}
-            <div className="space-y-2">
-              <p className="text-200 font-medium">یادداشت‌ها</p>
-
-              <p className="whitespace-pre-wrap text-200 text-muted-foreground leading-relaxed">
-                {followup.sessionReport?.notes ||
-                  "یادداشتی برای این گزارش ثبت نشده است."}
-              </p>
-            </div>
-
-            <Separator />
-
-            {/* Consultant & Report Date */}
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              <div className="flex items-center gap-2 text-200">
-                <UserRound className="size-4 text-muted-foreground" />
-                <span className="text-muted-foreground">مشاور:</span>
-
-                <span className="font-medium">
-                  {consultant
-                    ? `${consultant.firstName || ""} ${consultant.lastName || ""}`.trim()
-                    : "مشخص نشده"}
-                </span>
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="flex items-center gap-2 text-200 font-semibold">
+                  <FileText className="size-4" />
+                  گزارش جلسه مرتبط
+                </h3>
               </div>
 
-              <div className="flex items-center gap-2 text-200">
-                <CalendarCheck className="size-4 text-muted-foreground" />
-                <span className="text-muted-foreground">تاریخ ثبت گزارش:</span>
+              <div className="space-y-4 rounded-lg bg-muted/30 p-4">
+                {/* Summary */}
+                <div className="space-y-2">
+                  <p className="text-200 font-medium">خلاصه جلسه</p>
 
-                <span className="font-medium">
-                  {followup.sessionReport?.createdAt
-                    ? formatDate(followup.sessionReport.createdAt)
-                    : "ثبت نشده"}
-                </span>
+                  <p className="whitespace-pre-wrap text-200 text-muted-foreground leading-relaxed">
+                    {sessionReport.summary ||
+                      "خلاصه‌ای برای این جلسه ثبت نشده است."}
+                  </p>
+                </div>
+
+                <Separator />
+
+                {/* Result Description */}
+                <div className="space-y-2">
+                  <p className="text-200 font-medium">توضیحات نتیجه جلسه</p>
+
+                  <p className="whitespace-pre-wrap text-200 text-muted-foreground leading-relaxed">
+                    {sessionReport.resultDescription ||
+                      "توضیحی درباره نتیجه جلسه ثبت نشده است."}
+                  </p>
+                </div>
+
+                <Separator />
+
+                {/* Notes */}
+                <div className="space-y-2">
+                  <p className="text-200 font-medium">یادداشت‌ها</p>
+
+                  <p className="whitespace-pre-wrap text-200 text-muted-foreground leading-relaxed">
+                    {sessionReport.notes ||
+                      "یادداشتی برای این گزارش ثبت نشده است."}
+                  </p>
+                </div>
+
+                <Separator />
+
+                {/* Consultant & Report Date */}
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                  <div className="flex items-center gap-2 text-200">
+                    <UserRound className="size-4 text-muted-foreground" />
+                    <span className="text-muted-foreground">مشاور:</span>
+
+                    <span className="font-medium">
+                      {consultantName || "مشخص نشده"}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-200">
+                    <CalendarCheck className="size-4 text-muted-foreground" />
+                    <span className="text-muted-foreground">
+                      تاریخ ثبت گزارش:
+                    </span>
+
+                    <span className="font-medium">
+                      {sessionReport.createdAt
+                        ? formatDate(sessionReport.createdAt)
+                        : "ثبت نشده"}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
+        {followup.status === "pending" && (
+          <>
+            <Separator />
+
+            <div className="flex justify-end">
+              <Button
+                onClick={handleCompleteFollowUp}
+                disabled={isCompleting}
+                className="gap-2"
+              >
+                <CheckCircle2 className="size-4" />
+                {isCompleting ? "در حال تکمیل..." : "تکمیل پیگیری"}
+              </Button>
+            </div>
+          </>
+        )}
       </CardContent>
     </Card>
   );

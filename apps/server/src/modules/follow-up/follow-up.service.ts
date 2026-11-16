@@ -59,7 +59,7 @@ export class FollowUpService {
   }
   async getOverdueFollowUps() {
     return FollowUpModel.find({
-      isCompleted: false,
+      status: "pending",
 
       dueDate: {
         $lt: new Date(),
@@ -76,7 +76,6 @@ export class FollowUpService {
       id,
       {
         $set: {
-          isCompleted: true,
           status: "completed",
         },
       },
