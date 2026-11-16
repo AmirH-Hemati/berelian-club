@@ -9,6 +9,7 @@ import {
 import FilterDateRange from "./FilterDateRange";
 import FilterMultiSelect from "./FilterMultiSelect";
 import FilterCombobox from "./FilterCombobox";
+import FilterAssignedToMe from "./FilterAssignedToMe";
 
 export type FilterOptions = {
   [key: string]: {
@@ -47,6 +48,21 @@ export default function FilterRenderer({
                   : typeof selectedValues === "string" && selectedValues
                     ? selectedValues.split(",")
                     : []
+              }
+              onChange={(value) => onChange(filter.key, value)}
+            />
+          );
+        }
+
+        if (filter.type === "assignedToMe") {
+          return (
+            <FilterAssignedToMe
+              key={`${filter.key}-${filter.label}`}
+              label={filter.label}
+              selectedValue={
+                typeof values[filter.key] === "string"
+                  ? (values[filter.key] as string)
+                  : ""
               }
               onChange={(value) => onChange(filter.key, value)}
             />

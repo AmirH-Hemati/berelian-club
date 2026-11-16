@@ -7,6 +7,12 @@ export type FilterConfig =
   | {
       key: string;
       label: string;
+      type: "assignedToMe";
+      placeholder?: string;
+    }
+  | {
+      key: string;
+      label: string;
       type: "multiSelect";
       options: FilterOption[];
       placeholder?: string;

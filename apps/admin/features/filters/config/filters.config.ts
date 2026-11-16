@@ -15,6 +15,7 @@ export const appointmentFiltersConfig: FilterDefinition = {
         { label: "لغو شده", value: "cancelled" },
       ],
     },
+
     {
       key: "type",
       label: "نوع مشاوره",
@@ -29,6 +30,11 @@ export const appointmentFiltersConfig: FilterDefinition = {
       label: "بازه تاریخ نوبت",
       type: "dateRange",
       placeholder: "انتخاب بازه تاریخ",
+    },
+    {
+      key: "consultant",
+      label: "فقط نوبت‌های من",
+      type: "assignedToMe",
     },
     {
       key: "investor",
@@ -60,6 +66,7 @@ export const requestFiltersConfig: FilterDefinition = {
         { label: "لغو شده", value: "cancelled" },
       ],
     },
+
     {
       key: "type",
       label: "نوع درخواست",
@@ -70,11 +77,17 @@ export const requestFiltersConfig: FilterDefinition = {
         { label: "کاهش سرمایه", value: "decrease_capital" },
       ],
     },
+
     {
       key: "createdAt",
       label: "بازه تاریخ ثبت درخواست",
       type: "dateRange",
       placeholder: "انتخاب بازه تاریخ ثبت درخواست",
+    },
+    {
+      key: "assignedTo",
+      label: "فقط نوبت‌های من",
+      type: "assignedToMe",
     },
     {
       key: "investor",
