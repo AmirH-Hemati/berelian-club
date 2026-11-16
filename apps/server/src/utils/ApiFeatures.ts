@@ -1,5 +1,6 @@
 import type { Query } from "mongoose";
 import qs from "qs";
+
 export class ApiFeatures<T> {
   constructor(
     public query: Query<T[], T>,

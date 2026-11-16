@@ -2,9 +2,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAllUsers } from "../services/usersServices";
 import { useTableQuery } from "@/hooks/useTableQuery";
+import { useSearchParams } from "next/navigation";
 
 export function useGetUsers() {
-  const qeury = useTableQuery();
+  const searchParams = useSearchParams();
+  const tableQuery = useTableQuery();
+
+  const query = {
+    ...tableQuery,
+    role: searchParams.get("role") ?? "",
+    isActive: searchParams.get("isActive") ?? "",
+    "contractStartDate[gte]": searchParams.get("contractStartDate[gte]") ?? "",
+    "contractStartDate[lte]": searchParams.get("contractStartDate[lte]") ?? "",
+    "contractEndDate[gte]": searchParams.get("contractEndDate[gte]") ?? "",
+    "contractEndDate[lte]": searchParams.get("contractEndDate[lte]") ?? "",
+  };
 
   const {
     data = {},
@@ -13,8 +25,8 @@ export function useGetUsers() {
     refetch,
     error,
   } = useQuery({
-    queryKey: ["users", qeury.page, qeury.limit, qeury.search],
-    queryFn: () => getAllUsers(qeury),
+    queryKey: ["users", query],
+    queryFn: () => getAllUsers(query),
   });
 
   return {

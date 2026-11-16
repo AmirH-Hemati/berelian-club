@@ -90,3 +90,43 @@ export const requestFiltersConfig: FilterDefinition = {
     },
   ],
 };
+
+export const userFiltersConfig: FilterDefinition = {
+  title: "فیلتر کاربران",
+  description: "با استفاده از فیلترها کاربر موردنظرت رو پیدا کن.",
+  filters: [
+    {
+      key: "role",
+      label: "نقش کاربر",
+      type: "multiSelect",
+      options: [
+        { label: "سرمایه‌گذار", value: "investor" },
+        { label: "مشاور", value: "consultant" },
+        { label: "مدیر", value: "reception" },
+        { label: "مدیر", value: "admin" },
+      ],
+    },
+
+    {
+      key: "isActive",
+      label: "وضعیت فعالیت",
+      type: "select",
+      options: [
+        { label: "فعال", value: "true" },
+        { label: "غیرفعال", value: "false" },
+      ],
+    },
+    {
+      key: "contractStartDate",
+      label: "بازه تاریخ شروع قرارداد",
+      type: "dateRange",
+      placeholder: "انتخاب بازه تاریخ شروع قرارداد",
+    },
+    {
+      key: "contractEndDate",
+      label: "بازه تاریخ پایان قرارداد",
+      type: "dateRange",
+      placeholder: "انتخاب بازه تاریخ پایان قرارداد",
+    },
+  ],
+};
