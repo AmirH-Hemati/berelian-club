@@ -14,7 +14,7 @@ export function useAppointments() {
     consultant: searchParams.get("consultant") ?? "",
     investor: searchParams.get("investor") ?? "",
     "appointmentDate[gte]": searchParams.get("appointmentDate[gte]") ?? "",
-    "appointmentDate[lte]": searchParams.get("appointmentDate[lte]") ?? "",
+    "appointmentDate[lt]": searchParams.get("appointmentDate[lt]") ?? "",
   };
 
   const {

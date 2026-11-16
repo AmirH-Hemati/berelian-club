@@ -130,3 +130,53 @@ export const userFiltersConfig: FilterDefinition = {
     },
   ],
 };
+
+export const fileFiltersConfig: FilterDefinition = {
+  title: "فیلتر فایل‌ها",
+  description: "با استفاده از فیلترها فایل موردنظرت رو پیدا کن.",
+  filters: [
+    {
+      key: "fileType",
+      label: "نوع فایل",
+      type: "multiSelect",
+      options: [
+        { label: "تصویر", value: "image" },
+        { label: "ویدئو", value: "video" },
+        { label: "سند", value: "document" },
+        { label: "سایر", value: "other" },
+      ],
+    },
+    {
+      key: "mimeType",
+      label: "فرمت فایل",
+      type: "multiSelect",
+      options: [
+        { label: "JPEG", value: "image/jpeg" },
+        { label: "PNG", value: "image/png" },
+        { label: "GIF", value: "image/gif" },
+        { label: "WebP", value: "image/webp" },
+        { label: "MP4", value: "video/mp4" },
+        { label: "WebM", value: "video/webm" },
+        { label: "PDF", value: "application/pdf" },
+        { label: "Word (DOC)", value: "application/msword" },
+        {
+          label: "Word (DOCX)",
+          value:
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        },
+      ],
+    },
+    // {
+    //   key: "size",
+    //   label: "حجم فایل (بایت)",
+    //   type: "numberRange",
+    //   placeholder: "بازه حجم فایل",
+    // },
+    {
+      key: "createdAt",
+      label: "بازه تاریخ آپلود",
+      type: "dateRange",
+      placeholder: "انتخاب بازه تاریخ آپلود",
+    },
+  ],
+};

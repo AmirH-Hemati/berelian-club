@@ -27,7 +27,7 @@ type Props = {
 function getFilterKeys(config: FilterDefinition) {
   return config.filters.flatMap((filter) => {
     if (filter.type === "dateRange") {
-      return [`${filter.key}[gte]`, `${filter.key}[lte]`];
+      return [`${filter.key}[gte]`, `${filter.key}[lt]`];
     }
 
     return [filter.key];

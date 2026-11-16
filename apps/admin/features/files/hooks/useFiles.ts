@@ -2,9 +2,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { getFiles } from "../services/uploadServices";
 import { useTableQuery } from "@/hooks/useTableQuery";
+import { useSearchParams } from "next/navigation";
 
 export function useFiles() {
-  const query = useTableQuery();
+  const searchParams = useSearchParams();
+  const tableQuery = useTableQuery();
+
+  const query = {
+    ...tableQuery,
+    fileType: searchParams.get("fileType") ?? "",
+    mimeType: searchParams.get("mimeType") ?? "",
+    "createdAt[gte]": searchParams.get("createdAt[gte]") ?? "",
+    "createdAt[lt]": searchParams.get("createdAt[lt]") ?? "",
+  };
 
   const {
     data = {},
@@ -13,7 +23,7 @@ export function useFiles() {
     refetch,
     error,
   } = useQuery({
-    queryKey: ["files", query.page, query.limit, query.search],
+    queryKey: ["files", query],
     queryFn: () => getFiles(query),
   });
   return {

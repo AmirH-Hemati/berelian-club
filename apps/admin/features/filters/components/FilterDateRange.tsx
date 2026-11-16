@@ -31,10 +31,14 @@ export default function FilterDateRange({ label, value, onChange }: Props) {
             }
 
             if (dates.length === 2 && dates[0] && dates[1]) {
-              onChange([
-                dates[0].toDate().toISOString(),
-                dates[1].toDate().toISOString(),
-              ]);
+              const startDate = dates[0].toDate();
+              startDate.setHours(0, 0, 0, 0);
+
+              const endDate = dates[1].toDate();
+              endDate.setHours(0, 0, 0, 0);
+              endDate.setDate(endDate.getDate() + 1);
+
+              onChange([startDate.toISOString(), endDate.toISOString()]);
             }
           }}
           format="YYYY/MM/DD"

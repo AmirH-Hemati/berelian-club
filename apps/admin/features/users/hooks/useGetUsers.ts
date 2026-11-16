@@ -13,9 +13,9 @@ export function useGetUsers() {
     role: searchParams.get("role") ?? "",
     isActive: searchParams.get("isActive") ?? "",
     "contractStartDate[gte]": searchParams.get("contractStartDate[gte]") ?? "",
-    "contractStartDate[lte]": searchParams.get("contractStartDate[lte]") ?? "",
+    "contractStartDate[lt]": searchParams.get("contractStartDate[lt]") ?? "",
     "contractEndDate[gte]": searchParams.get("contractEndDate[gte]") ?? "",
-    "contractEndDate[lte]": searchParams.get("contractEndDate[lte]") ?? "",
+    "contractEndDate[lt]": searchParams.get("contractEndDate[lt]") ?? "",
   };
 
   const {

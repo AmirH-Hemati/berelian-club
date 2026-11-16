@@ -7,6 +7,8 @@ import AddNewFile from "@/features/files/components/AddNewFile";
 import { columns } from "@/features/files/components/columns";
 import { SendFileToAllModal } from "@/features/files/components/SendFileToAllModal";
 import { useFiles } from "@/features/files/hooks/useFiles";
+import FilterButton from "@/features/filters/components/FilterButton";
+import { fileFiltersConfig } from "@/features/filters/config/filters.config";
 
 import { Files } from "lucide-react";
 
@@ -39,8 +41,9 @@ export default function Page() {
       </div>
 
       {/* Search */}
-      <div className="rounded-xl border border-border bg-card p-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <SearchFilter />
+        <FilterButton config={fileFiltersConfig} />
       </div>
 
       {/* Files Table */}

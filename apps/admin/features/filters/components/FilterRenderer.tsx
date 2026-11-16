@@ -55,7 +55,7 @@ export default function FilterRenderer({
 
         if (filter.type === "dateRange") {
           const from = values[`${filter.key}[gte]`];
-          const to = values[`${filter.key}[lte]`];
+          const to = values[`${filter.key}[lt]`];
 
           return (
             <FilterDateRange
@@ -68,7 +68,7 @@ export default function FilterRenderer({
               }
               onChange={(value) => {
                 onChange(`${filter.key}[gte]`, value?.[0] ?? "");
-                onChange(`${filter.key}[lte]`, value?.[1] ?? "");
+                onChange(`${filter.key}[lt]`, value?.[1] ?? "");
               }}
             />
           );

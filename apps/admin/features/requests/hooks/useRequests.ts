@@ -15,7 +15,7 @@ export function useRequests() {
     assignedTo: searchParams.get("assignedTo") ?? "",
     investor: searchParams.get("investor") ?? "",
     "createdAt[gte]": searchParams.get("createdAt[gte]") ?? "",
-    "createdAt[lte]": searchParams.get("createdAt[lte]") ?? "",
+    "createdAt[lt]": searchParams.get("createdAt[lt]") ?? "",
   };
 
   const {
