@@ -18,3 +18,16 @@ export const formatTimeOnly = (date: Date | string) => {
     minute: "2-digit",
   });
 };
+
+export function formatDate(date?: string) {
+  if (!date) return "—";
+
+  const parsedDate = new Date(date);
+
+  if (Number.isNaN(parsedDate.getTime())) return "—";
+
+  return new Intl.DateTimeFormat("fa-IR", {
+    dateStyle: "long",
+    timeStyle: "short",
+  }).format(parsedDate);
+}

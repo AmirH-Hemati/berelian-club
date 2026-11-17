@@ -6,7 +6,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-  StatusBadge
+  StatusBadge,
 } from "@repo/ui";
 import { Button } from "@repo/ui";
 import { Spinner } from "@repo/ui";
@@ -48,7 +48,6 @@ export default function Page() {
               </Button>
               <h1 className="font-bold text-2xl my-5">درخواست</h1>
             </div>
-            <StatusBadge status={request.status} />
           </div>
           <UserRequestDataBox request={request} />
         </>

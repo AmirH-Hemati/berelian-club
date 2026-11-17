@@ -64,7 +64,7 @@ export default function RequestDataBox({ request }: Props) {
               <User className="text-muted-foreground" />
               <span className="text-muted-foreground">نام:</span>
               <span className="font-medium">
-                {request.user?.firstName + " " + request.user?.lastName ||
+                {request.investor?.firstName + " " + request.investor?.lastName ||
                   "نامشخص"}
               </span>
             </div>
@@ -73,7 +73,7 @@ export default function RequestDataBox({ request }: Props) {
               <Phone className="text-muted-foreground" />
               <span className="text-muted-foreground">موبایل:</span>
               <span className="font-medium">
-                {request.user?.phoneNumber || "نامشخص"}
+                {request.investor?.phoneNumber || "نامشخص"}
               </span>
             </div>
 
@@ -81,7 +81,7 @@ export default function RequestDataBox({ request }: Props) {
               <FileText className="text-muted-foreground" />
               <span className="text-muted-foreground">کد ملی:</span>
               <span className="font-medium font-mono">
-                {request.user.nationalCode}
+                {request.investor.nationalCode}
               </span>
             </div>
           </div>
