@@ -1,6 +1,6 @@
 "use client";
 import { Button, Spinner, Dialog, DialogTrigger } from "@repo/ui";
-import { useUser, LoginForm } from "@repo/auth";
+import { useUser, LoginForm, LoginOtpProvider } from "@repo/auth";
 import Link from "next/link";
 
 export default function LoginHeroButton() {
@@ -19,12 +19,14 @@ export default function LoginHeroButton() {
           <Link href="/account">وورد به پنل اختصاصی</Link>
         </Button>
       ) : (
-        <Dialog >
-          <DialogTrigger asChild>
-            <Button>وورد به پنل اختصاصی</Button>
-          </DialogTrigger>
-          <LoginForm />
-        </Dialog>
+        <LoginOtpProvider>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>وورد به پنل اختصاصی</Button>
+            </DialogTrigger>
+            <LoginForm />
+          </Dialog>
+        </LoginOtpProvider>
       )}
     </>
   );

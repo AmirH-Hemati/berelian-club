@@ -18,9 +18,8 @@ export function useLogout() {
         queryKey: ["user"],
       });
 
-      toast.success("با موفقیت خارج شدید");
-
       router.replace("/");
+      toast.success("با موفقیت خارج شدید");
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message || "خطا در خروج از حساب");

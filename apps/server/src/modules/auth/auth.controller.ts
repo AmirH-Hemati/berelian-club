@@ -75,11 +75,12 @@ export const resizeUserImage = CatchError(async (req, res, next) => {
 export const handleSendOtp = CatchError(async (req, res, next) => {
   const { phoneNumber } = req.body;
 
-  const otpCode = await authService.sendOtp(phoneNumber);
+  const { verificationCode, expiresAt } =
+    await authService.sendOtp(phoneNumber);
 
   return res.status(200).json({
     message: "کد تایید به شماره همراه شما ارسال گردید",
-    data: { code: otpCode },
+    data: { code: verificationCode, expiresAt },
   });
 });
 

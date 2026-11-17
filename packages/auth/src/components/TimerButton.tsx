@@ -1,50 +1,40 @@
 "use client";
 
 import { Button } from "@repo/ui";
-import { RefreshCwIcon } from "lucide-react";
 import { useSendOtp } from "../hooks/useSendOtp";
+import { useLoginOtp } from "./LoginOtpProvider";
+import { useOtpTimer } from "../hooks/useOtpTimer";
 
-interface TimerButtonProps {
-  timer: number;
-  phoneNumber: string;
-  onResetTimer: () => void;
-}
-
-export function TimerButton({
-  timer,
-  phoneNumber,
-  onResetTimer,
-}: TimerButtonProps) {
+export function TimerButton() {
+  const { formattedTime, isExpired } = useOtpTimer();
+  const { phoneNumber, setOtpExpiresAt } = useLoginOtp();
   const { sendCode, isSendingCode } = useSendOtp();
-  const canResend = timer <= 0;
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
+  function handleResendOtp() {
+    sendCode(phoneNumber, {
+      onSuccess: (response) => {
+        setOtpExpiresAt(response.data.expiresAt);
+      },
+    });
+  }
 
-  const handleResend = () => {
-    if (!canResend || isSendingCode) return;
-    sendCode(phoneNumber);
-    onResetTimer();
-  };
+  if (!isExpired) {
+    return (
+      <span className="text-xs text-muted-foreground">
+        ارسال مجدد کد تا {formattedTime}
+      </span>
+    );
+  }
 
   return (
     <Button
-      variant="outline"
-      size="xs"
-      onClick={handleResend}
-      disabled={!canResend || isSendingCode}
+      type="button"
+      variant="link"
+      size="sm"
+      disabled={isSendingCode}
+      onClick={handleResendOtp}
     >
-      <RefreshCwIcon
-        className={`size-3.5 ${isSendingCode ? "animate-spin" : ""}`}
-      />
-      {isSendingCode
-        ? "در حال ارسال..."
-        : canResend
-          ? "ارسال مجدد کد"
-          : formatTime(timer)}
+      {isSendingCode ? "در حال ارسال..." : "ارسال مجدد کد"}
     </Button>
   );
 }

@@ -6,13 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@repo/ui";
-import LoginForm from "./Login";
-import { useState } from "react";
-
-export type Step = "phone" | "otp";
+import { useLoginOtp } from "./LoginOtpProvider";
+import Login from "./Login";
 
 export default function LoginPage() {
-  const [step, setStep] = useState<Step>("phone");
+  const { step } = useLoginOtp();
 
   return (
     <Card className="min-w-xs">
@@ -37,7 +35,7 @@ export default function LoginPage() {
       )}
 
       <CardContent>
-        <LoginForm step={step} setStep={setStep} forwardLink="/" />
+        <Login forwardLink="/" />
       </CardContent>
     </Card>
   );

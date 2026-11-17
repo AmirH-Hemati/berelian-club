@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import {
   DialogContent,
   DialogDescription,
@@ -9,15 +7,15 @@ import {
   DialogTitle,
 } from "@repo/ui";
 import Login from "./Login";
-export type Step = "phone" | "otp";
-export default function LoginForm() {
-  const [step, setStep] = useState<Step>("phone");
+import { useLoginOtp } from "./LoginOtpProvider";
 
+export default function LoginForm() {
+  const { step } = useLoginOtp();
   return (
-    <DialogContent className="sm:max-w-xs">
+    <DialogContent className="sm:min-w-xs">
       {step === "phone" ? (
         <DialogHeader>
-          <DialogTitle className="text-xs md:text-sm font-mono">
+          <DialogTitle className="text-200 font-mono">
             ورود به حساب کاربری
           </DialogTitle>
           <DialogDescription className="text-xs md:text-sm">
@@ -26,16 +24,16 @@ export default function LoginForm() {
         </DialogHeader>
       ) : (
         <DialogHeader>
-          <DialogTitle className="text-xs md:text-sm font-mono">
+          <DialogTitle className="text-200 font-mono">
             کد تایید خود را وارد کنید
           </DialogTitle>
-          <DialogDescription className="text-xs md:text-sm">
+          <DialogDescription className="text-200">
             کد تاییدی که به شماره موبایل شما ارسال کردیم را وارد کنید
           </DialogDescription>
         </DialogHeader>
       )}
 
-      <Login step={step} setStep={setStep} forwardLink="/account" />
+      <Login forwardLink="/account" />
     </DialogContent>
   );
 }

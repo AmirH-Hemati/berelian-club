@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Moon, Sun, User } from "lucide-react";
-import { LoginForm, useUser } from "@repo/auth";
+import { LoginForm, useUser, LoginOtpProvider } from "@repo/auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +13,7 @@ import {
   DialogTrigger,
   Spinner,
 } from "@repo/ui";
+
 import { useTheme } from "next-themes";
 
 export default function Header() {
@@ -74,12 +75,14 @@ export default function Header() {
               </Button>
             </Link>
           ) : (
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button>ورود</Button>
-              </DialogTrigger>
-              <LoginForm />
-            </Dialog>
+            <LoginOtpProvider>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button>ورود</Button>
+                </DialogTrigger>
+                <LoginForm />
+              </Dialog>
+            </LoginOtpProvider>
           )}
         </div>
       </div>

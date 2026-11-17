@@ -6,18 +6,13 @@ import { Button, FormField } from "@repo/ui";
 import { Phone } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useSendOtp } from "../hooks/useSendOtp";
+import { useLoginOtp } from "./LoginOtpProvider";
 
-type Step = "phone" | "otp";
-
-type Props = {
-  onChangeStep: (step: Step) => void;
-  onSetPhoneNumber: (phone: string) => void;
-};
-export default function PhoneNumberComponent({
-  onChangeStep,
-  onSetPhoneNumber,
-}: Props) {
+export default function PhoneNumberComponent() {
   const { sendCode, isSendingCode } = useSendOtp();
+
+  const { setStep, setPhoneNumber, setOtpExpiresAt } = useLoginOtp();
+
   const form = useForm<phoneSchemaTypes>({
     resolver: zodResolver(phoneSchema),
     defaultValues: {
@@ -26,13 +21,15 @@ export default function PhoneNumberComponent({
   });
 
   function handleSubmit(values: phoneSchemaTypes) {
-    onSetPhoneNumber(values.phoneNumber);
     sendCode(values.phoneNumber, {
-      onSuccess: () => {
-        onChangeStep("otp");
+      onSuccess: (response) => {
+        setPhoneNumber(values.phoneNumber);
+        setOtpExpiresAt(response.data.expiresAt);
+        setStep("otp");
       },
     });
   }
+
   return (
     <form onSubmit={form.handleSubmit(handleSubmit)}>
       <FormField
@@ -44,7 +41,7 @@ export default function PhoneNumberComponent({
         type="tel"
       />
 
-      <div className="-mx-4 -mb-4 flex mt-4 flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:justify-end">
+      <div className="-mx-4 -mb-4 mt-4 flex flex-col-reverse gap-2 rounded-b-xl border-t bg-muted/50 p-4 sm:flex-row sm:justify-end">
         <Button type="submit" className="w-full" disabled={isSendingCode}>
           دریافت کد تایید
         </Button>

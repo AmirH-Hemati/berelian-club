@@ -18,9 +18,10 @@ export class AuthService {
 
     await this.otpService.checkActiveOtp(phoneNumber);
 
-    const otpCode = await this.otpService.createOtp(phoneNumber);
+    const { verificationCode, expiresAt } =
+      await this.otpService.createOtp(phoneNumber);
 
-    return otpCode;
+    return { verificationCode, expiresAt };
   }
 
   async verifyOtp(phoneNumber: string, otp: string) {

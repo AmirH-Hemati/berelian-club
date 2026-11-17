@@ -18,17 +18,21 @@ export class OtpService {
       429,
     );
   }
+
   async createOtp(phoneNumber: string) {
-    const verification = await VerificationModel.create({ phoneNumber });
+    const verification = new VerificationModel({ phoneNumber });
 
     const verificationCode = verification.generateVerificationCode();
+
     await verification.save();
 
     await this.smsProvider.sendOtp(phoneNumber, verificationCode);
 
-    return verificationCode;
+    return {
+      verificationCode,
+      expiresAt: verification.expiresAt,
+    };
   }
-
   async verifyOtp(phoneNumber: string, otp: string) {
     const verification = await VerificationModel.findOne({
       phoneNumber,

@@ -28,8 +28,11 @@ const verificationSchema = new mongoose.Schema({
   },
 });
 
-verificationSchema.index({ user: 1, code: 1, isUsed: 1 });
-
+verificationSchema.index({
+  phoneNumber: 1,
+  code: 1,
+  isUsed: 1,
+});
 verificationSchema.methods.generateVerificationCode = function () {
   const code = crypto.randomInt(100123, 999879).toString();
   this.code = code;
