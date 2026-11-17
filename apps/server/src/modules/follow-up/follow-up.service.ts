@@ -9,11 +9,13 @@ import { AppError } from "../../utils/AppError.js";
 export class FollowUpService {
   async createFollowUp(data: {
     sessionReport: string;
+    consultantId: string;
     dueDate: Date;
     note?: string;
   }) {
     return FollowUpModel.create({
       sessionReport: data.sessionReport,
+      consultant: data.consultantId,
       dueDate: data.dueDate,
       note: data.note,
     });
@@ -25,13 +27,9 @@ export class FollowUpService {
     endDate: Date,
     query: Record<string, unknown>,
   ) {
-    const sessionReports = await SessionReportModel.find({
-      consultant: consultantId,
-    }).distinct("_id");
-
     const features = new ApiFeatures(
       FollowUpModel.find({
-        sessionReport: { $in: sessionReports },
+        consultant: consultantId,
         dueDate: {
           $gte: startDate,
           $lt: endDate,

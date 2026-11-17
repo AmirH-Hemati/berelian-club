@@ -51,6 +51,7 @@ export class ApiFeatures<T> {
       "nationalCode",
       "phoneNumber",
       "email",
+      "note",
     ];
     const safeFields = searchFields.filter((field: string) =>
       directFields.includes(field),

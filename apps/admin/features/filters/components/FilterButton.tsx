@@ -146,12 +146,11 @@ export default function FilterButton({ config, filterOptions = {} }: Props) {
         </div>
 
         <SheetFooter className="flex-row gap-2 border-t pt-4">
-          <Button className="flex-1" onClick={handleApply}>
-            اعمال فیلترها
-          </Button>
-
           <Button variant="outline" className="flex-1" onClick={handleClear}>
             حذف فیلترها
+          </Button>
+          <Button className="flex-1" onClick={handleApply}>
+            اعمال فیلترها
           </Button>
         </SheetFooter>
       </SheetContent>

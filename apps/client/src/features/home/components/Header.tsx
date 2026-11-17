@@ -35,7 +35,7 @@ export default function Header() {
           />
 
           <span className="hidden text-base font-bold md:block">
-            باشگاه سرمایه گذارانان برلیان
+            باشگاه سرمایه گذاران برلیان
           </span>
         </Link>
 

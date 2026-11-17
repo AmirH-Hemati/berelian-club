@@ -2,6 +2,7 @@ import mongoose, { Query } from "mongoose";
 
 export interface FollowUpDocument extends mongoose.Document {
   sessionReport: mongoose.Types.ObjectId;
+  consultant: mongoose.Types.ObjectId;
   dueDate: Date;
   note: string;
   status: "pending" | "completed" | "cancelled";
@@ -14,6 +15,12 @@ const followUpSchema = new mongoose.Schema<FollowUpDocument>(
     sessionReport: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "SessionReport",
+      required: true,
+      index: true,
+    },
+    consultant: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
       index: true,
     },

@@ -20,12 +20,12 @@ export default function Footer() {
               />
 
               <h4 className="font-semibold text-400">
-                باشگاه سرمایه گذارانان برلیان
+                باشگاه سرمایه گذاران برلیان
               </h4>
             </div>
             <div className="space-y-3 text-300 text-muted-foreground leading-relaxed">
               <p>
-                باشگاه سرمایه گذارانان ما فراتر از یک پنل مدیریت دارایی، بستری
+                باشگاه سرمایه گذاران ما فراتر از یک پنل مدیریت دارایی، بستری
                 برای
                 <span className="text-primary font-medium">
                   {" "}

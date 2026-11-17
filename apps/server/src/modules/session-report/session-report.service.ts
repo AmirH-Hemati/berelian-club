@@ -9,7 +9,6 @@ type CreateSessionReportInput = {
   summary: string;
   userId: string;
   consultantId: string;
-  result: "completed" | "pending" | "cancelled" | "failed";
   resultDescription?: string;
   notes?: string;
   needFollowUp?: boolean;
@@ -34,7 +33,6 @@ export class SessionReportService {
       user: data.userId,
       consultant: data.consultantId,
       summary: data.summary,
-      result: data.result,
       resultDescription: data.resultDescription,
       notes: data.notes,
     });
@@ -46,6 +44,7 @@ export class SessionReportService {
 
       await this.followUpService.createFollowUp({
         sessionReport: sessionReport._id.toString(),
+        consultantId: data.consultantId,
         dueDate: data.followUpDate,
         note: data.followUpAction,
       });

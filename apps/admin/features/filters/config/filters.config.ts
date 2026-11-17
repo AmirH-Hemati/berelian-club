@@ -223,6 +223,11 @@ export const followupFiltersConfig: FilterDefinition = {
     },
     {
       key: "consultant",
+      label: "فقط نوبت‌های من",
+      type: "assignedToMe",
+    },
+    {
+      key: "consultant",
       label: "مشاور",
       type: "combobox",
       placeholder: "جستجوی مشاور...",
