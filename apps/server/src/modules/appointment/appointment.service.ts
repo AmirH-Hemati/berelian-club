@@ -220,7 +220,6 @@ export class AppointmentService {
     return appointment;
   }
 
-
   async getUserAppointments(userId: string, query: Record<string, any>) {
     const features = new ApiFeatures(
       AppointmentModel.find({ investor: userId }),
@@ -263,6 +262,12 @@ export class AppointmentService {
     }).sort({ startAt: 1 });
   }
 
+  async investorCountApprovedAppointments(investorId: string) {
+    return AppointmentModel.countDocuments({
+      status: "approved",
+      investor: investorId,
+    });
+  }
   async countPendingAppointments() {
     return AppointmentModel.countDocuments({
       status: "pending",

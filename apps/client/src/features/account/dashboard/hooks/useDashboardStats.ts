@@ -7,7 +7,7 @@ export function useDashboardStats() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["dashboardStats"],
+    queryKey: ["investorDashboardStats"],
     queryFn: getDashboardStats,
   });
   return {

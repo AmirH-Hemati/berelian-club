@@ -16,21 +16,26 @@ export class DashboardService {
     private readonly followUpService: FollowUpService,
   ) {}
 
-  // async getUserStats(userId: string) {
-  //   const [activeContractDays, pendingRequests, unreadNotifications] =
-  //     await Promise.all([
-  //       this.userService.getContractDaysRemaining(userId),
-  //       this.requestService.countPendingRequests(userId),
-  //       this.notificationService.countUnread(userId),
-  //     ]);
+  async getUserStats(userId: string) {
+    const [
+      activeContractDays,
+      pendingRequests,
+      approvedAppointments,
+      unreadNotifications,
+    ] = await Promise.all([
+      this.userService.getContractDaysRemaining(userId),
+      this.requestService.countInvestorNewRequests(userId),
+      this.appointmentService.investorCountApprovedAppointments(userId),
+      this.notificationService.countUnread(userId),
+    ]);
 
-  //   return {
-  //     activeContractDays,
-  //     pendingRequests,
-  //     unreadNotifications,
-  //     xp: 100,
-  //   };
-  // }
+    return {
+      activeContractDays,
+      pendingRequests,
+      approvedAppointments,
+      unreadNotifications,
+    };
+  }
 
   async getAdminDashboard(userId: string) {
     const now = DateTime.now().setZone("Asia/Tehran");

@@ -3,6 +3,7 @@ import {
   getConsultantDashboardController,
   getReceptionDashboardController,
   getStatsAdminDashboard,
+  getStatsInvestorDashboard,
 } from "./dashboard.controller.js";
 import { protectedRoute } from "../../middlewares/auth.middleware.js";
 import { restrictTo } from "../../middlewares/authorization.middleware.js";
@@ -10,7 +11,7 @@ import { restrictTo } from "../../middlewares/authorization.middleware.js";
 const router = express.Router();
 
 router.use(protectedRoute);
-// router.get("/stats", getStats);
+router.get("/investor", restrictTo("investor"), getStatsInvestorDashboard);
 
 router.get("/admin", restrictTo("admin"), getStatsAdminDashboard);
 

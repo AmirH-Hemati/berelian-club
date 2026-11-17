@@ -1,6 +1,6 @@
 "use client";
 import { Card, CardContent, StatsSkeleton } from "@repo/ui";
-import { Bell, CalendarDays, FileText, Trophy } from "lucide-react";
+import { Bell, CalendarCheck, CalendarDays, FileText } from "lucide-react";
 import { useDashboardStats } from "../hooks/useDashboardStats";
 
 export default function Stats() {
@@ -21,17 +21,18 @@ export default function Stats() {
       suffix: "درخواست",
       icon: CalendarDays,
     },
+
+    {
+      title: "مشاوره های پیش رو",
+      value: stats.approvedAppointments,
+      suffix: "مشاوره",
+      icon: CalendarCheck,
+    },
     {
       title: " اعلان‌ها خوانده نشده",
       value: stats.unreadNotifications,
       suffix: "جدید",
       icon: Bell,
-    },
-    {
-      title: "امتیاز",
-      value: stats.xp,
-      suffix: "XP",
-      icon: Trophy,
     },
   ];
 

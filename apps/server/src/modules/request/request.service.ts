@@ -182,7 +182,7 @@ export class RequestService {
   async getUserRequests(userId: string, query: Record<string, unknown>) {
     const features = new ApiFeatures(
       RequestModel.find({
-        user: userId,
+        investor: userId,
       }),
       query,
     )
@@ -283,6 +283,13 @@ export class RequestService {
       },
     };
   }
+  async countInvestorNewRequests(investorId: string) {
+    return RequestModel.countDocuments({
+      status: "pending",
+      investor: investorId,
+    });
+  }
+
   async countNewRequests() {
     return RequestModel.countDocuments({
       status: "pending",
