@@ -30,6 +30,7 @@ import { AppointmentType } from "@repo/schema";
 import { convertDate } from "@/utils/helper";
 import SectionTitle from "@/features/components/SectionTitle";
 import InfoItem from "@/features/components/InfoItem";
+import { DeleteAppointmentDialog } from "./DeleteAppointmentDialog";
 
 type Props = {
   appointment: AppointmentType;
@@ -42,7 +43,6 @@ const appointmentTypes: Record<string, string> = {
 
 export default function UserAppointmentDataBox({ appointment }: Props) {
   const isOnline = appointment.type === "online";
-  const isPhone = appointment.type === "phone";
 
   const isCancelled = appointment.status === "cancelled";
 
@@ -270,6 +270,24 @@ export default function UserAppointmentDataBox({ appointment }: Props) {
                 </div>
               )}
             </section>
+          </>
+        )}
+        {appointment.status === "pending" && (
+          <>
+            <Separator />
+
+            <div className="flex items-center justify-between gap-3 rounded-xl border border-destructive/20 bg-destructive/5 p-4">
+              <div className="w-1/2 space-y-1">
+                <p className="text-sm font-medium text-destructive">
+                  حذف نوبت مشاوره
+                </p>
+                <p className="text-xs leading-6 text-muted-foreground">
+                  امکان حذف نوبت مشاوره تا قبل از بررسی آن وجود دارد.
+                </p>
+              </div>
+
+              <DeleteAppointmentDialog appointmentId={appointment._id} />
+            </div>
           </>
         )}
       </CardContent>

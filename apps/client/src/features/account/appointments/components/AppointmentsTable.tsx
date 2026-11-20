@@ -14,6 +14,7 @@ import {
   Button,
   TableSkeleton,
   StatusBadge,
+  DropdownMenuSeparator,
 } from "@repo/ui";
 
 import { PaginationControls } from "@/components/PaginationControls";
@@ -31,6 +32,7 @@ import Typebadge from "../../requests/components/Typebadge";
 import { typesMap } from "../data/typesMap";
 import { useAppointments } from "../hooks/useAppointments";
 import ConsultantInfo from "@/components/ConsultantInfo";
+import { DeleteAppointmentDialog } from "./DeleteAppointmentDialog";
 
 export default function AppointmentsTable() {
   const { appointments, pagination, isLoading, isError, refetch, error } =
@@ -170,6 +172,17 @@ export default function AppointmentsTable() {
                           مشاهده جزئیات مشاوره
                         </Link>
                       </DropdownMenuItem>
+                      {appointment.status === "pending" && (
+                        <>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem asChild>
+                            <DeleteAppointmentDialog
+                              fullWidth
+                              appointmentId={appointment._id}
+                            />
+                          </DropdownMenuItem>
+                        </>
+                      )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

@@ -45,21 +45,18 @@ export default function AddNewAppointment() {
     createAppointment(values, {
       onSuccess: () => {
         setOpen(false);
+        form.reset({
+          appointmentDate: new Date(),
+          startAt: "",
+          description: "",
+          type: "online",
+        });
       },
     });
   };
-  const handleOpenChange = (value: boolean) => {
-    setOpen(value);
 
-    form.reset({
-      appointmentDate: new Date(),
-      startAt: "",
-      description: "",
-      type: "online",
-    });
-  };
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>ثبت مشاوره جدید</Button>
       </DialogTrigger>

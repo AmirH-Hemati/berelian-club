@@ -182,7 +182,7 @@ export default function RequestsTable() {
                             <>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem asChild>
-                                <DeleteRequestDialog
+                              <DeleteRequestDialog
                                   fullWidth
                                   requestId={request._id}
                                 />

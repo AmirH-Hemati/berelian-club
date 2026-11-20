@@ -6,7 +6,6 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-  StatusBadge,
 } from "@repo/ui";
 import { Button } from "@repo/ui";
 import { Spinner } from "@repo/ui";
@@ -29,7 +28,7 @@ export default function Page() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/appointments">مشاوره ها</BreadcrumbLink>
+            <BreadcrumbLink href="/account/appointments">مشاوره ها</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
