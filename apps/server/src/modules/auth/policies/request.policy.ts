@@ -49,12 +49,7 @@ export const requestPolicy: ResourcePolicies<RequestDocument, RequestAction> = {
   },
 
   reject: ({ user, resource }) => {
-    if (user.role === "admin") return true;
-
-    return (
-      user.role === "reception" &&
-      getResourceId(resource.assignedTo) === user._id.toString()
-    );
+    return user.role === "admin" || user.role === "reception";
   },
 
   complete: ({ user, resource }) => {

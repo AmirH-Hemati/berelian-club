@@ -7,6 +7,7 @@ import { NotificationService } from "../notification/notification.service.js";
 import { formatPersianDate } from "../../utils/date.js";
 import { ApiFeatures } from "../../utils/ApiFeatures.js";
 import type { UserDocument } from "../../models/user.model.js";
+import { AppError } from "../../utils/AppError.js";
 
 const APPOINTMENT_DURATION = 60;
 
@@ -92,20 +93,37 @@ export class AppointmentService {
     appointmentId: string,
     consultantId: mongoose.Types.ObjectId,
   ) {
-    const appointment = await AppointmentModel.findById(appointmentId);
+    const appointment = await AppointmentModel.findOneAndUpdate(
+      {
+        _id: appointmentId,
+        status: "pending",
+        consultant: null,
+      },
+      {
+        $set: {
+          consultant: consultantId,
+          status: "approved",
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
 
     if (!appointment) {
-      throw new Error("نوبت مشاوره پیدا نشد");
+      const existingAppointment =
+        await AppointmentModel.findById(appointmentId);
+
+      if (!existingAppointment) {
+        throw new AppError("نوبت مشاوره پیدا نشد", 404);
+      }
+
+      throw new AppError(
+        "این نوبت قبلاً توسط مشاور دیگری بررسی شده یا در وضعیت قابل تأیید نیست",
+        400,
+      );
     }
-
-    if (appointment.status !== "pending") {
-      throw new Error("این نوبت در وضعیت قابل تأیید نیست");
-    }
-
-    appointment.consultant = consultantId;
-    appointment.status = "approved";
-
-    await appointment.save();
 
     await this.notificationService.send({
       userId: appointment.investor._id.toString(),
@@ -123,21 +141,34 @@ export class AppointmentService {
     reason: string,
     userId: string,
   ) {
-    const appointment = await AppointmentModel.findById(appointmentId);
+    const appointment = await AppointmentModel.findOneAndUpdate(
+      {
+        _id: appointmentId,
+        status: "pending",
+      },
+      {
+        $set: {
+          status: "cancelled",
+          cancellationReason: reason,
+          cancelledBy: new mongoose.Types.ObjectId(userId),
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
 
     if (!appointment) {
-      throw new Error("نوبت مشاوره پیدا نشد");
+      const existingAppointment =
+        await AppointmentModel.findById(appointmentId);
+
+      if (!existingAppointment) {
+        throw new AppError("نوبت مشاوره پیدا نشد", 404);
+      }
+
+      throw new AppError("این نوبت در وضعیت قابل رد نیست", 400);
     }
-
-    if (appointment.status !== "pending") {
-      throw new Error("این نوبت در وضعیت قابل رد نیست");
-    }
-
-    appointment.status = "cancelled";
-    appointment.cancellationReason = reason;
-    appointment.cancelledBy = new mongoose.Types.ObjectId(userId);
-
-    await appointment.save();
 
     await this.notificationService.send({
       userId: appointment.investor._id.toString(),
@@ -183,31 +214,44 @@ export class AppointmentService {
     reason: string,
     userId: string,
   ) {
-    const appointment = await AppointmentModel.findById(appointmentId);
-
-    if (!appointment) {
-      throw new Error("نوبت مشاوره پیدا نشد");
-    }
-
-    if (!["pending", "approved"].includes(appointment.status)) {
-      throw new Error("امکان تغییر زمان این نوبت وجود ندارد");
-    }
-
     this.validateBusinessHours(startAt);
 
     const newDateTime = this.getAppointmentDateTime(appointmentDate, startAt);
 
     if (newDateTime <= new Date()) {
-      throw new Error("زمان جدید باید در آینده باشد");
+      throw new AppError("زمان جدید باید در آینده باشد", 400);
     }
 
-    appointment.appointmentDate = appointmentDate;
-    appointment.startAt = startAt;
-    appointment.endAt = this.calculateEndAt(startAt);
-    appointment.rescheduleReason = reason;
-    appointment.rescheduledBy = new mongoose.Types.ObjectId(userId);
+    const appointment = await AppointmentModel.findOneAndUpdate(
+      {
+        _id: appointmentId,
+        status: { $in: ["pending", "approved"] },
+      },
+      {
+        $set: {
+          appointmentDate,
+          startAt,
+          endAt: this.calculateEndAt(startAt),
+          rescheduleReason: reason,
+          rescheduledBy: new mongoose.Types.ObjectId(userId),
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
 
-    await appointment.save();
+    if (!appointment) {
+      const existingAppointment =
+        await AppointmentModel.findById(appointmentId);
+
+      if (!existingAppointment) {
+        throw new AppError("نوبت مشاوره پیدا نشد", 404);
+      }
+
+      throw new AppError("امکان تغییر زمان این نوبت وجود ندارد", 400);
+    }
 
     await this.notificationService.send({
       userId: appointment.investor._id.toString(),

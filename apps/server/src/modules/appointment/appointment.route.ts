@@ -5,6 +5,7 @@ import { validateZod } from "../../middlewares/validateZod.js";
 import { restrictTo } from "../../middlewares/authorization.middleware.js";
 import { protectedRoute } from "../../middlewares/auth.middleware.js";
 import { convertDateFields } from "../../middlewares/convertDateFields.js";
+
 import {
   approveAppointmentController,
   completeAppointmentController,
@@ -19,8 +20,10 @@ import {
   rescheduleAppointmentController,
   setAppointmentUserId,
 } from "./appointment.controller.js";
+import { authorize } from "../auth/authorization.middleware.js";
 
 const router = express.Router();
+
 router.use(protectedRoute);
 
 router
@@ -38,18 +41,39 @@ router.get(
   restrictTo("admin", "consultant"),
   getTodayAppointmentsController,
 );
+
 router.get("/myAppointments", getUserAppointmentsController);
 
-router.delete("/:id", deleteAppointment);
-router.route("/:id").get(getAppointment);
+router.get("/:id", authorize("appointment", "read"), getAppointment);
 
-// restrit for only admin
+router.delete("/:id", authorize("appointment", "delete"), deleteAppointment);
+
 router.use(restrictTo("admin", "consultant"));
 
 router.get("/userAppointments/:id/", getUserAppointmentsByParamsController);
-router.patch("/:id/approve", approveAppointmentController);
-router.patch("/:id/reject", rejectAppointmentController);
-router.patch("/:id/complete", completeAppointmentController);
-router.patch("/:id/reschedule", rescheduleAppointmentController);
+
+router.patch(
+  "/:id/approve",
+  authorize("appointment", "approve"),
+  approveAppointmentController,
+);
+
+router.patch(
+  "/:id/reject",
+  authorize("appointment", "reject"),
+  rejectAppointmentController,
+);
+
+router.patch(
+  "/:id/complete",
+  authorize("appointment", "complete"),
+  completeAppointmentController,
+);
+
+router.patch(
+  "/:id/reschedule",
+  authorize("appointment", "reschedule"),
+  rescheduleAppointmentController,
+);
 
 export default router;
