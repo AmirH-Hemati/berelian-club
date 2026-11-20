@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 
 export const useConversation = () => {
   const { requestId } = useParams();
-  const { data, isLoading } = useQuery({
+  const { data, isLoading  , isError ,error} = useQuery({
     queryKey: ["conversation", requestId],
     queryFn: () => getConversation(requestId as string),
     enabled: !!requestId,
@@ -14,5 +14,6 @@ export const useConversation = () => {
   return {
     conversation: data,
     isLoading,
+    isError ,error
   };
 };

@@ -127,7 +127,7 @@ function RequestActions({ request }: { request: RequestType }) {
                 className="flex cursor-pointer items-center gap-2"
               >
                 <MessageCircle className="size-4" />
-                گفتگو با پذیرش
+                گفتگو با سرمایه گذار
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />

@@ -45,7 +45,7 @@ const conversationSchema = new mongoose.Schema<ConversationDocument>(
 conversationSchema.pre<Query<ConversationDocument, ConversationDocument>>(
   /^find/,
   function () {
-    this.populate("participants", "firstName lastName phoneNumber").populate(
+    this.populate("participants", "firstName lastName phoneNumber photo").populate(
       "lastMessage",
     );
   },

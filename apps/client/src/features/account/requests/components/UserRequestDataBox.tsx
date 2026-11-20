@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardHeader,
@@ -10,14 +10,6 @@ import {
   Button,
   Separator,
   StatusBadge,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
 } from "@repo/ui";
 
 import {
@@ -28,15 +20,16 @@ import {
   Phone,
   CreditCard,
   UserCheck,
-  Trash2,
   CalendarCheck,
   CircleCheck,
   AlertCircle,
+  MessageCircle,
 } from "lucide-react";
 import { formatDate } from "@/utils/helper";
 import SectionTitle from "@/features/components/SectionTitle";
 import InfoItem from "@/features/components/InfoItem";
 import { RequestType } from "@repo/schema";
+import { DeleteRequestDialog } from "./DeleteRequestDialog";
 
 type Props = {
   request: RequestType;
@@ -55,7 +48,7 @@ const contractStatuses: Record<string, string> = {
 };
 
 export default function UserRequestDataBox({ request }: Props) {
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const router = useRouter();
 
   const investor = request.investor;
 
@@ -83,7 +76,7 @@ export default function UserRequestDataBox({ request }: Props) {
         </div>
 
         <div className="text-xs text-muted-foreground">
-          شناسه درخواست: {request._id}
+          شناسه درخواست: {request._id.slice(0, 6)}
         </div>
       </CardHeader>
 
@@ -236,56 +229,17 @@ export default function UserRequestDataBox({ request }: Props) {
           <>
             <Separator />
 
-            <div className="flex flex-col gap-3 rounded-xl border border-destructive/20 bg-destructive/5 p-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="space-y-1">
-                <p className="text-sm font-medium">حذف درخواست</p>
-
+            <div className="flex items-center justify-between gap-3 rounded-xl border border-destructive/20 bg-destructive/5 p-4">
+              <div className="w-1/2 space-y-1">
+                <p className="text-sm font-medium text-destructive">
+                  حذف درخواست
+                </p>
                 <p className="text-xs leading-6 text-muted-foreground">
-                  در صورت حذف، درخواست شما از سیستم حذف خواهد شد.
+                  امکان حذف درخواست تا قبل از بررسی آن وجود دارد.
                 </p>
               </div>
 
-              <AlertDialog
-                open={isDeleteDialogOpen}
-                onOpenChange={setIsDeleteDialogOpen}
-              >
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => setIsDeleteDialogOpen(true)}
-                  className="shrink-0"
-                >
-                  <Trash2 className="ml-2 size-4" />
-                  حذف درخواست
-                </Button>
-
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      آیا از حذف درخواست مطمئن هستید؟
-                    </AlertDialogTitle>
-
-                    <AlertDialogDescription>
-                      این عملیات قابل بازگشت نیست. آیا می‌خواهید درخواست خود را
-                      حذف کنید؟
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>انصراف</AlertDialogCancel>
-
-                    <AlertDialogAction
-                    // disabled={isDeleting}
-                    // onClick={(event) => {
-                    //   event.preventDefault();
-                    //   onDelete();
-                    // }}
-                    >
-                      {/* {isDeleting ? "در حال حذف..." : "بله، حذف شود"} */}
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <DeleteRequestDialog requestId={request._id} />
             </div>
           </>
         )}

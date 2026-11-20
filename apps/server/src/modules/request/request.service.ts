@@ -9,7 +9,7 @@ import type { ConversationService } from "../conversation/conversation.service.j
 import type { NotificationService } from "../notification/notification.service.js";
 import type { Types } from "mongoose";
 import type { UserService } from "../user/user.service.js";
-import type { UserDocument } from "../../models/user.model.js";
+import type { UserDocument, UserRole } from "../../models/user.model.js";
 
 export const REQUEST_TYPE_LABELS = {
   renew_contract: "تمدید قرارداد",
@@ -429,22 +429,17 @@ export class RequestService {
       count: item.count,
     }));
   }
+  async deleteRequest(request: RequestDocument) {
+    const conversation = await this.conversationService.findByRequest(
+      request._id.toString(),
+    );
 
-  async deleteRequest(requestId: string, userId: string, isAdmin: boolean) {
-    const request = await RequestModel.findById(requestId);
-    if (!request) {
-      throw new AppError("درخواست یافت نشد", 404);
-    }
-    if (!isAdmin && request.investor.toString() !== userId) {
-      throw new AppError("شما دسترسی به این درخواست ندارید", 403);
-    }
-    const conversation =
-      await this.conversationService.findByRequest(requestId);
     if (conversation) {
       await this.conversationService.deleteConversation(
         conversation._id.toString(),
       );
     }
-    await RequestModel.findByIdAndDelete(requestId);
+
+    await request.deleteOne();
   }
 }

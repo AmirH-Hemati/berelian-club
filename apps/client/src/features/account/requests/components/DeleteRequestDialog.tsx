@@ -12,15 +12,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   Button,
+  cn,
 } from "@repo/ui";
 import { Trash2, Loader2 } from "lucide-react";
 import { useDeleteRequest } from "../hooks/useDeleteRequest";
 
 interface DeleteRequestDialogProps {
   requestId: string;
+  fullWidth?: boolean;
 }
 
-export function DeleteRequestDialog({ requestId }: DeleteRequestDialogProps) {
+export function DeleteRequestDialog({
+  requestId,
+  fullWidth = false,
+}: DeleteRequestDialogProps) {
   const [open, setOpen] = useState(false);
   const { deleteRequest, isDeleting } = useDeleteRequest();
 
@@ -37,9 +42,9 @@ export function DeleteRequestDialog({ requestId }: DeleteRequestDialogProps) {
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogTrigger asChild>
           <Button
-            variant="ghost"
+            variant="destructive"
             size="sm"
-            className="w-full flex justify-start"
+            className={cn(fullWidth && "w-full flex justify-start")}
           >
             <Trash2 className="size-4" />
             حذف درخواست
@@ -52,16 +57,16 @@ export function DeleteRequestDialog({ requestId }: DeleteRequestDialogProps) {
               آیا از حذف این درخواست مطمئن هستید؟
             </AlertDialogTitle>
             <AlertDialogDescription>
-              با حذف این درخواست، تمام اطلاعات مرتبط با آن شامل:
-              <ul className="list-disc pr-6 mt-2 space-y-1">
-                <li>گفتگوی مرتبط با درخواست</li>
-                <li>همه پیام‌های موجود در گفتگو</li>
-                <li>اطلاعات درخواست</li>
-              </ul>
-              <span className="block mt-2 font-medium text-red-600">
-                این عمل قابل بازگشت نیست!
-              </span>
+              با حذف این درخواست، اطلاعات مرتبط با آن نیز حذف خواهند شد:
             </AlertDialogDescription>
+
+            <ul className="list-disc pr-6 mt-2 space-y-1 text-sm text-muted-foreground">
+              <li>گفتگوی مرتبط با درخواست</li>
+              <li>اطلاعات درخواست</li>
+            </ul>
+            <p className="mt-2 text-sm font-medium text-destructive">
+              این عمل قابل بازگشت نیست!
+            </p>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isDeleting}>انصراف</AlertDialogCancel>

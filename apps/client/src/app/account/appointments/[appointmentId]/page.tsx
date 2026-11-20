@@ -51,7 +51,7 @@ export default function Page() {
               </Button>
               <h1 className="font-bold text-500 my-5">مشاوره</h1>
             </div>
-            <StatusBadge status={appointment.status} />
+           
           </div>
           <UserAppointmentDataBox appointment={appointment} />
           <SessionReportCard appointmentId={appointment._id} />

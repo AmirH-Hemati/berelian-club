@@ -105,16 +105,15 @@ export const getTodayRequests = CatchError(async (req, res) => {
   });
 });
 
-export const deleteRequest = CatchError(async (req, res) => {
-  const user = req.user as UserDocument;
+export const deleteRequest = CatchError(async (req, res, next) => {
+  const request = res.locals.authorizedResource as RequestDocument;
 
-  await requestService.deleteRequest(
-    req.params.id as string,
-    user._id.toString(),
-    user.role === "admin",
-  );
+  await requestService.deleteRequest(request);
 
-  return res.status(204).send();
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
 });
 
 export const createRequest = CatchError(async (req: Request, res: Response) => {

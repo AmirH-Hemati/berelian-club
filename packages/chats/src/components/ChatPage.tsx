@@ -18,11 +18,31 @@ type Props = {
 
 export default function ChatPage({ renderSendFileIconAction }: Props) {
   const { user, isLoading: userLoading } = useUser();
-  const { conversation, isLoading } = useConversation();
+  const { conversation, isLoading, isError, error } = useConversation();
 
   if (isLoading || userLoading) {
     return <Spinner />;
   }
+
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-8rem)]">
+        <EmptyState
+          icon={MessageCircle}
+          title="خطا در دریافت گفتگو"
+          description={
+            error?.response?.data?.message ||
+            "مشکلی در دریافت اطلاعات گفتگو رخ داده است."
+          }
+        >
+          <Button asChild>
+            <Link href="/requests">مشاهده درخواست‌ها</Link>
+          </Button>
+        </EmptyState>
+      </div>
+    );
+  }
+
   if (!conversation) {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-8rem)]">

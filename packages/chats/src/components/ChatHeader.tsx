@@ -19,6 +19,11 @@ export function ChatHeader({
   requestId,
   isActive,
 }: ChatHeaderProps) {
+  
+  const imageUrl = otherUser?.photo
+    ? `http://localhost:5000/images/users/${otherUser?.photo}`
+    : undefined;
+   
   return (
     <header className="relative z-10 flex shrink-0 items-center justify-between gap-3 border-b bg-background/95 px-3 py-3 shadow-sm backdrop-blur-xl sm:px-5">
       <div className="flex min-w-0 items-center gap-3">
@@ -33,7 +38,7 @@ export function ChatHeader({
 
         <Avatar className="size-11 shrink-0 rounded-2xl border shadow-sm">
           <AvatarImage
-            src={`http://localhost:5000/images/users/${otherUser?.photo}`}
+            src={imageUrl}
             alt={`${otherUser?.firstName ?? ""} ${otherUser?.lastName ?? ""}`}
           />
           <AvatarFallback className="rounded-2xl bg-primary/10 font-semibold text-primary">

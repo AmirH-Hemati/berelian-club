@@ -15,6 +15,8 @@ import {
   Button,
   TableSkeleton,
   StatusBadge,
+  AlertDialog,
+  AlertDialogTrigger,
 } from "@repo/ui";
 
 import { PaginationControls } from "@/components/PaginationControls";
@@ -29,12 +31,11 @@ import { useRequests } from "../hooks/useRequests";
 import Typebadge from "./Typebadge";
 import ReceptionInfo from "./ReceptionInfo";
 import { convertDate } from "@/utils/helper";
+import { DeleteRequestDialog } from "./DeleteRequestDialog";
 
 export default function RequestsTable() {
   const { requests, pagination, isLoading, isError, error, refetch } =
     useRequests();
-
-  const { deleteRequest, isDeleting } = useDeleteRequest();
 
   if (isLoading) return <TableSkeleton />;
 
@@ -177,17 +178,17 @@ export default function RequestsTable() {
                             </Link>
                           </DropdownMenuItem>
 
-                          <DropdownMenuSeparator />
-
-                          <DropdownMenuItem
-                            disabled={isDeleting}
-                            variant="destructive"
-                            onClick={() => deleteRequest(request._id)}
-                            className="flex cursor-pointer items-center gap-2"
-                          >
-                            <Trash2 className="size-4" />
-                            حذف درخواست
-                          </DropdownMenuItem>
+                          {request.status === "pending" && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem asChild>
+                                <DeleteRequestDialog
+                                  fullWidth
+                                  requestId={request._id}
+                                />
+                              </DropdownMenuItem>
+                            </>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
