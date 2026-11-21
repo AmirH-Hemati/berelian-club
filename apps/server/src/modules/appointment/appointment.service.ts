@@ -131,6 +131,7 @@ export class AppointmentService {
       message: `نوبت مشاوره شما در تاریخ ${formatPersianDate(appointment.appointmentDate)} تأیید شد.`,
       type: "appointment_approved",
       link: `/appointments/${appointment._id}`,
+      deduplicationKey: `appointment-approve-${appointment._id}-${consultantId}`,
     });
 
     return appointment;
@@ -176,6 +177,7 @@ export class AppointmentService {
       message: `درخواست مشاوره شما در تاریخ ${formatPersianDate(appointment.appointmentDate)} رد شد. دلیل: ${reason}`,
       type: "appointment_rejected",
       link: `/appointments/${appointment._id}`,
+      deduplicationKey: `appointment-reject-${appointment._id}-${userId}`,
     });
 
     return appointment;
@@ -202,6 +204,7 @@ export class AppointmentService {
       message: `مشاوره شما در تاریخ ${formatPersianDate(appointment.appointmentDate)} تکمیل شد.`,
       type: "appointment_completed",
       link: `/appointments/${appointment._id}`,
+      deduplicationKey: `appointment-complete-${appointment._id}-${appointment.investor._id}`,
     });
 
     return appointment;
@@ -259,6 +262,7 @@ export class AppointmentService {
       message: `زمان مشاوره شما به ${formatPersianDate(appointment.appointmentDate)} ساعت ${startAt} تغییر کرد.`,
       type: "appointment_rescheduled",
       link: `/appointments/${appointment._id}`,
+      deduplicationKey: `appointment-complete-${appointment._id}-${appointment.investor._id}`,
     });
 
     return appointment;

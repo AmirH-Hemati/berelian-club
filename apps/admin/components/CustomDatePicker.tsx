@@ -18,7 +18,7 @@ export default function CustomDatePicker<T extends FieldValues>({
   label,
 }: Props<T>) {
   return (
-    <Field className="">
+    <Field>
       <FieldLabel className="text-sm font-medium">{label}</FieldLabel>
 
       <Controller
