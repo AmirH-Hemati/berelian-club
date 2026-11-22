@@ -8,6 +8,8 @@ import {
   CardContent,
   Separator,
   StatusBadge,
+  SectionTitle,
+  InfoItem,
 } from "@repo/ui";
 
 import {
@@ -28,8 +30,6 @@ import {
 
 import { AppointmentType } from "@repo/schema";
 import { convertDate } from "@/utils/helper";
-import SectionTitle from "@/features/components/SectionTitle";
-import InfoItem from "@/features/components/InfoItem";
 import { DeleteAppointmentDialog } from "./DeleteAppointmentDialog";
 
 type Props = {
@@ -80,7 +80,7 @@ export default function UserAppointmentDataBox({ appointment }: Props) {
         </div>
 
         <div className="text-xs text-muted-foreground">
-          شناسه نوبت: {appointment._id}
+          شناسه نوبت: {appointment._id.slice(0, 6)}
         </div>
       </CardHeader>
 

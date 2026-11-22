@@ -1,18 +1,41 @@
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@repo/ui";
-import { Badge } from "@repo/ui";
-import { Separator } from "@repo/ui";
-import { FileText, Clock, User, XCircle } from "lucide-react";
+"use client";
+
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  Separator,
+  Button,
+  SectionTitle,
+  InfoItem,
+} from "@repo/ui";
+
+import {
+  FileText,
+  Clock,
+  User,
+  XCircle,
+  ClipboardList,
+  MessageSquareText,
+  CalendarDays,
+  History,
+} from "lucide-react";
+
 import { formatDate } from "@/utils/helper";
 import { useSessionReport } from "../hooks/useSessionReport";
-import Spinner from "@/components/PageSpinner";
-import { Button } from "@repo/ui";
 import { useDeleteReportSession } from "../hooks/useDeleteReportSession";
+import Spinner from "@/components/PageSpinner";
 
 type Props = {
   appointmentId: string;
 };
+
 export default function SessionReportCard({ appointmentId }: Props) {
   const { sessionReport: report, isLoading } = useSessionReport(appointmentId);
+
   const { deleteSessionReport, isDeleting } =
     useDeleteReportSession(appointmentId);
 
@@ -20,68 +43,126 @@ export default function SessionReportCard({ appointmentId }: Props) {
 
   if (!report) return null;
 
+  const consultantName = [
+    report.consultant?.firstName,
+    report.consultant?.lastName,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <Card className="border-l-4 border-l-primary my-6">
-      <CardHeader className="pb-2 flex flex-wrap items-center justify-between">
-        <CardTitle className="text-sm font-semibold flex items-center gap-2">
-          <FileText className="size-4 text-primary" />
+    <Card className="my-6 overflow-hidden">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-base">
+          <FileText className="size-5 text-primary" />
           گزارش جلسه مشاوره
         </CardTitle>
+
+        <CardDescription>جزئیات و نتیجه جلسه برگزارشده</CardDescription>
       </CardHeader>
 
-      <CardContent className="space-y-3">
-        <div>
-          <p className="text-sm font-medium">خلاصه جلسه</p>
-          <p className="text-sm text-muted-foreground">{report.summary}</p>
-        </div>
+      <Separator />
 
-        <Separator />
+      <CardContent className="space-y-6 pt-6">
+        {/* Session Summary */}
+        <section className="space-y-4">
+          <SectionTitle
+            icon={<ClipboardList className="size-5" />}
+            title="خلاصه جلسه"
+          />
 
+          <InfoItem
+            icon={<FileText className="size-4" />}
+            label="خلاصه جلسه"
+            value={report.summary || "ثبت نشده است"}
+          />
+        </section>
+
+        {/* Result Description */}
         {report.resultDescription && (
-          <div>
-            <p className="text-sm font-medium">توضیحات نتیجه</p>
-            <p className="text-sm text-muted-foreground">
-              {report.resultDescription}
-            </p>
-          </div>
+          <>
+            <Separator />
+
+            <section className="space-y-4">
+              <SectionTitle
+                icon={<MessageSquareText className="size-5" />}
+                title="توضیحات نتیجه جلسه"
+              />
+
+              <InfoItem
+                icon={<MessageSquareText className="size-4" />}
+                label="نتیجه جلسه"
+                value={report.resultDescription}
+              />
+            </section>
+          </>
         )}
 
+        {/* Notes */}
         {report.notes && (
-          <div>
-            <p className="text-sm font-medium">یادداشت‌ها</p>
-            <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-              {report.notes}
-            </p>
-          </div>
+          <>
+            <Separator />
+
+            <section className="space-y-4">
+              <SectionTitle
+                icon={<FileText className="size-5" />}
+                title="یادداشت‌ها"
+              />
+
+              <InfoItem
+                icon={<ClipboardList className="size-4" />}
+                label="یادداشت‌های مشاور"
+                value={report.notes}
+              />
+            </section>
+          </>
         )}
 
         <Separator />
 
-        <div className="flex  flex-wrap items-center gap-4 text-xs text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <User className="size-3" />
-            <span>
-              ثبت توسط: {report.consultant?.firstName}{" "}
-              {report.consultant?.lastName}
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Clock className="size-3" />
-            <span>تاریخ ثبت: {formatDate(report.createdAt)}</span>
-          </div>
-        </div>
+        {/* Report Metadata */}
+        <section className="space-y-4">
+          <SectionTitle
+            icon={<User className="size-5" />}
+            title="اطلاعات ثبت گزارش"
+          />
 
-        <CardAction>
-          <Button
-            onClick={() => deleteSessionReport(report._id)}
-            disabled={isDeleting}
-            variant="destructive"
-          >
-            <XCircle className="size-4" />
-            حذف گزارش
-          </Button>
-        </CardAction>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <InfoItem
+              icon={<User className="size-4" />}
+              label="ثبت‌کننده گزارش"
+              value={consultantName || "—"}
+            />
+
+            <InfoItem
+              icon={<CalendarDays className="size-4" />}
+              label="تاریخ ثبت"
+              value={formatDate(report.createdAt)}
+            />
+
+            {report.updatedAt && report.updatedAt !== report.createdAt && (
+              <InfoItem
+                icon={<History className="size-4" />}
+                label="آخرین ویرایش"
+                value={formatDate(report.updatedAt)}
+              />
+            )}
+          </div>
+        </section>
       </CardContent>
+
+      <Separator />
+
+      <CardFooter className="flex justify-end py-4">
+        <Button
+          variant="destructive"
+          onClick={() => deleteSessionReport(report._id)}
+          disabled={isDeleting}
+        >
+          <XCircle className="size-4" />
+          {isDeleting ? "در حال حذف..." : "حذف گزارش جلسه"}
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

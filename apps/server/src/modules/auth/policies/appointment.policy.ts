@@ -16,7 +16,7 @@ export const appointmentPolicy: ResourcePolicies<
         return true;
 
       case "investor":
-        return getResourceId(resource.user) === user._id.toString();
+        return getResourceId(resource.investor) === user._id.toString();
 
       default:
         return false;
@@ -38,7 +38,7 @@ export const appointmentPolicy: ResourcePolicies<
 
       case "investor":
         return (
-          getResourceId(resource.user) === userId &&
+          getResourceId(resource.investor) === userId &&
           resource.status === "pending"
         );
 

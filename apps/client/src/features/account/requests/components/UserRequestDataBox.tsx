@@ -1,15 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-  Button,
   Separator,
   StatusBadge,
+  SectionTitle,
+  InfoItem,
 } from "@repo/ui";
 
 import {
@@ -23,11 +23,8 @@ import {
   CalendarCheck,
   CircleCheck,
   AlertCircle,
-  MessageCircle,
 } from "lucide-react";
 import { formatDate } from "@/utils/helper";
-import SectionTitle from "@/features/components/SectionTitle";
-import InfoItem from "@/features/components/InfoItem";
 import { RequestType } from "@repo/schema";
 import { DeleteRequestDialog } from "./DeleteRequestDialog";
 
@@ -44,11 +41,9 @@ const requestTypes: Record<string, string> = {
 const contractStatuses: Record<string, string> = {
   active: "فعال",
   expired: "منقضی شده",
-  pending: "در انتظار",
 };
 
 export default function UserRequestDataBox({ request }: Props) {
-  const router = useRouter();
 
   const investor = request.investor;
 

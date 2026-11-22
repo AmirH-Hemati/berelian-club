@@ -91,7 +91,6 @@ export default function AdminRescheduleAppointment({
 }: AdminRescheduleAppointmentProps) {
   const [open, setOpen] = useState(false);
 
-  console.log(currentDate);
   const { rescheduleAppointment, isRescheduling } = useRescheduleAppointment();
 
   const form = useForm<RescheduleFormValues>({

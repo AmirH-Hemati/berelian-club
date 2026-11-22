@@ -1,4 +1,6 @@
 "use client";
+import { useRouter } from "next/navigation";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,6 +20,7 @@ import SessionReportCard from "@/features/appointments/components/SessionReportC
 import ErrorState from "@/components/ErrorState";
 export default function Page() {
   const { appointment, isLoading, isError, refetch } = useAppointment();
+  const router = useRouter();
 
   if (isLoading) return <Spinner />;
   if (isError) {
@@ -53,7 +56,11 @@ export default function Page() {
         <>
           <div className="flex justify-between items-center ">
             <div className="flex items-center ">
-              <Button variant="ghost" size="icon-lg">
+              <Button
+                variant="ghost"
+                size="icon-lg"
+                onClick={() => router.back()}
+              >
                 <ArrowRight className="size-5" />
               </Button>
               <h1 className="font-bold text-2xl my-5">مشاوره</h1>

@@ -17,7 +17,7 @@ export default function InfoItem({
       <div className="min-w-0 space-y-1">
         <p className="text-sm text-muted-foreground">{label}</p>
 
-        <div className="text-sm font-medium break-words">{value || "—"}</div>
+        <div className="text-sm font-medium wrap-break-word">{value || "—"}</div>
       </div>
     </div>
   );

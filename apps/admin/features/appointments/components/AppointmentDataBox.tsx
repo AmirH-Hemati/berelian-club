@@ -1,220 +1,391 @@
-import { Button } from "@repo/ui";
-import { Card, CardContent, CardFooter, CardHeader } from "@repo/ui";
-import { Separator } from "@repo/ui";
-import { formatDate } from "@/utils/helper";
-import { AppointmentType } from "@repo/schema";
+"use client";
+
 import {
-  Calendar,
-  Check,
-  CheckCircle,
-  Clock,
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  Separator,
+  StatusBadge,
+  Button,
+  SectionTitle,
+  InfoItem,
+} from "@repo/ui";
+
+import {
+  CalendarDays,
+  Clock3,
   FileText,
   Phone,
-  User,
   Video,
-  CircleX,
-  UserX,
+  UserRound,
+  UserCheck,
   ClockArrowUp,
+  CircleX,
+  CalendarCheck,
+  Link2,
+  UserX,
+  CalendarPlus,
+  Check,
+  CheckCircle,
+  ShieldCheck,
+  IdCard,
 } from "lucide-react";
+
+import { AppointmentType } from "@repo/schema";
+import { formatDate } from "@/utils/helper";
+
 import { useApproveAppointment } from "../hooks/useApproveAppointment";
 import { useCompleteAppointment } from "../hooks/useCompleteAppointment";
+
 import AdminRescheduleAppointment from "./AdminAddNewAppointment";
 import { RejectAppointmentDialog } from "./RejectAppointmentDialog";
 import SessionReportDialog from "./SessionReportDialog";
 
-type Props = { appointment: AppointmentType };
+type Props = {
+  appointment: AppointmentType;
+};
+
+const appointmentTypes: Record<string, string> = {
+  online: "مشاوره آنلاین",
+  phone: "مشاوره تلفنی",
+};
+
+const contractStatuses: Record<string, string> = {
+  active: "فعال",
+  expired: "منقضی شده",
+};
+
 export default function AppointmentDataBox({ appointment }: Props) {
   const isOnline = appointment.type === "online";
-  const isPhone = appointment.type === "phone";
-  const { approveAppointment, isPending } = useApproveAppointment();
-  const { completeAppointment, isPending: isPending3 } =
-    useCompleteAppointment();
-
   const isCancelled = appointment.status === "cancelled";
+
   const isRescheduled =
     appointment.rescheduleReason || appointment.rescheduledBy;
 
+  const { approveAppointment, isPending } = useApproveAppointment();
+
+  const { completeAppointment, isPending: isPendingComplete } =
+    useCompleteAppointment();
+
+  const investor = appointment.investor;
+  const consultant = appointment.consultant;
+
   return (
-    <Card className="mt-2">
-      <CardHeader className="space-y-1">
+    <Card className="mt-2 overflow-hidden">
+      <CardHeader className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-1 text-muted-foreground">
-            <Clock className="size-4" />
-            <span className="text-200">
-              تاریخ ثبت درخواست مشاوره: {formatDate(appointment.createdAt)}
-            </span>
+          <div className="flex items-center gap-3">
+            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              {isOnline ? (
+                <Video className="size-5" />
+              ) : (
+                <Phone className="size-5" />
+              )}
+            </div>
+
+            <div>
+              <CardTitle className="text-lg">
+                {appointmentTypes[appointment.type] || "نوبت مشاوره"}
+              </CardTitle>
+
+              <CardDescription className="mt-1">
+                جزئیات مدیریتی نوبت مشاوره
+              </CardDescription>
+            </div>
           </div>
-          <AdminRescheduleAppointment
-            appointmentId={appointment._id}
-            userName={`${appointment.investor.firstName} ${appointment.investor.lastName}`}
-            currentDate={appointment.appointmentDate}
-            status={appointment.status}
-          />
+
+          {["pending", "approved"].includes(appointment.status) && (
+            <AdminRescheduleAppointment
+              appointmentId={appointment._id}
+              userName={`${investor.firstName} ${investor.lastName}`}
+              currentDate={appointment.appointmentDate}
+              status={appointment.status}
+            />
+          )}
         </div>
 
-        <div className="flex items-center gap-2">
-          {isOnline && <Video className="size-4 text-purple-600" />}
-          {isPhone && <Phone className="size-4 text-blue-600" />}
-          <span className="text-200">
-            {isOnline ? "مشاوره آنلاین" : "مشاوره تلفنی"}
-          </span>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-xs text-muted-foreground">
+            شناسه نوبت: {appointment._id.slice(0,6)}
+          </p>
         </div>
       </CardHeader>
 
       <Separator />
 
-      <CardContent className="space-y-4">
-        <div className="space-y-3">
-          <h3 className="text-200 font-semibold flex items-center gap-2">
-            <User className="size-4" />
-            اطلاعات کاربر
-          </h3>
+      <CardContent className="space-y-6 pt-6">
+        <section className="space-y-4">
+          <SectionTitle
+            icon={<UserRound className="size-5" />}
+            title="اطلاعات سرمایه‌گذار"
+          />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 rounded-lg">
-            <div className="flex items-center gap-2 text-200 bg-muted/20 rounded-lg px-3 py-2">
-              <User className="size-4 text-muted-foreground" />
-              <span className="text-muted-foreground">نام:</span>
-              <span className="font-medium">
-                {appointment.investor?.firstName}{" "}
-                {appointment.investor?.lastName || "نامشخص"}
-              </span>
-            </div>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <InfoItem
+              icon={<UserRound className="size-5" />}
+              label="نام و نام خانوادگی"
+              value={`${investor?.firstName || ""} ${investor?.lastName || ""}`}
+            />
 
-            <div className="flex items-center gap-2 text-200 bg-muted/20 rounded-lg px-3 py-2">
-              <Phone className="size-4 text-muted-foreground" />
-              <span className="text-muted-foreground">موبایل:</span>
-              <span className="font-medium dir-ltr">
-                {appointment.investor?.phoneNumber || "نامشخص"}
-              </span>
-            </div>
+            <InfoItem
+              icon={<Phone className="size-5" />}
+              label="شماره موبایل"
+              value={investor?.phoneNumber || "ثبت نشده"}
+            />
 
-            <div className="flex items-center gap-2 text-200 bg-muted/20 rounded-lg px-3 py-2">
-              <FileText className="size-4 text-muted-foreground" />
-              <span className="text-muted-foreground">کد ملی:</span>
-              <span className="font-medium font-mono">
-                {appointment.investor?.nationalCode || "نامشخص"}
-              </span>
-            </div>
+            <InfoItem
+              icon={<IdCard className="size-5" />}
+              label="کد ملی"
+              value={investor?.nationalCode || "ثبت نشده"}
+            />
+            <InfoItem
+              icon={<CalendarCheck className="size-5" />}
+              label="وضعیت قرارداد"
+              value={contractStatuses[investor?.contractStatus] || "نامشخص"}
+            />
           </div>
-        </div>
+        </section>
 
         <Separator />
 
-        <div className="space-y-3">
-          <h3 className="text-200 font-semibold flex items-center gap-2">
-            <Calendar className="size-4" />
-            اطلاعات جلسه مشاوره
-          </h3>
+        <section className="space-y-4">
+          <SectionTitle
+            icon={<CalendarDays className="size-5" />}
+            title="اطلاعات جلسه مشاوره"
+          />
 
-          <div className="grid grid-cols-1 gap-3 bg-muted/30 rounded-lg p-4">
-            <div className="flex items-center gap-2 text-200">
-              <Calendar className="size-4 text-muted-foreground" />
-              <span className="text-muted-foreground">تاریخ و زمان:</span>
-              <span className="font-medium">
-                {formatDate(appointment.appointmentDate)}
-              </span>
-            </div>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <InfoItem
+              icon={<CalendarDays className="size-5" />}
+              label="تاریخ جلسه"
+              value={formatDate(appointment.appointmentDate)}
+            />
 
-            {isRescheduled && (
-              <div>
-                <div className="flex items-start gap-2 text-200 text-yellow-600 dark:text-yellow-400 border-t border-yellow-200 dark:border-yellow-800 pt-3 mt-1">
-                  <ClockArrowUp className="size-4 shrink-0" />
-                  <span className="text-muted-foreground">تغییر زمان:</span>
-                  {appointment.rescheduleReason && (
-                    <span className="text-200">
-                      {appointment.rescheduleReason}
-                    </span>
-                  )}
-                </div>
-                <span className="text-muted-foreground">
-                  جلسه توسط تغییر کرد :
-                </span>
-                {appointment.rescheduledBy && (
-                  <span className="text-100 text-muted-foreground/70">
-                    {appointment.rescheduledBy?.firstName || ""}{" "}
-                    {appointment.rescheduledBy?.lastName || ""}
-                  </span>
-                )}
-              </div>
+            <InfoItem
+              icon={<Clock3 className="size-5" />}
+              label="ساعت جلسه"
+              value={
+                appointment.startAt && appointment.endAt
+                  ? `${appointment.startAt} تا ${appointment.endAt}`
+                  : appointment.startAt || "ثبت نشده"
+              }
+            />
+
+            <InfoItem
+              icon={
+                isOnline ? (
+                  <Video className="size-5" />
+                ) : (
+                  <Phone className="size-5" />
+                )
+              }
+              label="نوع مشاوره"
+              value={appointmentTypes[appointment.type] || "نامشخص"}
+            />
+
+            <InfoItem
+              icon={<UserCheck className="size-5" />}
+              label="مشاور اختصاص‌یافته"
+              value={
+                consultant
+                  ? `${consultant.firstName} ${consultant.lastName}`
+                  : "هنوز مشاوری تعیین نشده است"
+              }
+            />
+
+            {appointment.meetingLink && (
+              <InfoItem
+                icon={<Link2 className="size-5" />}
+                label="لینک جلسه"
+                value={
+                  <a
+                    href={appointment.meetingLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    ورود به جلسه
+                  </a>
+                }
+              />
             )}
           </div>
-        </div>
+        </section>
 
-        <div className="space-y-2">
-          <h3 className="text-200 font-semibold flex items-center gap-2">
-            <FileText className="size-4" />
-            توضیحات درخواست
-          </h3>
-          <div className="bg-muted/30 rounded-lg p-4 border-r-4 border-primary">
-            <p className="text-200 leading-relaxed">
-              {appointment.description || "توضیحاتی وارد نشده است"}
+        <Separator />
+
+        <section className="space-y-4">
+          <SectionTitle
+            icon={<FileText className="size-5" />}
+            title="توضیحات درخواست"
+          />
+
+          <div className="rounded-xl bg-muted/50 p-4">
+            <p className="text-sm leading-7">
+              {appointment.description || "توضیحاتی ثبت نشده است."}
             </p>
           </div>
-        </div>
+        </section>
+
+        <Separator />
+
+        <section className="space-y-4">
+          <SectionTitle
+            icon={<CalendarCheck className="size-5" />}
+            title="اطلاعات ثبت نوبت"
+          />
+
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <InfoItem
+              icon={<CalendarPlus className="size-5" />}
+              label="تاریخ ثبت درخواست"
+              value={formatDate(appointment.createdAt)}
+            />
+
+            <InfoItem
+              icon={<Clock3 className="size-5" />}
+              label="آخرین بروزرسانی"
+              value={formatDate(appointment.updatedAt)}
+            />
+          </div>
+        </section>
+
+        {isRescheduled && (
+          <>
+            <Separator />
+
+            <section className="space-y-4">
+              <SectionTitle
+                icon={<ClockArrowUp className="size-5" />}
+                title="اطلاعات تغییر زمان"
+              />
+
+              {appointment.rescheduleReason && (
+                <div className="space-y-2 rounded-xl bg-muted/50 p-4">
+                  <p className="text-sm text-muted-foreground">
+                    دلیل تغییر زمان
+                  </p>
+
+                  <p className="text-sm leading-7">
+                    {appointment.rescheduleReason}
+                  </p>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                {appointment.rescheduledBy && (
+                  <InfoItem
+                    icon={<UserRound className="size-5" />}
+                    label="تغییر داده شده توسط"
+                    value={`${appointment.rescheduledBy.firstName || ""} ${appointment.rescheduledBy.lastName || ""}`}
+                  />
+                )}
+
+                <InfoItem
+                  icon={<Clock3 className="size-5" />}
+                  label="تاریخ آخرین تغییر"
+                  value={formatDate(appointment.updatedAt)}
+                />
+              </div>
+            </section>
+          </>
+        )}
 
         {isCancelled && (
-          <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-4 space-y-2">
-            <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
-              <CircleX className="size-5" />
-              <h4 className="font-semibold text-200">جلسه کنسل شده</h4>
-            </div>
+          <>
+            <Separator />
 
-            {appointment.cancellationReason && (
-              <div className="pr-7">
-                <p className="text-200 text-red-700 dark:text-red-300 leading-relaxed">
-                  {appointment.cancellationReason}
+            <section className="space-y-4">
+              <SectionTitle
+                icon={<CircleX className="size-5" />}
+                title="اطلاعات لغو نوبت"
+              />
+
+              {appointment.cancellationReason && (
+                <div className="space-y-2 rounded-xl bg-destructive/5 p-4">
+                  <p className="text-sm text-muted-foreground">دلیل لغو نوبت</p>
+
+                  <p className="text-sm leading-7">
+                    {appointment.cancellationReason}
+                  </p>
+                </div>
+              )}
+
+              {appointment.cancelledBy && (
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                  <InfoItem
+                    icon={<UserX className="size-5" />}
+                    label="لغو شده توسط"
+                    value={`${appointment.cancelledBy.firstName || ""} ${appointment.cancelledBy.lastName || ""}`}
+                  />
+
+                  <InfoItem
+                    icon={<CalendarDays className="size-5" />}
+                    label="تاریخ لغو"
+                    value={formatDate(appointment.updatedAt)}
+                  />
+                </div>
+              )}
+            </section>
+          </>
+        )}
+
+        {appointment.status === "completed" && (
+          <>
+            <Separator />
+
+            <section className="space-y-4">
+              <SectionTitle
+                icon={<ShieldCheck className="size-5" />}
+                title="وضعیت جلسه"
+              />
+
+              <div className="rounded-xl bg-primary/5 p-4">
+                <p className="text-sm leading-7 text-muted-foreground">
+                  این جلسه با موفقیت تکمیل شده است. در صورت ثبت گزارش جلسه،
+                  می‌توانید آن را مشاهده کنید.
                 </p>
               </div>
-            )}
-
-            {appointment.cancelledBy && (
-              <div className="flex items-center gap-2 pr-7 text-200 text-red-500 dark:text-red-400/70">
-                <UserX className="size-3.5" />
-                <span>
-                  کنسل شده توسط:{" "}
-                  <span className="font-medium">
-                    {appointment.cancelledBy?.firstName || ""}{" "}
-                    {appointment.cancelledBy?.lastName || ""}
-                  </span>
-                </span>
-                <span className="w-1 h-1 rounded-full bg-red-300 dark:bg-red-600" />
-                <span>{formatDate(appointment.updatedAt)}</span>
-              </div>
-            )}
-          </div>
+            </section>
+          </>
         )}
       </CardContent>
 
       <Separator />
-      <CardFooter className="flex gap-2 w-full justify-end">
+
+      <CardFooter className="flex flex-wrap justify-end gap-2">
         {appointment.status === "pending" && (
           <>
             <RejectAppointmentDialog appointmentId={appointment._id} />
+
             <Button
               onClick={() => approveAppointment(appointment._id)}
               disabled={isPending}
-              className="w-1/2 md:w-fit"
             >
               <CheckCircle className="size-4" />
               تایید جلسه
             </Button>
           </>
         )}
+
         {appointment.status === "approved" && (
           <Button
             onClick={() => completeAppointment(appointment._id)}
-            disabled={isPending3}
-            className="w-1/2 md:w-fit"
+            disabled={isPendingComplete}
           >
             <Check className="size-4" />
             جلسه انجام شد
           </Button>
         )}
+
         {appointment.status === "completed" && (
           <SessionReportDialog
             appointmentId={appointment._id}
-            userName={`${appointment.investor.firstName} ${appointment.investor.lastName}`}
-            userId={appointment.investor._id}
+            userName={`${investor.firstName} ${investor.lastName}`}
+            userId={investor._id}
           />
         )}
       </CardFooter>

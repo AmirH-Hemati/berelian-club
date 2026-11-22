@@ -1,3 +1,4 @@
+import type { ClientSession } from "mongoose";
 import { ConversationModel } from "../../models/conversation.model.js";
 
 import { AppError } from "../../utils/AppError.js";
@@ -145,14 +146,16 @@ export class ConversationService {
     );
   }
 
-  async findByRequest(requestId: string) {
+  async findByRequest(requestId: string, session?: ClientSession) {
     return ConversationModel.findOne({
       request: requestId,
-    });
+    }).session(session ?? null);
   }
 
-  async deleteConversation(conversationId: string) {
-    return ConversationModel.findByIdAndDelete(conversationId);
+  async deleteConversation(conversationId: string, session?: ClientSession) {
+    return ConversationModel.findByIdAndDelete(conversationId).session(
+      session ?? null,
+    );
   }
 
   private assertAccess(conversation: any, userId: string, isAdmin: boolean) {

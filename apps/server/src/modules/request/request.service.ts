@@ -10,6 +10,7 @@ import type { NotificationService } from "../notification/notification.service.j
 import type { Types } from "mongoose";
 import type { UserService } from "../user/user.service.js";
 import type { UserDocument, UserRole } from "../../models/user.model.js";
+import mongoose from "mongoose";
 
 export const REQUEST_TYPE_LABELS = {
   renew_contract: "تمدید قرارداد",
@@ -429,17 +430,35 @@ export class RequestService {
       count: item.count,
     }));
   }
+
   async deleteRequest(request: RequestDocument) {
-    const conversation = await this.conversationService.findByRequest(
-      request._id.toString(),
-    );
+    const session = await mongoose.startSession();
 
-    if (conversation) {
-      await this.conversationService.deleteConversation(
-        conversation._id.toString(),
+    try {
+      session.startTransaction();
+
+      const conversation = await this.conversationService.findByRequest(
+        request._id.toString(),
+        session,
       );
-    }
 
-    await request.deleteOne();
+      if (conversation) {
+        await this.conversationService.deleteConversation(
+          conversation._id.toString(),
+          session,
+        );
+      }
+
+      await request.deleteOne({ session });
+
+      await session.commitTransaction();
+    } catch (error) {
+      if (session.inTransaction()) {
+        await session.abortTransaction();
+      }
+      throw error;
+    } finally {
+      await session.endSession();
+    }
   }
 }
