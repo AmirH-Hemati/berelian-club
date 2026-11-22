@@ -9,6 +9,7 @@ import { MessageSquareText } from "lucide-react";
 interface ChatNotificationPayload {
   _id: string;
   conversationId: string;
+  requestId: string;
   sender: {
     firstName: string;
     lastName: string;
@@ -29,9 +30,8 @@ export function useChatNotifications() {
       const isAccountPanel = pathname.startsWith("/account");
 
       const chatPath = isAccountPanel
-        ? `/account/chat/${notification.conversationId}`
-        : `/chat/${notification.conversationId}`;
-
+        ? `/account/chat/${notification.requestId}`
+        : `/chat/${notification.requestId}`;
       if (pathname === chatPath) return;
 
       const senderName = `${notification.sender.firstName} ${notification.sender.lastName}`;

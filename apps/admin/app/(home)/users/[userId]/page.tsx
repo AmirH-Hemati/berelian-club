@@ -29,6 +29,8 @@ export default function Page() {
     isLoading: requestsLoading,
     isError: requestsError,
     refetch: refetchRequests,
+    error : requestsObjectError
+
   } = useUserRequests(user?._id ?? "");
 
   const {
@@ -36,6 +38,7 @@ export default function Page() {
     isLoading: appointmentsLoading,
     isError: appointmentsError,
     refetch: refetchAppointments,
+     error : appointmentsObjectError
   } = useUserAppointments(user?._id ?? "");
 
   if (isLoading) return <Spinner />;
@@ -89,7 +92,9 @@ export default function Page() {
           title="درخواست‌های کاربر"
           emptyTitle="هیچ درخواستی ثبت نشده است"
           emptyDescription="این کاربر هنوز درخواستی ثبت نکرده است."
+          error={requestsObjectError}
         />
+
 
         <AppointmentList
           appointments={appointments}
@@ -97,6 +102,7 @@ export default function Page() {
           isError={appointmentsError}
           refetch={refetchAppointments}
           title="نوبت‌های مشاوره اخیر"
+          error={appointmentsObjectError}
         />
       </div>
     </div>

@@ -11,7 +11,7 @@ import ScreenShots from "./ScreenShots";
 export function FeatureSlider() {
   return (
     <ActiveProvider itemsCount={4}>
-      <div className="relative space-y-12">
+      <div className="relative space-y-12" id="features">
         <div className="grid grid-cols-1 md:grid-cols-2  gap-16 items-center">
           <TitleSection />
           <SubtitleSection />

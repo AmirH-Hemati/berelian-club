@@ -12,7 +12,7 @@ import { upload } from "../../config/multer.config.js";
 const router = express.Router();
 
 router.use(protectedRoute);
-router.use(restrictTo("admin"));
+router.use(restrictTo("admin" , "consultant"));
 
 router.get("/downloadById/:id", downloadFileById);
 router.route("/").get(getAllFiles).post(upload.single("file"), uploadFile);

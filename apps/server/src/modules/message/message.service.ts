@@ -63,6 +63,7 @@ export class MessageService {
       "chat:notification",
       {
         _id: message._id.toString(),
+        requestId: conversation.request,
         conversationId,
         sender: message.sender,
         content: message.content,

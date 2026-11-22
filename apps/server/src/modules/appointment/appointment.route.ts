@@ -28,7 +28,7 @@ router.use(protectedRoute);
 
 router
   .route("/")
-  .get(restrictTo("admin", "consultant"), getAppointments)
+  .get(restrictTo("admin", "consultant" , "reception"), getAppointments)
   .post(
     convertDateFields(["appointmentDate"]),
     validateZod(createAppointmentSchema),

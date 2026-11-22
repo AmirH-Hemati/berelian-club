@@ -8,10 +8,11 @@ export function useUserRequests(userId: string) {
     isLoading,
     isError,
     refetch,
+    error,
   } = useQuery({
     queryKey: ["userRequests", userId],
     queryFn: () => getUserRequests(userId as string),
   });
 
-  return { requests: data ?? [], isLoading, isError, refetch };
+  return { requests: data ?? [], isLoading, isError, refetch, error };
 }

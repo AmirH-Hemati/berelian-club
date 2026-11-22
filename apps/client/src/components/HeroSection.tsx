@@ -4,7 +4,7 @@ import LoginHeroButton from "./LoginHeroButton";
 
 export default function HeroSection() {
   return (
-    <section>
+    <section id="loginInYourAccount">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-start">
         <div className="space-y-6 flex flex-col items-center md:items-start">
           <h1 className="text-800 font-extrabold tracking-tight leading-[1.2]">

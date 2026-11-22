@@ -27,7 +27,7 @@ router.use(protectedRoute);
 
 router
   .route("/")
-  .get(restrictTo("admin", "reception"), getRequests)
+  .get(restrictTo("admin", "reception" , "consultant"), getRequests)
   .post(validateZod(createRequestSchema), setRequestUserId, createRequest);
 
 router.get("/myRequests", getUserRequests);

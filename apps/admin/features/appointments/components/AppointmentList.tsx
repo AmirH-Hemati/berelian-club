@@ -25,6 +25,7 @@ import {
 
 import AsyncState from "@/components/AsyncState";
 import { formatDate } from "@/utils/helper";
+import { AxiosError } from "axios";
 
 export const appointmentTypesMap = {
   phone: {
@@ -46,6 +47,7 @@ interface AppointmentListProps {
   emptyTitle?: string;
   emptyDescription?: string;
   mode?: "pending" | "today";
+  error?: AxiosError<{ message?: string }> | Error | null;
 }
 
 export default function AppointmentList({
@@ -54,6 +56,7 @@ export default function AppointmentList({
   isError,
   refetch,
   title = "جلسات مشاوره",
+  error,
   emptyTitle = "جلسه‌ای وجود ندارد",
   emptyDescription = "در حال حاضر جلسه‌ای برای نمایش وجود ندارد.",
   mode = "pending",
@@ -100,6 +103,7 @@ export default function AppointmentList({
           emptyTitle={emptyTitle}
           emptyDescription={emptyDescription}
           emptyIcon={CalendarDays}
+          error={error}
         >
           <ScrollArea className="h-80 pl-2">
             <div className="space-y-2">

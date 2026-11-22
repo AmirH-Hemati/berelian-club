@@ -50,7 +50,7 @@ const faqs = [
 
 export default function FAQ() {
   return (
-    <section className="space-y-6">
+    <section className="space-y-6" id="questions">
       <div className="space-y-3">
         <div className="flex items-center gap-2 ">
           <HelpCircle className="size-6 text-primary" />

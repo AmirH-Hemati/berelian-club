@@ -46,6 +46,8 @@ interface RequestListProps {
   emptyTitle?: string;
   emptyDescription?: string;
   newRequest?: boolean;
+    error?: AxiosError<{ message?: string }> | Error | null;
+  
 }
 
 export default function RequestList({
@@ -53,6 +55,7 @@ export default function RequestList({
   isLoading,
   isError,
   refetch,
+  error,
   title = "درخواست‌های اخیر",
   emptyTitle = "درخواستی وجود ندارد",
   emptyDescription = "در حال حاضر درخواستی برای نمایش وجود ندارد.",
@@ -94,6 +97,7 @@ export default function RequestList({
           emptyTitle={emptyTitle}
           emptyDescription={emptyDescription}
           emptyIcon={FileQuestion}
+          error={error}
         >
           <ScrollArea className="h-80 pl-2">
             <div className="space-y-2">

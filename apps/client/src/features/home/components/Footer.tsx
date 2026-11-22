@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone, TrendingUp } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -53,7 +53,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/auth"
+                  href="#loginInYourAccount"
                   className="hover:text-foreground transition-colors"
                 >
                   عضویت در باشگاه
@@ -61,7 +61,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="#blogs"
                   className="hover:text-foreground transition-colors"
                 >
                   وبلاگ و مقالات
@@ -69,7 +69,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="#questions"
                   className="hover:text-foreground transition-colors"
                 >
                   سوالات متداول
@@ -83,11 +83,11 @@ export default function Footer() {
             <ul className="space-y-3 text-200 text-muted-foreground">
               <li className="flex items-center gap-3">
                 <Phone className="h-4 w-4 shrink-0" />
-                <span>۰۲۱-۱۲۳۴۵۶۷۸</span>
+                <span>31306870 031</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-4 w-4 shrink-0" />
-                <span>info@club.com</span>
+                <span>info@ berelianpm.com</span>
               </li>
               <li className="flex items-center gap-3">
                 <MapPin className="h-4 w-4 shrink-0" />

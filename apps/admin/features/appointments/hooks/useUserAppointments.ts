@@ -7,11 +7,11 @@ export function useUserAppointments(userId: string) {
     data = [],
     isLoading,
     isError,
-    refetch,
+    refetch, error
   } = useQuery({
     queryKey: ["userAppointments", userId],
     queryFn: () => getUserAppointments(userId as string),
   });
 
-  return { appointments: data ?? [], isLoading, isError, refetch };
+  return { appointments: data ?? [], isLoading, isError, refetch ,error };
 }

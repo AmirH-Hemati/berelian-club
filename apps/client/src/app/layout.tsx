@@ -35,7 +35,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fa" dir="rtl" suppressHydrationWarning>
+    <html
+      lang="fa"
+      dir="rtl"
+      suppressHydrationWarning
+      className="scroll-smooth"
+    >
       <body
         suppressHydrationWarning
         className={cn(vazirmatn.className, "antialiased")}
