@@ -13,8 +13,8 @@ import { SidebarTrigger } from "@repo/ui";
 import { useLogout, useUser } from "@repo/auth";
 import { Spinner } from "@repo/ui";
 import NotificationsDropdown from "../features/notifications/components/NotificationsDropdown";
-import { useNotificationEvents } from "@/features/notifications/hooks/useNotificationEvents";
 import Link from "next/link";
+import { Suspense } from "react";
 export default function Navbar() {
   const { user, isLoading } = useUser();
   const { setTheme } = useTheme();
@@ -34,7 +34,10 @@ export default function Navbar() {
 
       <div className="flex items-center gap-2 md:gap-4">
         {/* Notifications  */}
-        <NotificationsDropdown />
+        <Suspense fallback={<Spinner />}>
+          <NotificationsDropdown />
+        </Suspense>
+
         {/* theme */}
 
         <DropdownMenu>

@@ -19,7 +19,7 @@ export const formatTimeOnly = (date: Date | string) => {
   });
 };
 
-export function formatDate(date?: string) {
+export function formatDate(date?: string | Date) {
   if (!date) return "—";
 
   const parsedDate = new Date(date);

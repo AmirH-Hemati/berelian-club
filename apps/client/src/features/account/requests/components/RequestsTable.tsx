@@ -15,23 +15,21 @@ import {
   Button,
   TableSkeleton,
   StatusBadge,
-  AlertDialog,
-  AlertDialogTrigger,
 } from "@repo/ui";
 
 import { PaginationControls } from "@/components/PaginationControls";
 
-import { MoreHorizontalIcon, MessageCircle, Eye, Trash2 } from "lucide-react";
+import { MoreHorizontalIcon, MessageCircle, Eye } from "lucide-react";
 import Link from "next/link";
 
 import { typesMap } from "../data/typesMap";
-import { useDeleteRequest } from "../hooks/useDeleteRequest";
 import { useRequests } from "../hooks/useRequests";
 
 import Typebadge from "./Typebadge";
 import ReceptionInfo from "./ReceptionInfo";
 import { convertDate } from "@/utils/helper";
 import { DeleteRequestDialog } from "./DeleteRequestDialog";
+import { RequestType } from "@repo/schema";
 
 export default function RequestsTable() {
   const { requests, pagination, isLoading, isError, error, refetch } =
@@ -113,7 +111,7 @@ export default function RequestsTable() {
                 </TableCell>
               </TableRow>
             ) : (
-              requests?.map((request) => (
+              requests?.map((request: RequestType) => (
                 <TableRow
                   key={request._id}
                   className="transition-colors hover:bg-muted/30"
@@ -135,7 +133,9 @@ export default function RequestsTable() {
                   </TableCell>
 
                   <TableCell className="px-4 py-4">
-                    {convertDate(request.completedAt)}
+                    {request.completedAt
+                      ? convertDate(request.completedAt)
+                      : "تکمیل نشده است"}
                   </TableCell>
 
                   <TableCell className="px-4 py-4">
@@ -182,7 +182,7 @@ export default function RequestsTable() {
                             <>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem asChild>
-                              <DeleteRequestDialog
+                                <DeleteRequestDialog
                                   fullWidth
                                   requestId={request._id}
                                 />

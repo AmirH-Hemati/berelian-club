@@ -123,7 +123,7 @@ export const getUserAppointmentsController = CatchError(
 
 export const getUserAppointmentsByParamsController = CatchError(
   async (req: Request, res: Response) => {
-    const userId = req.params.id;
+    const userId = req.params.id as string;
 
     const { appointments, pagination } =
       await appointmentService.getUserAppointments(userId, req.query);

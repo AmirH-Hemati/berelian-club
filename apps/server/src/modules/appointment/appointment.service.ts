@@ -38,8 +38,16 @@ export class AppointmentService {
   private validateBusinessHours(startAt: string) {
     const [hour, minute] = startAt.split(":").map(Number);
 
-    if (hour < 9 || hour > 15 || minute !== 0) {
-      throw new Error("ساعت انتخاب شده خارج از ساعات کاری است");
+    if (
+      hour === undefined ||
+      minute === undefined ||
+      !Number.isInteger(hour) ||
+      !Number.isInteger(minute) ||
+      hour < 9 ||
+      hour > 15 ||
+      minute !== 0
+    ) {
+      throw new AppError("ساعت انتخاب شده خارج از ساعات کاری است", 400);
     }
   }
 

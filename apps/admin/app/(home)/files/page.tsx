@@ -1,20 +1,18 @@
 "use client";
 
-import { DataTable } from "@/components/DataTable";
+import PageSpinner from "@/components/PageSpinner";
 import SearchFilter from "@/components/SearchFilter";
 
 import AddNewFile from "@/features/files/components/AddNewFile";
-import { columns } from "@/features/files/components/columns";
+import FilesTable from "@/features/files/components/FilesTable";
 import { SendFileToAllModal } from "@/features/files/components/SendFileToAllModal";
-import { useFiles } from "@/features/files/hooks/useFiles";
 import FilterButton from "@/features/filters/components/FilterButton";
 import { fileFiltersConfig } from "@/features/filters/config/filters.config";
 
 import { Files } from "lucide-react";
+import { Suspense } from "react";
 
 export default function Page() {
-  const { files, isLoading, pagination, isError, refetch, error } = useFiles();
-
   return (
     <div className="mt-5 space-y-5">
       {/* Header */}
@@ -47,19 +45,9 @@ export default function Page() {
       </div>
 
       {/* Files Table */}
-      <DataTable
-        columns={columns}
-        data={files ?? []}
-        currentPage={pagination?.page ?? 1}
-        totalPages={pagination?.totalPages ?? 1}
-        limit={pagination?.limit ?? 10}
-        isLoading={isLoading}
-        isError={isError}
-        onRetry={refetch}
-        errorMessage={
-          error?.response?.data?.message || "دریافت فایل‌ها با خطا مواجه شد."
-        }
-      />
+      <Suspense fallback={<PageSpinner />}>
+        <FilesTable />
+      </Suspense>
     </div>
   );
 }

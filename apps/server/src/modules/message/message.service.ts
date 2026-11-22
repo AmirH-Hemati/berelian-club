@@ -158,6 +158,7 @@ export class MessageService {
     conversationId: string,
     senderId: string,
     fileId: string,
+    isAdmin: boolean,
   ) {
     const file = await FileModel.findById(fileId);
 
@@ -169,20 +170,21 @@ export class MessageService {
       await this.conversationService.getActiveConversationForParticipant(
         conversationId,
         senderId,
+        isAdmin,
       );
 
-    const receiverId = conversation.participants.find(
+    const receiver = conversation.participants.find(
       (participant) => participant._id.toString() !== senderId,
     );
 
-    if (!receiverId) {
+    if (!receiver) {
       throw new AppError("گیرنده یافت نشد", 404);
     }
 
     const message = await MessageModel.create({
       conversation: conversationId,
       sender: senderId,
-      receiver: receiverId,
+      receiver: receiver._id,
       content: file.originalName,
       type: "file",
       file: file._id,
@@ -204,17 +206,24 @@ export class MessageService {
       message._id.toString(),
     );
 
-    // const receiverSocketId = this.socketService.isUserOnline(
-    //   receiverId.toString(),
-    // );
-
-    // if (receiverSocketId) {
-    // }
     this.socketService.emitNewMessage(conversationId, message);
+
+    this.socketService.emitToUser(
+      receiver._id.toString(),
+      "chat:notification",
+      {
+        _id: message._id.toString(),
+        requestId: conversation.request,
+        conversationId,
+        sender: message.sender,
+        content: message.content,
+        createdAt: message.createdAt,
+      },
+    );
 
     return {
       message,
-      receiverId,
+      receiverId: receiver._id,
     };
   }
 

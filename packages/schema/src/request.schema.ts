@@ -29,12 +29,15 @@ export interface RequestType extends CreateRequestTypes {
     _id: string;
     firstName: string;
     lastName: string;
+    photo: string;
   } | null;
+  assignedAt: Date | null;
   type:
     "consultation" | "renew_contract" | "increase_capital" | "decrease_capital";
   status: "pending" | "approved" | "completed" | "cancelled";
   cancellationReason?: string;
   cancelledBy?: { firstName: string; lastName: string };
+  completedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }

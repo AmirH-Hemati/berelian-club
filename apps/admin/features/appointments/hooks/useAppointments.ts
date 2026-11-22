@@ -2,7 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { getAppointments } from "../services/appointmentServices";
 import { useTableQuery } from "@/hooks/useTableQuery";
 import { useSearchParams } from "next/navigation";
-
+import { AxiosError } from "axios";
+type ApiError = {
+  message: string;
+};
 export function useAppointments() {
   const searchParams = useSearchParams();
   const tableQuery = useTableQuery();
@@ -34,6 +37,7 @@ export function useAppointments() {
     isLoading,
     isError,
     refetch,
-    error,
+
+    error: error as AxiosError<ApiError> | null,
   };
 }

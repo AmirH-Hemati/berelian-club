@@ -117,7 +117,7 @@ export default function AppointmentList({
 
                 const Icon = config.icon;
 
-                const user = appointment.user as unknown as {
+                const user = appointment.investor as unknown as {
                   firstName?: string;
                   lastName?: string;
                 };

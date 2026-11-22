@@ -1,18 +1,15 @@
 "use client";
 
-import { DataTable } from "@/components/DataTable";
 import SearchFilter from "@/components/SearchFilter";
-import { columns } from "@/features/followUps/components/columns";
-import { useFollowUps } from "@/features/followUps/hooks/useFollowUps";
 import { ClipboardCheck } from "lucide-react";
 import { followupFiltersConfig } from "@/features/filters/config/filters.config";
 import FilterButton from "@/features/filters/components/FilterButton";
 import { useGetConsultant } from "@/features/users/hooks/useGetConsultant";
+import FollowUpsTable from "@/features/followUps/components/FollowUpsTable";
+import PageSpinner from "@/components/PageSpinner";
+import { Suspense } from "react";
 
 export default function Page() {
-  const { followUps, pagination, isLoading, isError, refetch, error } =
-    useFollowUps();
-
   const { consultants, isLoading: consultantsLoading } = useGetConsultant();
 
   const filterOptions = {
@@ -54,19 +51,9 @@ export default function Page() {
       </div>
 
       {/* Follow Ups Table */}
-      <DataTable
-        columns={columns}
-        data={followUps ?? []}
-        currentPage={pagination?.page ?? 1}
-        totalPages={pagination?.totalPages ?? 1}
-        limit={pagination?.limit ?? 10}
-        isLoading={isLoading}
-        isError={isError}
-        onRetry={refetch}
-        errorMessage={
-          error?.response?.data?.message || "دریافت پیگیری‌ها با خطا مواجه شد."
-        }
-      />
+      <Suspense fallback={<PageSpinner />}>
+        <FollowUpsTable />
+      </Suspense>
     </div>
   );
 }

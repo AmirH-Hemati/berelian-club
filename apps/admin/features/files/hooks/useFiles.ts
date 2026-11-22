@@ -3,7 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { getFiles } from "../services/uploadServices";
 import { useTableQuery } from "@/hooks/useTableQuery";
 import { useSearchParams } from "next/navigation";
-
+import { AxiosError } from "axios";
+type ApiError = {
+  message: string;
+};
 export function useFiles() {
   const searchParams = useSearchParams();
   const tableQuery = useTableQuery();
@@ -32,6 +35,6 @@ export function useFiles() {
     isLoading,
     isError,
     refetch,
-    error,
+    error: error as AxiosError<ApiError> | null,
   };
 }

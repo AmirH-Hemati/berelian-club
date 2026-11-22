@@ -47,12 +47,15 @@ export const getMessages = CatchError(async (req: Request, res: Response) => {
 
 export const sendFileMessage = CatchError(
   async (req: Request, res: Response) => {
-    const senderId = (req.user as UserDocument)._id.toString();
+    const user = req.user as UserDocument;
+    const senderId = user._id.toString();
+    const isAdmin = user.role === "admin";
 
     const { message } = await messageService.sendFileMessage(
       req.params.conversationId as string,
       senderId,
       req.body.fileId,
+      isAdmin,
     );
 
     return res.status(201).json({

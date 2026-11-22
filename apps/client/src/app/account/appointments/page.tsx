@@ -8,7 +8,6 @@ export default function Page() {
     <div className="mt-4">
       <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
         <AppointmentsHeader />
-
         <Suspense fallback={<Spinner />}>
           <AppointmentsTable />
         </Suspense>

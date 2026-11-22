@@ -49,9 +49,16 @@ interface PerformanceChartProps {
   consultantPerformance?: ConsultantPerformance[];
   isLoading?: boolean;
 }
+type PerformanceChartData = {
+  id: string;
+  name: string;
+  firstMetric: number;
+  completed: number;
+  thirdMetric: number;
+};
 
 const receptionConfig = {
-  assigned: {
+  firstMetric: {
     label: "تخصیص‌یافته",
     color: "#3B82F6",
   },
@@ -59,14 +66,14 @@ const receptionConfig = {
     label: "تکمیل‌شده",
     color: "#10B981",
   },
-  inProgress: {
+  thirdMetric: {
     label: "در حال رسیدگی",
     color: "#F59E0B",
   },
 } satisfies ChartConfig;
 
 const consultantConfig = {
-  appointments: {
+  firstMetric: {
     label: "کل جلسات ماه",
     color: "#3B82F6",
   },
@@ -74,7 +81,7 @@ const consultantConfig = {
     label: "تکمیل‌شده",
     color: "#10B981",
   },
-  approved: {
+  thirdMetric: {
     label: "تأییدشده",
     color: "#F59E0B",
   },
@@ -91,23 +98,23 @@ export default function PerformanceChart({
 
   const isReception = selectedGroup === "reception";
 
-  const chartData = useMemo(() => {
+  const chartData = useMemo<PerformanceChartData[]>(() => {
     if (isReception) {
       return receptionPerformance.map(({ user, stats }) => ({
         id: user._id,
         name: `${user.firstName} ${user.lastName}`,
-        assigned: stats.monthlyAssigned,
+        firstMetric: stats.monthlyAssigned,
         completed: stats.monthlyCompleted,
-        inProgress: stats.inProgress,
+        thirdMetric: stats.inProgress,
       }));
     }
 
     return consultantPerformance.map(({ user, stats }) => ({
       id: user._id,
       name: `${user.firstName} ${user.lastName}`,
-      appointments: stats.monthlyAppointments,
+      firstMetric: stats.monthlyAppointments,
       completed: stats.monthlyCompleted,
-      approved: stats.monthlyApproved,
+      thirdMetric: stats.monthlyApproved,
     }));
   }, [isReception, receptionPerformance, consultantPerformance]);
 
@@ -200,44 +207,25 @@ export default function PerformanceChart({
               />
 
               <ChartLegend content={<ChartLegendContent />} />
+              <>
+                <Bar
+                  dataKey="firstMetric"
+                  fill="var(--color-firstMetric)"
+                  radius={[0, 4, 4, 0]}
+                />
 
-              {isReception ? (
-                <>
-                  <Bar
-                    dataKey="assigned"
-                    fill="var(--color-assigned)"
-                    radius={[0, 4, 4, 0]}
-                  />
-                  <Bar
-                    dataKey="completed"
-                    fill="var(--color-completed)"
-                    radius={[0, 4, 4, 0]}
-                  />
-                  <Bar
-                    dataKey="inProgress"
-                    fill="var(--color-inProgress)"
-                    radius={[0, 4, 4, 0]}
-                  />
-                </>
-              ) : (
-                <>
-                  <Bar
-                    dataKey="appointments"
-                    fill="var(--color-appointments)"
-                    radius={[0, 4, 4, 0]}
-                  />
-                  <Bar
-                    dataKey="completed"
-                    fill="var(--color-completed)"
-                    radius={[0, 4, 4, 0]}
-                  />
-                  <Bar
-                    dataKey="approved"
-                    fill="var(--color-approved)"
-                    radius={[0, 4, 4, 0]}
-                  />
-                </>
-              )}
+                <Bar
+                  dataKey="completed"
+                  fill="var(--color-completed)"
+                  radius={[0, 4, 4, 0]}
+                />
+
+                <Bar
+                  dataKey="thirdMetric"
+                  fill="var(--color-thirdMetric)"
+                  radius={[0, 4, 4, 0]}
+                />
+              </>
             </BarChart>
           </ChartContainer>
         )}

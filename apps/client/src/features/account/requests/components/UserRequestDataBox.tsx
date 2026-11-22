@@ -44,7 +44,6 @@ const contractStatuses: Record<string, string> = {
 };
 
 export default function UserRequestDataBox({ request }: Props) {
-
   const investor = request.investor;
 
   return (
@@ -137,7 +136,9 @@ export default function UserRequestDataBox({ request }: Props) {
             <InfoItem
               icon={<CalendarCheck className="size-5" />}
               label="وضعیت قرارداد"
-              value={contractStatuses[investor?.contractStatus] || "نامشخص"}
+              value={
+                contractStatuses[investor?.contractStatus ?? ""] || "نامشخص"
+              }
             />
 
             <InfoItem

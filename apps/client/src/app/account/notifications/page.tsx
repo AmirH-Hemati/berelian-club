@@ -1,4 +1,6 @@
+import Spinner from "@/components/spinner/Spinner";
 import NotificationsList from "@/features/account/notifications/components/NotificationsList";
+import { Suspense } from "react";
 
 export default function NotificationsPage() {
   return (
@@ -9,8 +11,9 @@ export default function NotificationsPage() {
           تمام پیام‌ها و رویدادهای مرتبط با حساب کاربری شما
         </p>
       </div>
-
-      <NotificationsList />
+      <Suspense fallback={<Spinner />}>
+        <NotificationsList />
+      </Suspense>
     </div>
   );
 }

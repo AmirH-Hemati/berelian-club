@@ -18,6 +18,7 @@ import Link from "next/link";
 import NotificationsDropdown from "../account/notifications/components/NotificationsDropdown";
 import { useLogout, useUser } from "@repo/auth";
 import { LogOut, Moon, Sun, User } from "lucide-react";
+import { Suspense } from "react";
 
 export default function Navbar() {
   const { user, isLoading, isError } = useUser();
@@ -34,7 +35,9 @@ export default function Navbar() {
       <SidebarTrigger />
       <div className="flex items-center gap-2 md:gap-3">
         {/* notifications */}
-        <NotificationsDropdown />
+        <Suspense fallback={<Spinner />}>
+          <NotificationsDropdown />
+        </Suspense>
         {/* toggle theme */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

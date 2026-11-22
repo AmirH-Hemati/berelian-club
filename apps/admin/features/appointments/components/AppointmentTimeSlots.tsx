@@ -1,8 +1,9 @@
-import { createAppointmentTypes } from "@repo/schema";
 import { Button } from "@repo/ui";
-import { Controller, Control, FieldValues } from "react-hook-form";
+import { Controller, Control, FieldValues, Path } from "react-hook-form";
 
-interface AppointmentTimeSlotsProps<T extends FieldValues> {
+interface AppointmentTimeSlotsProps<
+  T extends FieldValues & { startAt: string },
+> {
   control: Control<T>;
   disabled?: boolean;
 }
@@ -16,13 +17,14 @@ const timeSlots = [
   "14:00",
   "15:00",
 ];
-function AppointmentTimeSlots<T extends FieldValues>({
+
+function AppointmentTimeSlots<T extends FieldValues & { startAt: string }>({
   control,
   disabled = false,
 }: AppointmentTimeSlotsProps<T>) {
   return (
     <Controller
-      name="startAt"
+      name={"startAt" as Path<T>}
       control={control}
       render={({ field, fieldState }) => (
         <div className="space-y-3">

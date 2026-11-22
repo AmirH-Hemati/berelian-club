@@ -1,18 +1,15 @@
 "use client";
 
-import { DataTable } from "@/components/DataTable";
+import PageSpinner from "@/components/PageSpinner";
 import FilterButton from "@/features/filters/components/FilterButton";
 import { requestFiltersConfig } from "@/features/filters/config/filters.config";
-import { columns } from "@/features/requests/components/columns";
-import { useRequests } from "@/features/requests/hooks/useRequests";
+import RequestsTable from "@/features/requests/components/RequestsTable";
 import { useGetInvestors } from "@/features/users/hooks/useGetInvestors";
 import { useGetReceptions } from "@/features/users/hooks/useGetReceptions";
 import { ClipboardList } from "lucide-react";
+import { Suspense } from "react";
 
 export default function Page() {
-  const { requests, pagination, isLoading, isError, refetch, error } =
-    useRequests();
-
   const { investors, isLoading: investorsLoading } = useGetInvestors();
   const { receptions, isLoading: receptionsLoading } = useGetReceptions();
 
@@ -66,19 +63,9 @@ export default function Page() {
       </div> */}
 
       {/* Requests Table */}
-      <DataTable
-        columns={columns}
-        data={requests ?? []}
-        currentPage={pagination?.page ?? 1}
-        totalPages={pagination?.totalPages ?? 1}
-        limit={pagination?.limit ?? 10}
-        isLoading={isLoading}
-        isError={isError}
-        onRetry={refetch}
-        errorMessage={
-          error?.response?.data?.message || "دریافت درخواست‌ها با خطا مواجه شد."
-        }
-      />
+      <Suspense fallback={<PageSpinner />}>
+        <RequestsTable />
+      </Suspense>
     </div>
   );
 }

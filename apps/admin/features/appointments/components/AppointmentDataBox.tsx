@@ -109,7 +109,7 @@ export default function AppointmentDataBox({ appointment }: Props) {
 
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground">
-            شناسه نوبت: {appointment._id.slice(0,6)}
+            شناسه نوبت: {appointment._id.slice(0, 6)}
           </p>
         </div>
       </CardHeader>
@@ -144,7 +144,9 @@ export default function AppointmentDataBox({ appointment }: Props) {
             <InfoItem
               icon={<CalendarCheck className="size-5" />}
               label="وضعیت قرارداد"
-              value={contractStatuses[investor?.contractStatus] || "نامشخص"}
+              value={
+                contractStatuses[investor?.contractStatus ?? ""] || "نامشخص"
+              }
             />
           </div>
         </section>

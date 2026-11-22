@@ -1,19 +1,16 @@
 "use client";
 
-import { DataTable } from "@/components/DataTable";
-import { columns } from "@/features/appointments/components/columns";
-import { useAppointments } from "@/features/appointments/hooks/useAppointments";
+import PageSpinner from "@/components/PageSpinner";
+import AppointmentsTable from "@/features/appointments/components/AppointmentsTable";
 import FilterButton from "@/features/filters/components/FilterButton";
 import { appointmentFiltersConfig } from "@/features/filters/config/filters.config";
 import { useGetConsultant } from "@/features/users/hooks/useGetConsultant";
 import { useGetInvestors } from "@/features/users/hooks/useGetInvestors";
 
 import { CalendarDays } from "lucide-react";
+import { Suspense } from "react";
 
 export default function Page() {
-  const { appointments, pagination, isLoading, isError, refetch, error } =
-    useAppointments();
-
   const { investors, isLoading: investorsLoading } = useGetInvestors();
   const { consultants, isLoading: consultantsLoading } = useGetConsultant();
 
@@ -70,17 +67,9 @@ export default function Page() {
       </div> */}
 
       {/* Appointments Table */}
-      <DataTable
-        columns={columns}
-        data={appointments ?? []}
-        currentPage={pagination?.page ?? 1}
-        totalPages={pagination?.totalPages ?? 1}
-        limit={pagination?.limit ?? 10}
-        isLoading={isLoading}
-        isError={isError}
-        onRetry={refetch}
-        errorMessage={error?.response?.data?.message as string}
-      />
+      <Suspense fallback={<PageSpinner />}>
+        <AppointmentsTable />
+      </Suspense>
     </div>
   );
 }

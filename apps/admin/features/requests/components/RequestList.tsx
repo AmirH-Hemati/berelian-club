@@ -21,6 +21,7 @@ import {
 import AsyncState from "@/components/AsyncState";
 import type { RequestType } from "@repo/schema";
 import Link from "next/link";
+import { AxiosError } from "axios";
 
 export const typesMap = {
   renew_contract: {
@@ -46,8 +47,7 @@ interface RequestListProps {
   emptyTitle?: string;
   emptyDescription?: string;
   newRequest?: boolean;
-    error?: AxiosError<{ message?: string }> | Error | null;
-  
+  error?: AxiosError<{ message?: string }> | Error | null;
 }
 
 export default function RequestList({
@@ -108,7 +108,7 @@ export default function RequestList({
 
                 const Icon = config.icon;
 
-                const user = req.user as unknown as {
+                const user = req.investor as unknown as {
                   firstName?: string;
                   lastName?: string;
                 };

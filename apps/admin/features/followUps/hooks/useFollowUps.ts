@@ -2,7 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { getFollowUps } from "../services/followUps.service";
 import { useTableQuery } from "@/hooks/useTableQuery";
 import { useSearchParams } from "next/navigation";
-
+import { AxiosError } from "axios";
+type ApiError = {
+  message: string;
+};
 export function useFollowUps() {
   const searchParams = useSearchParams();
   const tableQuery = useTableQuery();
@@ -35,6 +38,7 @@ export function useFollowUps() {
     isLoading,
     isError,
     refetch,
-    error,
+
+    error: error as AxiosError<ApiError> | null,
   };
 }

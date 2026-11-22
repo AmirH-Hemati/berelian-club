@@ -63,14 +63,12 @@ export const createAppointmentSchema = z
 export type createAppointmentTypes = z.infer<typeof createAppointmentSchema>;
 export interface AppointmentType extends createAppointmentTypes {
   _id: string;
-  investor: Pick<
-    UserType,
-    "_id" | "firstName" | "lastName" | "phoneNumber" | "nationalCode" | "photo"
-  >;
+  investor: UserType;
   consultant: {
     _id: string;
     firstName: string;
     lastName: string;
+    photo: string;
   } | null;
   appointmentDate: Date;
   startAt: string;

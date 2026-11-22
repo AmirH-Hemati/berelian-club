@@ -1,10 +1,13 @@
+import { AxiosError } from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { getConversation } from "../services/chat.services";
 import { useParams } from "next/navigation";
-
+type ApiError = {
+  message: string;
+};
 export const useConversation = () => {
   const { requestId } = useParams();
-  const { data, isLoading  , isError ,error} = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["conversation", requestId],
     queryFn: () => getConversation(requestId as string),
     enabled: !!requestId,
@@ -14,6 +17,7 @@ export const useConversation = () => {
   return {
     conversation: data,
     isLoading,
-    isError ,error
+    isError,
+    error: error as AxiosError<ApiError> | null,
   };
 };

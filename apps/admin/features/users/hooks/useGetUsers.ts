@@ -3,6 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllUsers } from "../services/usersServices";
 import { useTableQuery } from "@/hooks/useTableQuery";
 import { useSearchParams } from "next/navigation";
+import { AxiosError } from "axios";
+type ApiError = {
+  message: string;
+};
 
 export function useGetUsers() {
   const searchParams = useSearchParams();
@@ -35,6 +39,6 @@ export function useGetUsers() {
     isLoading,
     isError,
     refetch,
-    error,
+    error: error as AxiosError<ApiError> | null,
   };
 }

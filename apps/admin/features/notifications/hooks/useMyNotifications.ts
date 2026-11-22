@@ -14,13 +14,7 @@ export function useMyNotifications() {
     refetch,
     error,
   } = useQuery({
-    queryKey: [
-      "notifications",
-      query.page,
-      query.limit,
-      query.search,
-      query.status,
-    ],
+    queryKey: ["notifications", query.page, query.limit, query.search],
     queryFn: () => getMyNotifications(query),
   });
 
