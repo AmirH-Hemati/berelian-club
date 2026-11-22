@@ -147,10 +147,20 @@ export const getTodayAppointmentsController = CatchError(
     });
   },
 );
+
+export const deleteAppointment = CatchError(
+  async (req: Request, res: Response) => {
+    await appointmentService.deleteAppointment(req.params.id as string);
+
+    return res.status(200).json({
+      status: "success",
+      message: "نوبت مشاوره و اطلاعات مرتبط با آن با موفقیت حذف شدند",
+      data: null,
+    });
+  },
+);
 export const getAppointments = getAll<appointmentDocument>(AppointmentModel);
 export const getAppointment = getOne<appointmentDocument>(AppointmentModel);
 
 export const updateAppointment =
   updateOne<appointmentDocument>(AppointmentModel);
-export const deleteAppointment =
-  deleteOne<appointmentDocument>(AppointmentModel);

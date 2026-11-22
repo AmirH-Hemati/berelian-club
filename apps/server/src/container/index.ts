@@ -49,7 +49,11 @@ export const initializeSocketServices = (io: Server) => {
 
   messageService = new MessageService(conversationService, socketService);
 
-  appointmentService = new AppointmentService(notificationService, userService);
+  appointmentService = new AppointmentService(
+    notificationService,
+    sessionReportService,
+    userService,
+  );
   requestService = new RequestService(
     notificationService,
     conversationService,

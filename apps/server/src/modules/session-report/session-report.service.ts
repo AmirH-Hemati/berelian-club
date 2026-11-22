@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { type ClientSession } from "mongoose";
 import SessionReportModel from "../../models/sessionReport.model.js";
 
 import { AppError } from "../../utils/AppError.js";
@@ -116,5 +116,23 @@ export class SessionReportService {
     } finally {
       await session.endSession();
     }
+  }
+  async deleteByAppointmentId(appointmentId: string, session: ClientSession) {
+    const sessionReport = await SessionReportModel.findOne({
+      appointment: appointmentId,
+    }).session(session);
+
+    if (!sessionReport) {
+      throw new AppError("گزارشی برای این نوبت مشاوره پیدا نشد", 404);
+    }
+
+    await this.followUpService.deleteBySessionReportId(
+      sessionReport._id.toString(),
+      session,
+    );
+
+    await SessionReportModel.findByIdAndDelete(sessionReport._id).session(
+      session,
+    );
   }
 }

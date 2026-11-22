@@ -8,14 +8,12 @@ import { formatPersianDate } from "../../utils/date.js";
 import { ApiFeatures } from "../../utils/ApiFeatures.js";
 import type { UserDocument } from "../../models/user.model.js";
 import { AppError } from "../../utils/AppError.js";
-
-const APPOINTMENT_DURATION = 60;
-
-const BUSINESS_TIMEZONE = "Asia/Tehran";
+import type { SessionReportService } from "../session-report/session-report.service.js";
 
 export class AppointmentService {
   constructor(
     private readonly notificationService: NotificationService,
+    private readonly sessionReportService: SessionReportService,
     private readonly userService: UserService,
   ) {}
 
@@ -549,5 +547,38 @@ export class AppointmentService {
         ) + 1,
       count: item.count,
     }));
+  }
+
+  async deleteAppointment(id: string) {
+    const session = await mongoose.startSession();
+
+    try {
+      session.startTransaction();
+
+      const appointment = await AppointmentModel.findById(id).session(session);
+
+      if (!appointment) {
+        throw new AppError("نوبت مشاوره پیدا نشد", 404);
+      }
+
+      await this.sessionReportService.deleteByAppointmentId(
+        appointment._id.toString(),
+        session,
+      );
+
+      await AppointmentModel.findByIdAndDelete(appointment._id).session(
+        session,
+      );
+
+      await session.commitTransaction();
+    } catch (error) {
+      if (session.inTransaction()) {
+        await session.abortTransaction();
+      }
+
+      throw error;
+    } finally {
+      await session.endSession();
+    }
   }
 }
