@@ -44,8 +44,6 @@ export class NotificationService {
   }
 
   async sendMany(notifications: SendNotification[]) {
-    const createdNotifications = [];
-
     for (const data of notifications) {
       try {
         const notification = await NotificationModel.create({
@@ -57,8 +55,6 @@ export class NotificationService {
           deduplicationKey: data.deduplicationKey,
         });
 
-        createdNotifications.push(notification);
-
         this.emitNotification(notification);
       } catch (error: any) {
         if (error.code === 11000) {
@@ -68,8 +64,6 @@ export class NotificationService {
         throw error;
       }
     }
-
-    return createdNotifications;
   }
 
   async getUserNotifications(userId: string, query: Record<string, unknown>) {

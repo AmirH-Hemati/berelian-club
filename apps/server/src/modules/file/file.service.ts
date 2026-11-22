@@ -69,10 +69,27 @@ export class FileService {
 
   async deleteFile(fileId: string) {
     const file = await this.getFileById(fileId);
+    const session = await mongoose.startSession();
 
-    await UserFileModel.deleteMany({ file: file._id });
+    try {
+      session.startTransaction();
 
-    await FileModel.findByIdAndDelete(file._id);
+      await UserFileModel.deleteMany({
+        file: file._id,
+      }).session(session);
+
+      await FileModel.findByIdAndDelete(file._id).session(session);
+
+      await session.commitTransaction();
+    } catch (error) {
+      if (session.inTransaction()) {
+        await session.abortTransaction();
+      }
+
+      throw error;
+    } finally {
+      await session.endSession();
+    }
 
     const filePath = this.resolveFilePath(file.path);
 
