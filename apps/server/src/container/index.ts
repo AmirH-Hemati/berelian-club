@@ -53,6 +53,7 @@ export const initializeSocketServices = (io: Server) => {
   requestService = new RequestService(
     notificationService,
     conversationService,
+    messageService,
     userService,
   );
 

@@ -11,6 +11,7 @@ import type { Types } from "mongoose";
 import type { UserService } from "../user/user.service.js";
 import type { UserDocument, UserRole } from "../../models/user.model.js";
 import mongoose from "mongoose";
+import type { MessageService } from "../message/message.service.js";
 
 export const REQUEST_TYPE_LABELS = {
   renew_contract: "تمدید قرارداد",
@@ -22,6 +23,7 @@ export class RequestService {
   constructor(
     private readonly notificationService: NotificationService,
     private readonly conversationService: ConversationService,
+    private readonly messageService: MessageService,
     private readonly userService: UserService,
   ) {}
   async createRequest(
@@ -443,6 +445,11 @@ export class RequestService {
       );
 
       if (conversation) {
+        await this.messageService.deleteByConversation(
+          conversation._id.toString(),
+          session,
+        );
+
         await this.conversationService.deleteConversation(
           conversation._id.toString(),
           session,
@@ -456,6 +463,7 @@ export class RequestService {
       if (session.inTransaction()) {
         await session.abortTransaction();
       }
+
       throw error;
     } finally {
       await session.endSession();

@@ -5,6 +5,7 @@ import { AppError } from "../../utils/AppError.js";
 
 import type { ConversationService } from "../conversation/conversation.service.js";
 import type { SocketService } from "../socket/socket.service.js";
+import type { ClientSession } from "mongoose";
 
 export class MessageService {
   constructor(
@@ -216,9 +217,9 @@ export class MessageService {
     };
   }
 
-  async deleteByConversation(conversationId: string) {
-    await MessageModel.deleteMany({
+  async deleteByConversation(conversationId: string, session?: ClientSession) {
+    return MessageModel.deleteMany({
       conversation: conversationId,
-    });
+    }).session(session ?? null);
   }
 }
