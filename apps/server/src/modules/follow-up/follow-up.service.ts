@@ -5,20 +5,15 @@ import SessionReportModel from "../../models/sessionReport.model.js";
 import { ApiFeatures } from "../../utils/ApiFeatures.js";
 
 import { AppError } from "../../utils/AppError.js";
+import type { ClientSession } from "mongoose";
 
 export class FollowUpService {
-  async createFollowUp(data: {
-    sessionReport: string;
-    consultantId: string;
-    dueDate: Date;
-    note?: string;
-  }) {
-    return FollowUpModel.create({
-      sessionReport: data.sessionReport,
-      consultant: data.consultantId,
-      dueDate: data.dueDate,
-      note: data.note,
-    });
+  async createFollowUp(data: any, session?: ClientSession) {
+    const followUp = new FollowUpModel(data);
+
+    await followUp.save({ session });
+
+    return followUp;
   }
 
   async getTodayFollowUps(
@@ -114,9 +109,12 @@ export class FollowUpService {
     return followUp;
   }
 
-  async deleteBySessionReportId(sessionReportId: string) {
-    return FollowUpModel.deleteOne({
+  async deleteBySessionReportId(
+    sessionReportId: string,
+    session?: ClientSession,
+  ) {
+    return FollowUpModel.deleteMany({
       sessionReport: sessionReportId,
-    });
+    }).session(session ?? null);
   }
 }

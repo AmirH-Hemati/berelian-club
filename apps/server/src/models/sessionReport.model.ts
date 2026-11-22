@@ -57,9 +57,8 @@ sessionReportSchema.pre<Query<SessionReportDocument, SessionReportDocument>>(
     this.populate("consultant", "firstName lastName");
   },
 );
-
-sessionReportSchema.index({ appointment: 1, user: 1 });
-sessionReportSchema.index({ createdBy: 1, createdAt: -1 });
+sessionReportSchema.index({ appointment: 1 }, { unique: true });
+sessionReportSchema.index({ user: 1, createdBy: 1, createdAt: -1 });
 
 const SessionReportModel = mongoose.model<SessionReportDocument>(
   "SessionReport",

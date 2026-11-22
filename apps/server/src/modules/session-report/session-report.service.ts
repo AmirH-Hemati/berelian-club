@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import SessionReportModel from "../../models/sessionReport.model.js";
 
 import { AppError } from "../../utils/AppError.js";
@@ -28,31 +29,51 @@ export class SessionReportService {
       throw new AppError("گزارش جلسه از قبل وارد شده است", 400);
     }
 
-    const sessionReport = await SessionReportModel.create({
-      appointment: data.appointment,
-      user: data.userId,
-      consultant: data.consultantId,
-      summary: data.summary,
-      resultDescription: data.resultDescription,
-      notes: data.notes,
-    });
-
-    if (data.needFollowUp) {
-      if (!data.followUpDate) {
-        throw new AppError("تاریخ پیگیری الزامی است", 400);
-      }
-
-      await this.followUpService.createFollowUp({
-        sessionReport: sessionReport._id.toString(),
-        consultantId: data.consultantId,
-        dueDate: data.followUpDate,
-        note: data.followUpAction,
-      });
+    if (data.needFollowUp && !data.followUpDate) {
+      throw new AppError("تاریخ پیگیری الزامی است", 400);
     }
 
-    return sessionReport;
-  }
+    const session = await mongoose.startSession();
 
+    try {
+      session.startTransaction();
+
+      const sessionReport = new SessionReportModel({
+        appointment: data.appointment,
+        user: data.userId,
+        consultant: data.consultantId,
+        summary: data.summary,
+        resultDescription: data.resultDescription,
+        notes: data.notes,
+      });
+
+      await sessionReport.save({ session });
+
+      if (data.needFollowUp) {
+        await this.followUpService.createFollowUp(
+          {
+            sessionReport: sessionReport._id.toString(),
+            consultant: data.consultantId,
+            dueDate: data.followUpDate!,
+            note: data.followUpAction,
+          },
+          session,
+        );
+      }
+
+      await session.commitTransaction();
+
+      return sessionReport;
+    } catch (error) {
+      if (session.inTransaction()) {
+        await session.abortTransaction();
+      }
+
+      throw error;
+    } finally {
+      await session.endSession();
+    }
+  }
   async getSessionReportByAppointment(appointmentId: string) {
     const sessionReport = await SessionReportModel.findOne({
       appointment: appointmentId,
@@ -64,7 +85,6 @@ export class SessionReportService {
 
     return sessionReport;
   }
-
   async deleteSessionReport(id: string) {
     const sessionReport = await SessionReportModel.findById(id);
 
@@ -72,10 +92,29 @@ export class SessionReportService {
       throw new AppError("گزارشی با آیدی مشخص شده پیدا نشد", 404);
     }
 
-    await this.followUpService.deleteBySessionReportId(
-      sessionReport._id.toString(),
-    );
+    const session = await mongoose.startSession();
 
-    await SessionReportModel.findByIdAndDelete(sessionReport._id);
+    try {
+      session.startTransaction();
+
+      await this.followUpService.deleteBySessionReportId(
+        sessionReport._id.toString(),
+        session,
+      );
+
+      await SessionReportModel.findByIdAndDelete(sessionReport._id).session(
+        session,
+      );
+
+      await session.commitTransaction();
+    } catch (error) {
+      if (session.inTransaction()) {
+        await session.abortTransaction();
+      }
+
+      throw error;
+    } finally {
+      await session.endSession();
+    }
   }
 }
