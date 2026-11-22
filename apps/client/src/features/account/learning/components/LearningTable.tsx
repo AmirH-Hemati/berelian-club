@@ -25,14 +25,15 @@ import {
   ImageIcon,
   MoreHorizontalIcon,
   VideoIcon,
-  Download,
   FolderOpen,
+  Trash2,
 } from "lucide-react";
 
 import { useMyFiles } from "../hooks/useMyFiles";
 import { convertDate, formatFileSize } from "@/utils/helper";
 import { PaginationControls } from "@/components/PaginationControls";
 import { UserFileType } from "@repo/schema";
+import { useDeleteFile } from "../hooks/useDeleteMyFile";
 
 const getFileTypeBadge = (fileType?: string, mimeType?: string) => {
   if (fileType === "image" || mimeType?.startsWith("image/")) {
@@ -79,6 +80,7 @@ const getFileIcon = (fileType?: string) => {
 };
 
 export default function LearningTable() {
+  const { deleteFile, isDeleting } = useDeleteFile();
   const { files, pagination, isLoading, isError, refetch } = useMyFiles();
 
   if (isLoading) return <TableSkeleton />;
@@ -242,11 +244,12 @@ export default function LearningTable() {
                           </DropdownMenuItem>
 
                           <DropdownMenuSeparator />
-
                           <DropdownMenuItem
-                            disabled
                             className="text-destructive"
+                            disabled={isDeleting}
+                            onClick={() => deleteFile(file._id)}
                           >
+                            <Trash2 className="size-4" />
                             حذف فایل
                           </DropdownMenuItem>
                         </DropdownMenuContent>

@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  deleteUserFile,
   downloadUserFile,
   getUserFiles,
   sendFileToAllInvestors,
@@ -14,8 +15,9 @@ router.use(protectedRoute);
 
 router.get("/myFiles", getUserFiles);
 router.get("/downloadById/:id", downloadUserFile);
+router.delete("/:id", deleteUserFile);
 
-router.use(restrictTo("admin"));
+router.use(restrictTo("admin" ,  "consultant"));
 
 router.route("/").post(sendFileToUser);
 router.post("/send-to-all", sendFileToAllInvestors);

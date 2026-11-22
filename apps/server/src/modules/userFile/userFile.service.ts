@@ -121,9 +121,20 @@ export class UserFileService {
     return this.fileService.downloadFile(fileId);
   }
 
-  async deleteByFileId(fileId: string) {
-    await UserFileModel.deleteMany({
-      file: fileId,
+  async deleteUserFile(userId: Types.ObjectId, userFileId: string) {
+    if (!mongoose.isValidObjectId(userFileId)) {
+      throw new AppError("شناسه فایل نامعتبر است", 400);
+    }
+
+    const userFile = await UserFileModel.findOneAndDelete({
+      _id: userFileId,
+      user: userId,
     });
+
+    if (!userFile) {
+      throw new AppError("این فایل قابلیت حذف شدن ندارد", 404);
+    }
+
+    return userFile;
   }
 }

@@ -7,3 +7,13 @@ export async function getMyFiles(query: GetRequestsParams) {
 
   return data;
 }
+
+
+
+export const deleteFileApi = async (userFileId: string) => {
+  const { data } = await axiosInstance.delete(
+    `/userFiles/${userFileId}`,
+  );
+
+  return data;
+};

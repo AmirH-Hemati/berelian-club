@@ -81,3 +81,17 @@ export const downloadUserFile = CatchError(
     });
   },
 );
+
+export const deleteUserFile = CatchError(
+  async (req: Request, res: Response) => {
+    const user = req.user as UserDocument;
+
+    await userFileService.deleteUserFile(user._id, req.params.id as string);
+
+    return res.status(200).json({
+      status: "success",
+      message: "فایل با موفقیت از لیست شما حذف شد",
+      data: null,
+    });
+  },
+);
