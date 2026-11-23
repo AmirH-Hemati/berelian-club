@@ -18,6 +18,14 @@ export const getAppointments = async (query: GetRequestsParams) => {
 
   return data;
 };
+
+export const getRecentMyAppointment = async () => {
+  const { data } = await axiosInstance.get(
+    `/appointments/myAppointments?status=pending,approved`,
+  );
+
+  return data.data;
+};
 export async function getAppointment(appointmentId: string) {
   const { data } = await axiosInstance.get(`/appointments/${appointmentId}`);
 

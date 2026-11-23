@@ -19,7 +19,9 @@ export async function getRequest(requestId: string) {
   return data.data;
 }
 export const getRecentMyRequests = async () => {
-  const { data } = await axiosInstance.get(`/requests/myRequests`);
+  const { data } = await axiosInstance.get(
+    `/requests/myRequests?status=pending,approved`,
+  );
 
   return data.data;
 };

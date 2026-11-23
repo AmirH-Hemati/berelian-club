@@ -56,7 +56,7 @@ export default function RecentRequests() {
           </div>
 
           <div className="space-y-0.5">
-            <h3 className="text-300 font-semibold">درخواست‌های اخیر شما</h3>
+            <h3 className="text-300 font-semibold">درخواست‌های در جریان شما</h3>
 
             <p className="text-100 text-muted-foreground">
               {requests?.length

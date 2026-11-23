@@ -20,8 +20,8 @@ import {
 import AsyncState from "@/components/AsyncState";
 import type { AppointmentType } from "@repo/schema";
 import Link from "next/link";
-import { useAppointments } from "../hooks/useAppointments";
 import { convertDate } from "@/utils/helper";
+import { useRecentAppointments } from "../hooks/useRecentAppointments";
 
 const appointmentTypesMap = {
   phone: {
@@ -35,7 +35,7 @@ const appointmentTypesMap = {
 };
 
 export default function RecentAppointments() {
-  const { appointments, isLoading, isError, refetch } = useAppointments();
+  const { appointments, isLoading, isError, refetch } = useRecentAppointments();
 
   return (
     <Card>
@@ -46,11 +46,13 @@ export default function RecentAppointments() {
           </div>
 
           <div className="space-y-0.5">
-            <h3 className="text-300 font-semibold">مشاوره‌های اخیر شما</h3>
+            <h3 className="text-300 font-semibold">
+              نوبت های مشاوره در جریان شما
+            </h3>
 
             <p className="text-100 text-muted-foreground">
-              {appointments.length
-                ? `${appointments.length} جلسه مشاوره`
+              {appointments?.length
+                ? `${appointments?.length} جلسه مشاوره`
                 : "جلسه‌ای برای نمایش وجود ندارد"}
             </p>
           </div>
