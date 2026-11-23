@@ -22,6 +22,7 @@ import messagesRoutes from "./modules/message/message.route.js";
 
 const app = express();
 
+app.set("trust proxy", 1);
 app.use(
   cors({
     origin: [

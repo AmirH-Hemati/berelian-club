@@ -17,19 +17,16 @@ const sessionReportSchema = new mongoose.Schema<SessionReportDocument>(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Appointment",
       required: true,
-      index: true,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
     consultant: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
     summary: {
       type: String,
