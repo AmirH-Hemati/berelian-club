@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { AppError } from "../utils/AppError.js";
 import { z } from "zod";
+import { error } from "node:console";
 
 const handleDuplicateFieldsDb = (err: any) => {
   const value = err.errmsg?.match(/(["'])(\\?.)*?\1/)?.[0] || "";
@@ -59,6 +60,8 @@ const sendErrorProd = (err: any, res: Response) => {
       status: err.status,
     });
   }
+
+  console.log("INTERNAL SERVER ERROR", error);
 
   return res.status(500).json({
     status: "error",
