@@ -28,9 +28,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     if (socketRef.current?.connected) return;
 
     const socket = io(
-      process.env.NEXT_PUBLIC_SOCKET_URL ||
-        // "https://api.berelianbg.ir",
-        "http://localhost:5000",
+      process.env.NEXT_PUBLIC_SOCKET_URL || "https://api.berelianbg.ir",
+      // "http://localhost:5000",
       {
         withCredentials: true,
         transports: ["websocket"],

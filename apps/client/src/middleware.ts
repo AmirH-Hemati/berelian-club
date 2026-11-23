@@ -1,8 +1,8 @@
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
-const ADMIN_PANEL_URL = process.env.ADMIN_PANEL_URL || "http://localhost:4001";
-const API_URL = process.env.API_URL || "http://localhost:5000";
+const ADMIN_PANEL_URL = "https://admin.berelianbg.ir";
+const API_URL = process.env.API_URL || "https://api.berelianbg.ir";
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
