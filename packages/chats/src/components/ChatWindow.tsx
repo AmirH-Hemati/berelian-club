@@ -1,14 +1,7 @@
 "use client";
 
-import {
-  ScrollArea,
-  DownloadButton,
-  Spinner,
-  Button,
-  SidebarFooter,
-} from "@repo/ui";
+import { ScrollArea, DownloadButton, Spinner, Button } from "@repo/ui";
 import { cn } from "@repo/ui";
-import { formatFileSize, formatTimeOnly } from "@/utils/helper";
 import { FileIcon, MessageCircle, Paperclip, ArrowDown } from "lucide-react";
 import {
   useCallback,
@@ -17,6 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { usePathname } from "next/navigation";
 
 import { useJoinConversation } from "../hooks/useJoinConversation";
 import { useNewMessages } from "../hooks/useNewMessage";
@@ -25,6 +19,7 @@ import { UserType } from "@repo/schema";
 import { useGetConversationMessages } from "../hooks/useGetConversationMessages";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import { groupMessagesByDate } from "../helper/groupMessagesByDate";
+import { formatFileSize, formatTimeOnly } from "../helper/helper";
 
 interface ChatWindowProps {
   conversationId: string;
@@ -240,12 +235,18 @@ export function ChatWindow({
 
   const yesterday = new Date(Date.now() - 86400000).toLocaleDateString("fa-IR");
 
+  const pathname = usePathname();
+
+  const isAccountPanel = pathname.startsWith("/account");
+
+  const fileSource = isAccountPanel ? "files" : "userFiles";
+
   if (isLoading) {
     return (
       <div className="flex min-h-0 flex-1 items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-3">
           <Spinner />
-          <p className="text-sm text-muted-foreground">
+          <p className="text-200 text-muted-foreground">
             در حال دریافت پیام‌ها...
           </p>
         </div>
@@ -266,7 +267,7 @@ export function ChatWindow({
             {isFetchingNextPage && (
               <div className="flex items-center justify-center gap-2 py-2">
                 <Spinner />
-                <span className="text-xs text-muted-foreground">
+                <span className="text-100 text-muted-foreground">
                   در حال دریافت پیام‌های قبلی...
                 </span>
               </div>
@@ -279,11 +280,11 @@ export function ChatWindow({
                   <MessageCircle className="size-9 text-primary/60" />
                 </div>
 
-                <h3 className="text-base font-bold text-foreground sm:text-lg">
+                <h3 className="text-300 font-bold text-foreground ">
                   شروع گفت‌وگو
                 </h3>
 
-                <p className="mt-2 max-w-sm text-sm leading-7 text-muted-foreground">
+                <p className="mt-2 max-w-sm text-200 leading-7 text-muted-foreground">
                   هنوز پیامی برای این درخواست ثبت نشده است. می‌توانید از طریق
                   کادر پایین، پیام خود را ارسال کنید.
                 </p>
@@ -295,7 +296,7 @@ export function ChatWindow({
                   <div className="relative flex items-center justify-center py-2">
                     <div className="absolute inset-x-0 top-1/2 border-t border-border/60" />
 
-                    <span className="relative rounded-full border border-border/70 bg-background px-4 py-1.5 text-[11px] font-medium text-muted-foreground shadow-sm">
+                    <span className="relative rounded-full border border-border/70 bg-background px-4 py-1.5 text-100 font-medium text-muted-foreground shadow-sm">
                       {group.date === today
                         ? "امروز"
                         : group.date === yesterday
@@ -332,7 +333,7 @@ export function ChatWindow({
                             )}
                           >
                             {/* Sender name */}
-                            <span className="px-1 text-[11px] font-medium text-muted-foreground">
+                            <span className="px-1 text-100 font-medium text-muted-foreground">
                               {senderName || "کاربر"}
                             </span>
 
@@ -350,12 +351,13 @@ export function ChatWindow({
                                 <DownloadButton
                                   fileId={msg.file._id}
                                   originalName={msg.file.originalName}
+                                  source={fileSource}
                                 >
                                   <div
                                     className={cn(
                                       "flex min-w-0 items-center gap-3 rounded-xl p-2 transition-colors",
                                       isOwn
-                                        ? "bg-white/10 hover:bg-white/15"
+                                        ? "bg-white/10 hover:bg-muted"
                                         : "bg-muted/60 hover:bg-muted",
                                     )}
                                   >
@@ -371,11 +373,11 @@ export function ChatWindow({
                                     </div>
 
                                     <div className="min-w-0 flex-1 text-right">
-                                      <p className="max-w-[200px] truncate text-sm font-medium">
+                                      <p className="max-w-[200px] truncate text-200 font-medium">
                                         {msg.file.originalName}
                                       </p>
 
-                                      <p className="mt-1 text-[11px] opacity-70">
+                                      <p className="mt-1 text-100 opacity-70">
                                         {formatFileSize(msg.file.size)}
                                       </p>
                                     </div>
@@ -384,7 +386,7 @@ export function ChatWindow({
                                   </div>
                                 </DownloadButton>
                               ) : (
-                                <p className="break-words whitespace-pre-wrap text-sm leading-7">
+                                <p className="break-words whitespace-pre-wrap text-200 leading-7">
                                   {msg.content}
                                 </p>
                               )}
@@ -396,7 +398,10 @@ export function ChatWindow({
                                   isOwn ? "justify-start" : "justify-end",
                                 )}
                               >
-                                <span className="text-[10px] opacity-60">
+                                <span
+                                  className="text-100
+                                 opacity-60"
+                                >
                                   {formatTimeOnly(msg.createdAt)}
                                 </span>
                               </div>
