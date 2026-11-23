@@ -97,7 +97,6 @@ export const handleVerifyOtp = CatchError(async (req, res, next) => {
     domain: process.env.APP_ENV === "production" ? ".berelianbg.ir" : undefined,
   };
 
-  console.log(cookieOption);
   res.cookie("token", token, cookieOption);
   return res.status(200).json({
     message: "خوش آمدید",
@@ -107,10 +106,10 @@ export const handleVerifyOtp = CatchError(async (req, res, next) => {
 
 export const logout = (req: Request, res: Response, next: NextFunction) => {
   res.clearCookie("token", {
-    secure: process.env.APP_ENV === "production" ? true : false,
+    secure: process.env.APP_ENV === "production",
     httpOnly: true,
     sameSite: "lax",
-    // domain: "berelianbg.ir",
+    domain: process.env.APP_ENV === "production" ? ".berelianbg.ir" : undefined,
   });
   res.status(200).json({
     status: "success",
