@@ -3,6 +3,9 @@ import AppointmentModel, {
 } from "../../models/appointment.model.js";
 import type { RequestDocument } from "../../models/request.model.js";
 import RequestModel from "../../models/request.model.js";
+import SessionReportModel, {
+  type SessionReportDocument,
+} from "../../models/sessionReport.model.js";
 import type { ResourceDefinition } from "./authorization.types.js";
 import {
   appointmentPolicy,
@@ -12,6 +15,10 @@ import {
   requestPolicy,
   type RequestAction,
 } from "./policies/request.policy.js";
+import {
+  sessionReportPolicy,
+  type SessionReportAction,
+} from "./policies/session-report.policy.js";
 
 export const authorizationRegistry = {
   request: {
@@ -22,4 +29,8 @@ export const authorizationRegistry = {
     load: (id: string) => AppointmentModel.findById(id).exec(),
     policies: appointmentPolicy,
   } satisfies ResourceDefinition<appointmentDocument, AppointmentAction>,
+  sessionReport: {
+    load: (id: string) => SessionReportModel.findById(id).exec(),
+    policies: sessionReportPolicy,
+  } satisfies ResourceDefinition<SessionReportDocument, SessionReportAction>,
 };

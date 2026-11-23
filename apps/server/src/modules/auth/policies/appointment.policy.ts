@@ -3,8 +3,13 @@ import { getResourceId } from "../authorization.helpers.js";
 import type { appointmentDocument } from "../../../models/appointment.model.js";
 
 export type AppointmentAction =
-  "read" | "delete" | "approve" | "reject" | "complete" | "reschedule";
-
+  | "read"
+  | "delete"
+  | "approve"
+  | "reject"
+  | "complete"
+  | "reschedule"
+  | "createSessionReport";
 export const appointmentPolicy: ResourcePolicies<
   appointmentDocument,
   AppointmentAction
@@ -65,5 +70,14 @@ export const appointmentPolicy: ResourcePolicies<
 
   reschedule: ({ user, resource }) => {
     return user.role === "admin" || user.role === "consultant";
+  },
+
+  createSessionReport: ({ user, resource }) => {
+    if (user.role === "admin") return true;
+
+    return (
+      user.role === "consultant" &&
+      getResourceId(resource.consultant) === user._id.toString()
+    );
   },
 };

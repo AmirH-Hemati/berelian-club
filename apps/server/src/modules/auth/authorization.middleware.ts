@@ -9,20 +9,27 @@ type AnyResourceDefinition = ResourceDefinition<any, string>;
 
 type Registry = Record<string, AnyResourceDefinition>;
 
+type ResourceIdSource = "params" | "body" | "query";
+
 export function createAuthorizationMiddleware<TRegistry extends Registry>(
   registry: TRegistry,
 ) {
   return function authorize<
     TResource extends keyof TRegistry & string,
     TAction extends keyof TRegistry[TResource]["policies"] & string,
-  >(resourceName: TResource, action: TAction, idParam = "id") {
+  >(
+    resourceName: TResource,
+    action: TAction,
+    idParam = "id",
+    source: ResourceIdSource = "params",
+  ) {
     return CatchError(
       async (req: Request, res: Response, next: NextFunction) => {
         if (!req.user) {
           return next(new AppError("شما وارد نشده‌اید", 401));
         }
 
-        const resourceId = req.params[idParam] as string;
+        const resourceId = req[source][idParam] as string;
 
         if (!resourceId || !mongoose.isValidObjectId(resourceId)) {
           return next(new AppError("شناسه منبع معتبر نیست", 400));
@@ -60,5 +67,4 @@ export function createAuthorizationMiddleware<TRegistry extends Registry>(
     );
   };
 }
-
 export const authorize = createAuthorizationMiddleware(authorizationRegistry);
