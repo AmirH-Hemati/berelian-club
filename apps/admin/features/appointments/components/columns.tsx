@@ -68,7 +68,7 @@ function AppointmentActions({ appointment }: { appointment: AppointmentType }) {
 
         <DropdownMenuItem asChild>
           <Link
-            href={`/users/${appointment.investor?._id}`}
+            href={`/users/${appointment?.investor?._id}`}
             className="flex cursor-pointer items-center gap-2"
           >
             <UserRound className="size-4" />
@@ -78,7 +78,7 @@ function AppointmentActions({ appointment }: { appointment: AppointmentType }) {
 
         <DropdownMenuItem asChild>
           <Link
-            href={`/appointments/${appointment._id}`}
+            href={`/appointments/${appointment?._id}`}
             className="flex cursor-pointer items-center gap-2"
           >
             <Eye className="size-4" />
@@ -91,7 +91,7 @@ function AppointmentActions({ appointment }: { appointment: AppointmentType }) {
         <DropdownMenuItem
           variant="destructive"
           disabled={isDeleting}
-          onClick={() => deleteAppointment(appointment._id)}
+          onClick={() => deleteAppointment(appointment?._id)}
           className="flex cursor-pointer items-center gap-2"
         >
           <Trash2 className="size-4" />
@@ -108,7 +108,7 @@ export const columns: ColumnDef<AppointmentType>[] = [
     header: "اطلاعات سرمایه گذاران",
     cell: ({ row }) => {
       const appointment = row.original;
-      const user = appointment.investor;
+      const user = appointment?.investor;
 
       const fullName =
         [user?.firstName, user?.lastName].filter(Boolean).join(" ") ||
@@ -117,8 +117,8 @@ export const columns: ColumnDef<AppointmentType>[] = [
       const initials =
         `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}` || "?";
 
-      const imageUrl = user.photo
-        ? `${process.env.NEXT_PUBLIC_API_URL}/images/users/${user.photo}`
+      const imageUrl = user?.photo
+        ? `${process.env.NEXT_PUBLIC_API_URL}/images/users/${user?.photo}`
         : undefined;
 
       return (
@@ -149,7 +149,7 @@ export const columns: ColumnDef<AppointmentType>[] = [
     accessorKey: "type",
     header: "نوع مشاوره",
     cell: ({ row }) => {
-      const type = row.original.type;
+      const type = row?.original?.type;
 
       const config =
         appointmentTypesMap[type as keyof typeof appointmentTypesMap];
@@ -161,7 +161,7 @@ export const columns: ColumnDef<AppointmentType>[] = [
       const Icon = config.icon;
 
       return (
-        <Badge className={`gap-1.5 border-0 ${config.className}`}>
+        <Badge className={`gap-1.5 border-0 ${config?.className}`}>
           <Icon className="size-3.5" />
           {config.label}
         </Badge>
@@ -179,12 +179,12 @@ export const columns: ColumnDef<AppointmentType>[] = [
         <div className="flex min-w-36 flex-col gap-1.5">
           <span className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
             <CalendarDays className="size-3.5 text-muted-foreground" />
-            {formatDate(appointment.appointmentDate)}
+            {formatDate(appointment?.appointmentDate)}
           </span>
 
           <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <Clock3 className="size-3.5" />
-            {appointment.startAt} تا {appointment.endAt}
+            {appointment?.startAt} تا {appointment?.endAt}
           </span>
         </div>
       );
