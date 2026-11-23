@@ -21,7 +21,7 @@ export default function Header() {
   const { user, isLoading } = useUser();
 
   const isInvestor = user?.role === "investor";
-  const profilePath = isInvestor ? "/account" : "http://localhost:4001";
+  const profilePath = isInvestor ? "/account" : "https://admin.berelianbg.ir";
   return (
     <header className="border-b py-4  border-border/40 bg-background/95  ">
       <div className="flex items-center justify-between">
