@@ -61,7 +61,7 @@ const sendErrorProd = (err: any, res: Response) => {
     });
   }
 
-  console.log("INTERNAL SERVER ERROR", error);
+  console.log("INTERNAL SERVER ERROR", err);
 
   return res.status(500).json({
     status: "error",
