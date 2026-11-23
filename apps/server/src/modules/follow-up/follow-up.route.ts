@@ -8,8 +8,10 @@ import {
   getOverdueFollowUps,
   getTodayFollowUps,
 } from "./follow-up.controller.js";
+
 import { protectedRoute } from "../../middlewares/auth.middleware.js";
 import { restrictTo } from "../../middlewares/authorization.middleware.js";
+import { authorize } from "../auth/authorization.middleware.js";
 
 const router = Router();
 
@@ -22,8 +24,15 @@ router.get("/today", getTodayFollowUps);
 
 router.get("/overdue", getOverdueFollowUps);
 
-router.patch("/:id/complete", completeFollowUp);
+router.patch(
+  "/:id/complete",
+  authorize("followUp", "complete"),
+  completeFollowUp,
+);
 
-router.route("/:id").get(getFollowUp).delete(deleteFollowUp);
+router
+  .route("/:id")
+  .get(getFollowUp)
+  .delete(authorize("followUp", "delete"), deleteFollowUp);
 
 export default router;

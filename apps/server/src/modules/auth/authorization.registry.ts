@@ -1,6 +1,9 @@
 import AppointmentModel, {
   type appointmentDocument,
 } from "../../models/appointment.model.js";
+import FollowUpModel, {
+  type FollowUpDocument,
+} from "../../models/followUp.model.js";
 import type { RequestDocument } from "../../models/request.model.js";
 import RequestModel from "../../models/request.model.js";
 import SessionReportModel, {
@@ -11,6 +14,10 @@ import {
   appointmentPolicy,
   type AppointmentAction,
 } from "./policies/appointment.policy.js";
+import {
+  followUpPolicy,
+  type FollowUpAction,
+} from "./policies/follow-up.policy.js";
 import {
   requestPolicy,
   type RequestAction,
@@ -33,4 +40,8 @@ export const authorizationRegistry = {
     load: (id: string) => SessionReportModel.findById(id).exec(),
     policies: sessionReportPolicy,
   } satisfies ResourceDefinition<SessionReportDocument, SessionReportAction>,
+  followUp: {
+    load: (id: string) => FollowUpModel.findById(id).exec(),
+    policies: followUpPolicy,
+  } satisfies ResourceDefinition<FollowUpDocument, FollowUpAction>,
 };
