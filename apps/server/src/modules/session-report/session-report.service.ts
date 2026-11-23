@@ -122,9 +122,7 @@ export class SessionReportService {
       appointment: appointmentId,
     }).session(session);
 
-    if (!sessionReport) {
-      throw new AppError("گزارشی برای این نوبت مشاوره پیدا نشد", 404);
-    }
+    if (!sessionReport) return;
 
     await this.followUpService.deleteBySessionReportId(
       sessionReport._id.toString(),
