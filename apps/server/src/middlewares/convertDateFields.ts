@@ -5,16 +5,22 @@ export const convertDateFields = (fields: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
       fields.forEach((field) => {
-        if (req.body[field]) {
-          if (typeof req.body[field] === "string") {
-            const date = new Date(req.body[field]);
+        const [parent, key] = field.includes(".")
+          ? field.split(".")
+          : [null, field];
 
-            if (isNaN(date.getTime())) {
-              throw new AppError(`فرمت ${field} معتبر نیست`, 400);
-            }
+        const target = parent ? req.body[parent] : req.body;
 
-            req.body[field] = date;
+        if (!target?.[key]) return;
+
+        if (typeof target[key] === "string") {
+          const date = new Date(target[key]);
+
+          if (isNaN(date.getTime())) {
+            throw new AppError(`فرمت ${field} معتبر نیست`, 400);
           }
+
+          target[key] = date;
         }
       });
 

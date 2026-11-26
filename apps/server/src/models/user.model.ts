@@ -13,14 +13,8 @@ export interface UserDocument extends mongoose.Document {
   birthMonth: number;
   birthDay: number;
   role: UserRole;
-  contractStartDate: Date;
-  contractEndDate: Date;
-  bankAccountNumber: string;
-  shabaNumber: string;
+  permissions: mongoose.Types.ObjectId[] | [];
   isActive: boolean;
-  contractDaysRemaining: number;
-  contractStatus: string;
-  contractProgress: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -77,29 +71,16 @@ const userSchema = new mongoose.Schema<UserDocument>(
       default: "investor",
       required: true,
     },
-    contractStartDate: {
-      type: Date,
-      required: true,
+    permissions: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Permission",
+        },
+      ],
+      default: [],
     },
-    contractEndDate: {
-      type: Date,
-      required: true,
-    },
-    bankAccountNumber: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    // bankName: {
-    //   type: String,
-    //   enum: ["melli", "melat", "saderat", "sepah", "tejarat", "other"],
-    //   required: true,
-    // },
-    shabaNumber: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+
     isActive: {
       type: Boolean,
       default: true,
@@ -112,42 +93,13 @@ const userSchema = new mongoose.Schema<UserDocument>(
   },
 );
 
-userSchema.virtual("contractDaysRemaining").get(function () {
-  const today = new Date();
-  const end = new Date(this.contractEndDate);
-  const diffTime = end.getTime() - today.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return diffDays > 0 ? diffDays : 0;
-});
-
-userSchema.virtual("contractStatus").get(function () {
-  const today = new Date();
-  const end = new Date(this.contractEndDate);
-
-  if (today > end) return "expired";
-  return "active";
-});
-
-userSchema.virtual("contractProgress").get(function () {
-  const start = new Date(this.contractStartDate);
-  const end = new Date(this.contractEndDate);
-  const now = new Date();
-
-  if (now < start) return 0;
-  if (now > end) return 100;
-
-  const total = end.getTime() - start.getTime();
-  const elapsed = now.getTime() - start.getTime();
-
-  return Math.round((elapsed / total) * 100);
-});
-
 userSchema.pre("save", function (this: UserDocument) {
   if (this.isModified("birthDate")) {
     this.birthMonth = this.birthDate.getMonth() + 1;
     this.birthDay = this.birthDate.getDate();
   }
 });
+
 userSchema.pre("findOneAndUpdate", function () {
   const update = this.getUpdate() as any;
 
@@ -158,6 +110,18 @@ userSchema.pre("findOneAndUpdate", function () {
     update.birthDay = birthDate.getDate();
   }
 });
+
+userSchema.virtual("contract", {
+  ref: "Contract",
+  localField: "_id",
+  foreignField: "user",
+  justOne: true,
+});
+
+// userSchema.index({ phoneNumber: 1 }, { unique: true });
+// userSchema.index({ nationalCode: 1 }, { unique: true });
+// userSchema.index({ email: 1 }, { unique: true });
+
 const UserModel = mongoose.model<UserDocument>("User", userSchema);
 
 export default UserModel;

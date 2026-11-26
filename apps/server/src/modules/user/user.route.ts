@@ -21,17 +21,20 @@ router.get("/me", setUserId, getUser);
 
 router
   .route("/")
-  .get(restrictTo("admin" , "consultant" , "reception"), getUsers)
+  .get(restrictTo("admin", "consultant", "reception"), getUsers)
   .post(
-    restrictTo("admin"),
-    convertDateFields(["birthDate", "contractStartDate", "contractEndDate"]),
+    // restrictTo("admin"),
+    convertDateFields(["birthDate", "contract.startDate", "contract.endDate"]),
     validateZod(createUserSchema),
     createUser,
   );
+
+
 router.get("/by-role/:role", restrictTo("admin"), getUsersByRole);
+
 router
   .route("/:id")
-  .get(restrictTo("admin", "consultant" , "reception"), getUser)
+  .get(restrictTo("admin", "consultant", "reception"), getUser)
   .patch(
     restrictTo("admin"),
     convertDateFields(["birthDate", "contractStartDate", "contractEndDate"]),

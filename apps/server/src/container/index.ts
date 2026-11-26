@@ -17,13 +17,18 @@ import { UserService } from "../modules/user/user.service.js";
 import { UserFileService } from "../modules/userFile/userFile.service.js";
 import { OtpService } from "../modules/verification/verification.service.js";
 import { SmsService } from "../services/sms/sms.service.js";
+import { PermissionService } from "../modules/permission/permission.service.js";
+import ContractService from "../modules/contract/contract.service.js";
 
 const SmsProvider = new SmsService();
 const otpService = new OtpService(SmsProvider);
 
 export const tokenService = new TokenService();
 export const authService = new AuthService(otpService, tokenService);
-export const userService = new UserService();
+
+export const permissionService = new PermissionService();
+export const contractService = new ContractService();
+export const userService = new UserService(permissionService, contractService);
 
 export const conversationService = new ConversationService();
 

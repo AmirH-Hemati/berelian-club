@@ -1,58 +1,64 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 
-import CustomDatePicker from "@/components/CustomDatePicker";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+
 import {
-  Banknote,
-  BriefcaseBusiness,
-  CreditCard,
-  Headset,
-  IdCard,
-  Mail,
-  Phone,
-  Shield,
-  User,
-} from "lucide-react";
+  createUserSchema,
+  type CreateUserInputTypes,
+  type UserType,
+} from "@repo/schema";
 
-import { createUserSchema, CreateUserInputTypes, UserType } from "@repo/schema";
 import { useCreateUser } from "../hooks/useCreateUser";
 import { useUpdateUser } from "../hooks/useUpdateUser";
-import {
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  Field,
-  FieldError,
-  FieldLabel,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  FormField,
-  Button,
-} from "@repo/ui";
 
-type Props = { user?: UserType; onCloseDialog: () => void };
+import InvestorContractStep from "./InvestorContractStep";
+import UserFormStepper from "./UserFormStepper";
+import UserPermissionsStep from "../../permissions/components/UserPermissionsStep";
+
+import { Button, DialogDescription, DialogHeader, DialogTitle } from "@repo/ui";
+import UserIdentity from "./UserIdentity";
+
+type Props = {
+  user?: UserType;
+  onCloseDialog: () => void;
+};
+
+const STEPS = ["اطلاعات هویتی", "سطح دسترسی", "اطلاعات قرارداد"];
+
 export function CreateUserForm({ user, onCloseDialog }: Props) {
   const { createUser, isCreating } = useCreateUser();
   const { updateUser, isUpdating } = useUpdateUser();
-  
+
+  const [currentStep, setCurrentStep] = useState(1);
+
   const editId = user?._id || "";
   const isEditSession = Boolean(editId);
   const isWorking = isCreating || isUpdating;
 
   const form = useForm<CreateUserInputTypes>({
     resolver: zodResolver(createUserSchema),
+
     defaultValues: isEditSession
       ? {
           ...user,
-          birthDate: new Date(user?.birthDate || ""),
-          contractStartDate: new Date(user?.contractStartDate || ""),
-          contractEndDate: new Date(user?.contractEndDate || ""),
+          birthDate: user?.birthDate ? new Date(user.birthDate) : undefined,
+
+          contract: {
+            startDate: user?.contract?.startDate
+              ? new Date(user.contract.startDate)
+              : undefined,
+
+            endDate: user?.contract?.endDate
+              ? new Date(user.contract.endDate)
+              : undefined,
+          },
+
           role: user?.role || "investor",
+          permissions: [],
         }
       : {
           firstName: "",
@@ -60,33 +66,81 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
           phoneNumber: "",
           nationalCode: "",
           email: "",
-          bankAccountNumber: "",
-          shabaNumber: "",
           birthDate: new Date(),
-          contractStartDate: new Date(),
-          contractEndDate: new Date(),
           role: "investor",
-          // new Date().setFullYear(new Date().getFullYear() + 1),
+          permissions: [],
+          contract: {
+            startDate: new Date(),
+            endDate: new Date(),
+          },
         },
   });
 
+  const selectedRole = useWatch({
+    control: form.control,
+    name: "role",
+  });
+
+  const isInvestor = selectedRole === "investor";
+
+  const visibleSteps = isInvestor ? STEPS : STEPS.slice(0, 2);
+
   const handleSubmit = (values: CreateUserInputTypes) => {
+    console.log(values);
     if (isEditSession) {
       updateUser(
         { id: editId, data: values },
         {
-          onSuccess: () => {
-            onCloseDialog();
-          },
+          onSuccess: onCloseDialog,
         },
       );
     } else {
       createUser(values, {
-        onSuccess: () => {
-          onCloseDialog();
-        },
+        onSuccess: onCloseDialog,
       });
     }
+  };
+  const handleNext = async () => {
+    if (currentStep === 1) {
+      const isValid = await form.trigger([
+        "firstName",
+        "lastName",
+        "phoneNumber",
+        "nationalCode",
+        "email",
+        "birthDate",
+        "role",
+      ]);
+
+      if (!isValid) return;
+
+      setCurrentStep(2);
+      return;
+    }
+
+    if (currentStep === 2) {
+      if (isInvestor) {
+        setCurrentStep(3);
+        return;
+      }
+
+      await form.handleSubmit(handleSubmit)();
+    }
+  };
+
+  const handlePrevious = () => {
+    setCurrentStep((step) => Math.max(1, step - 1));
+  };
+
+  const handleRoleChange = (role: CreateUserInputTypes["role"]) => {
+    form.setValue("role", role, {
+      shouldValidate: true,
+    });
+
+    // form.setValue("permissions", [...ROLE_DEFAULT_PERMISSIONS[role]], {
+    //   shouldDirty: true,
+    //   shouldValidate: true,
+    // });
   };
 
   return (
@@ -95,153 +149,73 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
         <DialogTitle>
           {isEditSession ? "ویرایش اطلاعات کاربر" : "ایجاد کاربر جدید"}
         </DialogTitle>
+
         <DialogDescription>
-          اطلاعات کاربر جدید را وارد کنید. تمامی فیلد ها الزامی هستند.
+          اطلاعات کاربر و سطح دسترسی موردنیاز او را مشخص کنید.
         </DialogDescription>
       </DialogHeader>
 
+      <div className="mt-5 mb-2">
+        <UserFormStepper currentStep={currentStep} steps={visibleSteps} />
+      </div>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className=" mt-4 flex flex-col gap-6"
+        className="mt-5 flex flex-col gap-6"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            name="firstName"
+        {/* Step 1: Identity */}
+        {currentStep === 1 && (
+          <UserIdentity
             control={form.control}
-            label="نام"
-            placeholder="مثال: رضا"
-            icon={User}
+            handleRoleChange={handleRoleChange}
+            form={form}
           />
+        )}
 
-          <FormField
-            name="lastName"
-            control={form.control}
-            label="نام خانوادگی"
-            placeholder="مثال: حسینی"
-            icon={User}
-          />
-        </div>
+        {/* Step 2: Permissions */}
+        {currentStep === 2 && <UserPermissionsStep control={form.control} />}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            name="phoneNumber"
-            control={form.control}
-            label="شماره موبایل"
-            placeholder="۰۹۱۲۳۴۵۶۷۸۹"
-            icon={Phone}
-          />
+        {/* Step 3: Investor contract */}
+        {currentStep === 3 && isInvestor && (
+          <InvestorContractStep control={form.control} />
+        )}
 
-          <FormField
-            name="nationalCode"
-            control={form.control}
-            label="کد ملی"
-            placeholder="۱۲۳۴۵۶۷۸۹۰"
-            icon={IdCard}
-          />
-        </div>
-
-        <FormField
-          name="email"
-          control={form.control}
-          label="ایمیل"
-          type="email"
-          placeholder="example@gmail.com"
-          icon={Mail}
-        />
-        <Controller
-          name="role"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="role">نقش کاربر</FieldLabel>
-
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="انتخاب نقش کاربر" />
-                </SelectTrigger>
-
-                <SelectContent>
-                  <SelectItem value="admin">
-                    <div className="flex items-center gap-2">
-                      <Shield className="size-4 text-red-500" />
-                      <span>ادمین</span>
-                    </div>
-                  </SelectItem>
-
-                  <SelectItem value="investor">
-                    <div className="flex items-center gap-2">
-                      <User className="size-4 text-blue-500" />
-                      <span>سرمایه‌گذار</span>
-                    </div>
-                  </SelectItem>
-
-                  <SelectItem value="reception">
-                    <div className="flex items-center gap-2">
-                      <Headset className="size-4 text-green-500" />
-                      <span>پذیرش</span>
-                    </div>
-                  </SelectItem>
-
-                  <SelectItem value="consultant">
-                    <div className="flex items-center gap-2">
-                      <BriefcaseBusiness className="size-4 text-purple-500" />
-                      <span>مشاور</span>
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <CustomDatePicker
-            control={form.control}
-            name="birthDate"
-            label="تاریخ تولد"
-          />
-          <CustomDatePicker
-            control={form.control}
-            name="contractStartDate"
-            label="تاریخ شروع قرارداد"
-          />
-          <CustomDatePicker
-            control={form.control}
-            name="contractEndDate"
-            label="تاریخ پایان قرارداد"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            name="bankAccountNumber"
-            control={form.control}
-            label="شماره حساب"
-            placeholder="۱۲۳۴۵۶۷۸۹۰"
-            icon={CreditCard}
-          />
-
-          <FormField
-            name="shabaNumber"
-            control={form.control}
-            label="شماره شبا"
-            placeholder="IR123456789012345678901234"
-            icon={Banknote}
-          />
-        </div>
-
-        <div className="flex gap-3 pt-4 mr-auto">
+        {/* Navigation */}
+        <div className="flex items-center gap-3 pt-2 mr-auto border-t">
           <Button
             type="button"
             variant="outline"
-            size="lg"
-            onClick={onCloseDialog}
+            onClick={currentStep === 1 ? onCloseDialog : handlePrevious}
+            disabled={isWorking}
           >
-            انصراف
+            {currentStep === 1 ? (
+              "انصراف"
+            ) : (
+              <>
+                <ArrowRight className="size-4" />
+                مرحله قبل
+              </>
+            )}
           </Button>
-          <Button type="submit" size="lg" disabled={isWorking}>
-            {isEditSession ? "ویرایش کاربر" : "ایجاد کاربر"}
+
+          <Button
+            type={currentStep === 3 ? "submit" : "button"}
+            onClick={currentStep !== 3 ? handleNext : undefined}
+            disabled={isWorking}
+          >
+            {isWorking ? (
+              "در حال ثبت..."
+            ) : currentStep === 3 || !isInvestor ? (
+              isEditSession ? (
+                "ذخیره تغییرات"
+              ) : (
+                "ایجاد کاربر"
+              )
+            ) : (
+              <>
+                مرحله بعد
+                <ArrowLeft className="size-4" />
+              </>
+            )}
           </Button>
         </div>
       </form>

@@ -19,6 +19,8 @@ import sessionReportRoutes from "./modules/session-report/session-report.route.j
 import followUpsRoutes from "./modules/follow-up/follow-up.route.js";
 import conversationsRoutes from "./modules/conversation/conversation.route.js";
 import messagesRoutes from "./modules/message/message.route.js";
+import permissionRoutes from "./modules/permission/permission.routes.js";
+import contractRoutes from "./modules/contract/contract.routes.js";
 
 const app = express();
 
@@ -47,6 +49,8 @@ app.use("/api", generalLimiter);
 app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/permissions", permissionRoutes);
+app.use("/api/v1/contracts", contractRoutes);
 app.use("/api/v1/requests", requestRoutes);
 app.use("/api/v1/appointments", appointmentRoutes);
 app.use("/api/v1/notifications", notificationsRoutes);

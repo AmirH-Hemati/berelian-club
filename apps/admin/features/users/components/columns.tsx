@@ -91,7 +91,7 @@ function UserInfo({ user }: { user: UserType }) {
           {fullName}
         </p>
         <p className="mt-1 truncate text-100 text-muted-foreground">
-          شناسه: {user._id.slice(-8)}
+          شناسه: {user._id.slice(-6)}
         </p>
       </div>
     </div>

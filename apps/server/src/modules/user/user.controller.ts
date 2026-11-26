@@ -4,7 +4,6 @@ import userModel, {
   type UserRole,
 } from "../../models/user.model.js";
 import {
-  createOne,
   deleteOne,
   getAll,
   getOne,
@@ -13,9 +12,37 @@ import {
 import CatchError from "../../utils/catchAsync.js";
 import { userService } from "../../container/index.js";
 
-export const createUser = createOne<UserDocument>(userModel);
-export const getUsers = getAll<UserDocument>(userModel);
-export const getUser = getOne<UserDocument>(userModel);
+export const createUser = CatchError(async (req, res, next) => {
+  const user = await userService.createUser(req.body);
+
+  res.status(201).json({
+    status: "success",
+    data: {
+      user,
+    },
+  });
+});
+
+export const getUser = CatchError(async (req, res) => {
+  const user = await userService.getUser(req.params.id as string);
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      data: user,
+    },
+  });
+});
+
+export const getUsers = CatchError(async (req, res) => {
+  const results = await userService.getUsers(req.query);
+
+  res.status(200).json({
+    status: "success",
+    data: results.users,
+    pagination: results.pagination,
+  });
+});
 export const updateUser = updateOne<UserDocument>(userModel);
 export const deleteUser = deleteOne<UserDocument>(userModel);
 

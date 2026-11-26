@@ -16,20 +16,20 @@ export default function ContractStatus({ user }: Props) {
         </CardTitle>
 
         <Badge variant={user.contractStatus ? "default" : "destructive"}>
-          {user.contractStatus ? "فعال" : "غیر فعال"}
+          {/* {user.contract.stat ? "فعال" : "غیر فعال"} */} test 
         </Badge>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex justify-between text-300">
           <span className="text-muted-foreground">شروع قرارداد</span>
           <span className="font-medium">
-            {formatDate(user.contractStartDate)}
+            {formatDate(user?.contract?.startDate)}
           </span>
         </div>
         <div className="flex justify-between text-300">
           <span className="text-muted-foreground">پایان قرارداد</span>
           <span className="font-medium">
-            {formatDate(user.contractEndDate)}
+            {formatDate(user?.contract?.endDate)}
           </span>
         </div>
 
@@ -41,7 +41,7 @@ export default function ContractStatus({ user }: Props) {
           <Progress value={user?.contractProgress} />
           <div className="flex justify-between text-200 text-muted-foreground">
             <span>پایان</span>
-            <span>{user.contractDaysRemaining} روز باقی‌مانده</span>
+            <span>{user?.contractDaysRemaining} روز باقی‌مانده</span>
             <span>شروع</span>
           </div>
         </div>

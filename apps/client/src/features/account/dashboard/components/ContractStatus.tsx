@@ -36,7 +36,7 @@ export default function ContractStatus() {
       <CardContent className="space-y-4 text-200">
         <div className="flex justify-between ">
           <span className="text-muted-foreground">شروع قرارداد</span>
-          <span>{convertDate(user?.contractStartDate)}</span>
+          <span>{convertDate(user?.contract?.startDate)}</span>
         </div>
 
         <div className="flex justify-between ">

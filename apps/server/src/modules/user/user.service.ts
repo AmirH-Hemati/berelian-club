@@ -1,6 +1,96 @@
+import type { ContractStatus } from "../../models/contract.model.js";
 import UserModel, { type UserRole } from "../../models/user.model.js";
+import { ApiFeatures } from "../../utils/ApiFeatures.js";
+import { AppError } from "../../utils/AppError.js";
+import type ContractService from "../contract/contract.service.js";
+import type { PermissionService } from "../permission/permission.service.js";
+
+type CreateUserInput = {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  nationalCode: string;
+  email?: string;
+  birthDate?: Date;
+  role?: "admin" | "investor" | "reception" | "consultant";
+
+  permissions?: string[];
+
+  contract?: {
+    startDate: Date;
+    endDate: Date;
+    status: ContractStatus;
+  };
+
+  bankAccountNumber?: string;
+  shabaNumber?: string;
+};
 
 export class UserService {
+  constructor(
+    private readonly permissionService: PermissionService,
+    private readonly contractService: ContractService,
+  ) {}
+
+  async createUser(data: CreateUserInput) {
+    const permissionIds = await this.permissionService.validateAndGetIds(
+      data.permissions ?? [],
+    );
+
+    const { contract, ...userData } = data;
+
+    const user = await UserModel.create({
+      ...userData,
+      permissions: permissionIds,
+    });
+
+    if (user.role === "investor" && contract) {
+      await this.contractService.createContract({
+        ...contract,
+        user: user._id,
+      });
+    }
+
+    return user;
+  }
+
+  async getUser(id: string) {
+    const user = await UserModel.findById(id).populate({
+      path: "contract",
+      select: "startDate endDate status",
+    });
+
+    if (!user) {
+      throw new AppError("کاربر موردنظر پیدا نشد", 404);
+    }
+
+    return user;
+  }
+
+  async getUsers(query: Record<string, unknown>) {
+    const features = new ApiFeatures(UserModel.find(), query)
+      .filter()
+      .search()
+      .sort()
+      .fields();
+
+    const { total, limit, page, totalPages } = await features.pagination();
+
+    const users = await features.query.populate({
+      path: "contract",
+      select: "startDate endDate status",
+    });
+    return {
+      users,
+      pagination: {
+        totalPages,
+        total,
+        limit,
+        page,
+      },
+    };
+  }
+
   async getContractDaysRemaining(userId: string) {
     const user = await UserModel.findById(userId);
 

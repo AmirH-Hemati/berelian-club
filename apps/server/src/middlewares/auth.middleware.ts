@@ -20,7 +20,10 @@ export const protectedRoute = CatchError(async (req, res, next) => {
 
   const decoded = tokenService.verifyToken(token);
 
-  const user = await UserModel.findById(decoded.id);
+  const user = await UserModel.findById(decoded.id).populate(
+    "permissions",
+    "key isActive",
+  );
   if (!user) {
     throw new AppError("کاربر مربوط به این توکن یافت نشد", 401);
   }

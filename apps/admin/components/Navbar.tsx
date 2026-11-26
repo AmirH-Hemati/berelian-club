@@ -75,7 +75,7 @@ export default function Navbar() {
               <Avatar className="relative size-10 rounded-xl border-border/70 bg-background hover:bg-muted">
                 <AvatarImage src={imageUrl} />
                 <AvatarFallback>
-                  {user?.firstName[0] + user?.lastName[0]}
+                  {user?.firstName?.[0] + user?.lastName?.[0]}
                 </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>

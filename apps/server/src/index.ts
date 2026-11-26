@@ -8,6 +8,7 @@ import { initializeSocketServices } from "./container/index.js";
 import app from "./app.js";
 
 import ReminderEngine from "./services/reminder/ReminderEngine.js";
+import { seedPermissions } from "./modules/permission/permission.seed.js";
 
 const server = http.createServer(app);
 
@@ -26,6 +27,7 @@ mongoose
   .then(() => console.log("✅✅connected to mongodb"))
   .catch((err) => console.log(err));
 
+await seedPermissions();
 const io = createSocketServer(server);
 initializeSocketServices(io);
 
