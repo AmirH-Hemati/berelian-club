@@ -3,12 +3,7 @@ import userModel, {
   type UserDocument,
   type UserRole,
 } from "../../models/user.model.js";
-import {
-  deleteOne,
-  getAll,
-  getOne,
-  updateOne,
-} from "../../controllers/handlerFactory.js";
+import { deleteOne, updateOne } from "../../controllers/handlerFactory.js";
 import CatchError from "../../utils/catchAsync.js";
 import { userService } from "../../container/index.js";
 
@@ -17,9 +12,7 @@ export const createUser = CatchError(async (req, res, next) => {
 
   res.status(201).json({
     status: "success",
-    data: {
-      user,
-    },
+    data: user,
   });
 });
 
@@ -28,9 +21,7 @@ export const getUser = CatchError(async (req, res) => {
 
   res.status(200).json({
     status: "success",
-    data: {
-      data: user,
-    },
+    data: user,
   });
 });
 
@@ -41,6 +32,15 @@ export const getUsers = CatchError(async (req, res) => {
     status: "success",
     data: results.users,
     pagination: results.pagination,
+  });
+});
+
+export const checkDuplicates = CatchError(async (req, res) => {
+  const result = await userService.checkDuplicates(req.body);
+
+  res.status(200).json({
+    status: "success",
+    data: result,
   });
 });
 export const updateUser = updateOne<UserDocument>(userModel);

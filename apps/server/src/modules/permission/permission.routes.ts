@@ -5,11 +5,13 @@ import {
   createPermission,
   deletePermissionn,
   getAllPermission,
+  getDefaultPermissions,
   getOnePermission,
   updatePermission,
 } from "./permission.controller.js";
 
 import { requiredPermissions } from "../../middlewares/require-permission.js";
+import { restrictTo } from "../../middlewares/authorization.middleware.js";
 
 const router = express.Router();
 
@@ -24,6 +26,8 @@ router
 
     createPermission,
   );
+
+router.get("/defaults/:role", restrictTo("admin"), getDefaultPermissions);
 
 router
   .route("/:id")

@@ -29,8 +29,7 @@ export default function Page() {
     isLoading: requestsLoading,
     isError: requestsError,
     refetch: refetchRequests,
-    error : requestsObjectError
-
+    error: requestsObjectError,
   } = useUserRequests(user?._id ?? "");
 
   const {
@@ -38,7 +37,7 @@ export default function Page() {
     isLoading: appointmentsLoading,
     isError: appointmentsError,
     refetch: refetchAppointments,
-     error : appointmentsObjectError
+    error: appointmentsObjectError,
   } = useUserAppointments(user?._id ?? "");
 
   if (isLoading) return <Spinner />;
@@ -54,7 +53,7 @@ export default function Page() {
       </div>
     );
   }
-
+  const isInvestor = user?.role === "investor";
   return (
     <div className="mb-6 space-y-6">
       <Breadcrumb>
@@ -81,30 +80,33 @@ export default function Page() {
 
       <UserDataBox user={user} />
 
-      <ContractStatus user={user} />
+      {isInvestor && (
+        <>
+          <ContractStatus user={user} />
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <RequestList
-          requests={requests}
-          isLoading={requestsLoading}
-          isError={requestsError}
-          refetch={refetchRequests}
-          title="درخواست‌های کاربر"
-          emptyTitle="هیچ درخواستی ثبت نشده است"
-          emptyDescription="این کاربر هنوز درخواستی ثبت نکرده است."
-          error={requestsObjectError}
-        />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <RequestList
+              requests={requests}
+              isLoading={requestsLoading}
+              isError={requestsError}
+              refetch={refetchRequests}
+              title="درخواست‌های کاربر"
+              emptyTitle="هیچ درخواستی ثبت نشده است"
+              emptyDescription="این کاربر هنوز درخواستی ثبت نکرده است."
+              error={requestsObjectError}
+            />
 
-
-        <AppointmentList
-          appointments={appointments}
-          isLoading={appointmentsLoading}
-          isError={appointmentsError}
-          refetch={refetchAppointments}
-          title="نوبت‌های مشاوره اخیر"
-          error={appointmentsObjectError}
-        />
-      </div>
+            <AppointmentList
+              appointments={appointments}
+              isLoading={appointmentsLoading}
+              isError={appointmentsError}
+              refetch={refetchAppointments}
+              title="نوبت‌های مشاوره اخیر"
+              error={appointmentsObjectError}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }

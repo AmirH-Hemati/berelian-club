@@ -7,10 +7,15 @@ import {
   updateUser,
   setUserId,
   getUsersByRole,
+  checkDuplicates,
 } from "./user.controller.js";
 import { validateZod } from "../../middlewares/validateZod.js";
 
-import { createUserSchema, updateUserSchema } from "@repo/schema";
+import {
+  checkUserDuplicatesSchema,
+  createUserSchema,
+  updateUserSchema,
+} from "@repo/schema";
 import { convertDateFields } from "../../middlewares/convertDateFields.js";
 import { protectedRoute } from "../../middlewares/auth.middleware.js";
 import { restrictTo } from "../../middlewares/authorization.middleware.js";
@@ -19,16 +24,22 @@ const router = express.Router();
 router.use(protectedRoute);
 router.get("/me", setUserId, getUser);
 
+router.post(
+  "/check-duplicates",
+  restrictTo("admin"),
+  validateZod(checkUserDuplicatesSchema),
+  checkDuplicates,
+);
+
 router
   .route("/")
   .get(restrictTo("admin", "consultant", "reception"), getUsers)
   .post(
-    // restrictTo("admin"),
+    restrictTo("admin"),
     convertDateFields(["birthDate", "contract.startDate", "contract.endDate"]),
     validateZod(createUserSchema),
     createUser,
   );
-
 
 router.get("/by-role/:role", restrictTo("admin"), getUsersByRole);
 

@@ -31,8 +31,7 @@ export const createUserSchema = z
     role: z.enum(["admin", "investor", "reception", "consultant"]),
 
     // Permissions
-    permissions: z.array(z.string()).default([]),
-
+    permissions: z.array(z.string()).optional().default([]),
     // Contract
     contract: z
       .object({
@@ -69,6 +68,18 @@ export const createUserSchema = z
         code: "custom",
         path: ["contract", "endDate"],
         message: "تاریخ پایان باید بعد از تاریخ شروع باشد",
+      });
+    }
+  })
+  .superRefine((data, ctx) => {
+    if (
+      (data.role === "reception" || data.role === "consultant") &&
+      data.permissions.length === 0
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["permissions"],
+        message: "حداقل یک سطح دسترسی باید انتخاب شود",
       });
     }
   });
@@ -160,6 +171,36 @@ export const createUserSchema = z
 //       });
 //     }
 //   });
+
+export const checkUserDuplicatesSchema = z
+  .object({
+    phoneNumber: z
+      .string()
+      .regex(/^09[0-9]{9}$/, "شماره موبایل معتبر نیست")
+      .optional(),
+
+    nationalCode: z
+      .string()
+      .regex(/^\d{10}$/, "کد ملی معتبر نیست")
+      .optional(),
+
+    email: z.email("ایمیل معتبر نیست").optional(),
+
+    excludeUserId: z
+      .string()
+      .regex(/^[a-f\d]{24}$/i, "شناسه کاربر معتبر نیست")
+      .optional(),
+  })
+  .refine(
+    (data) => Boolean(data.phoneNumber || data.nationalCode || data.email),
+    {
+      message: "حداقل یک فیلد برای بررسی لازم است",
+    },
+  );
+
+export type CheckUserDuplicatesInput = z.infer<
+  typeof checkUserDuplicatesSchema
+>;
 
 export const updateUserSchema = createUserSchema;
 export type CreateUserInputTypes = z.infer<typeof createUserSchema>;

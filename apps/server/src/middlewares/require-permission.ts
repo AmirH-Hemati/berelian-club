@@ -1,12 +1,12 @@
 import CatchError from "../utils/catchAsync.js";
 import { AppError } from "../utils/AppError.js";
+
 export function requiredPermissions(...requiredPermissions: string[]) {
   return CatchError(async (req, _res, next) => {
     if (!req.user) {
       throw new AppError("ابتدا وارد حساب کاربری شوید", 401);
     }
 
-    
     if (req.user.role === "admin") {
       return next();
     }

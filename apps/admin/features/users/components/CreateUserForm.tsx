@@ -14,26 +14,45 @@ import {
 
 import { useCreateUser } from "../hooks/useCreateUser";
 import { useUpdateUser } from "../hooks/useUpdateUser";
+import { useCheckUserDuplicates } from "../hooks/useCheckUserDuplicates";
+import { useGetDefaultPermissions } from "@/features/permissions/hooks/useGetDefaultPermissions";
 
 import InvestorContractStep from "./InvestorContractStep";
 import UserFormStepper from "./UserFormStepper";
 import UserPermissionsStep from "../../permissions/components/UserPermissionsStep";
+import UserIdentity from "./UserIdentity";
 
 import { Button, DialogDescription, DialogHeader, DialogTitle } from "@repo/ui";
-import UserIdentity from "./UserIdentity";
 
 type Props = {
   user?: UserType;
   onCloseDialog: () => void;
 };
 
-const STEPS = ["اطلاعات هویتی", "سطح دسترسی", "اطلاعات قرارداد"];
+const IDENTITY_FIELDS = [
+  "firstName",
+  "lastName",
+  "phoneNumber",
+  "nationalCode",
+  "email",
+  "birthDate",
+  "role",
+] as const;
+
+const PERMISSION_ROLES = ["reception", "consultant"] as const;
+
+const IDENTITY_STEP = "اطلاعات هویتی";
+const PERMISSIONS_STEP = "سطح دسترسی";
+const CONTRACT_STEP = "اطلاعات قرارداد";
 
 export function CreateUserForm({ user, onCloseDialog }: Props) {
+  const [currentStep, setCurrentStep] = useState(1);
+
   const { createUser, isCreating } = useCreateUser();
   const { updateUser, isUpdating } = useUpdateUser();
-
-  const [currentStep, setCurrentStep] = useState(1);
+  const { checkUserDuplicates, isChecking } = useCheckUserDuplicates();
+  const { getDefaultPermissions, isLoadingDefaults } =
+    useGetDefaultPermissions();
 
   const editId = user?._id || "";
   const isEditSession = Boolean(editId);
@@ -58,7 +77,7 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
           },
 
           role: user?.role || "investor",
-          permissions: [],
+          permissions: user?.permissions || [],
         }
       : {
           firstName: "",
@@ -83,47 +102,100 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
 
   const isInvestor = selectedRole === "investor";
 
-  const visibleSteps = isInvestor ? STEPS : STEPS.slice(0, 2);
+  const needsPermissions = PERMISSION_ROLES.includes(
+    selectedRole as (typeof PERMISSION_ROLES)[number],
+  );
+
+  const visibleSteps = [
+    IDENTITY_STEP,
+    ...(needsPermissions ? [PERMISSIONS_STEP] : []),
+    ...(isInvestor ? [CONTRACT_STEP] : []),
+  ];
 
   const handleSubmit = (values: CreateUserInputTypes) => {
-    console.log(values);
     if (isEditSession) {
-      updateUser(
-        { id: editId, data: values },
-        {
-          onSuccess: onCloseDialog,
-        },
-      );
+      updateUser({ id: editId, data: values }, { onSuccess: onCloseDialog });
     } else {
-      createUser(values, {
-        onSuccess: onCloseDialog,
-      });
+      createUser(values, { onSuccess: onCloseDialog });
     }
   };
+
   const handleNext = async () => {
     if (currentStep === 1) {
-      const isValid = await form.trigger([
-        "firstName",
-        "lastName",
-        "phoneNumber",
-        "nationalCode",
-        "email",
-        "birthDate",
-        "role",
-      ]);
+      const isValid = await form.trigger(IDENTITY_FIELDS);
 
       if (!isValid) return;
 
-      setCurrentStep(2);
+      const fields = ["phoneNumber", "nationalCode", "email"] as const;
+
+      fields.forEach((name) => {
+        if (form.getFieldState(name).error?.type === "duplicate") {
+          form.clearErrors(name);
+        }
+      });
+
+      form.clearErrors("root.duplicateCheck");
+
+      const values = form.getValues();
+
+      try {
+        const result = await checkUserDuplicates({
+          phoneNumber: values.phoneNumber,
+          nationalCode: values.nationalCode,
+          ...(values.email.trim() && {
+            email: values.email.trim(),
+          }),
+          ...(isEditSession && {
+            excludeUserId: editId,
+          }),
+        });
+
+        let hasDuplicate = false;
+
+        if (result.phoneNumber) {
+          form.setError("phoneNumber", {
+            type: "duplicate",
+            message: "این شماره موبایل قبلاً ثبت شده است",
+          });
+          hasDuplicate = true;
+        }
+
+        if (result.nationalCode) {
+          form.setError("nationalCode", {
+            type: "duplicate",
+            message: "این کد ملی قبلاً ثبت شده است",
+          });
+          hasDuplicate = true;
+        }
+
+        if (result.email) {
+          form.setError("email", {
+            type: "duplicate",
+            message: "این ایمیل قبلاً ثبت شده است",
+          });
+          hasDuplicate = true;
+        }
+
+        if (hasDuplicate) return;
+
+        // for submit admin
+        if (!needsPermissions && !isInvestor) {
+          await form.handleSubmit(handleSubmit)();
+          return;
+        }
+
+        setCurrentStep(2);
+      } catch {
+        form.setError("root.duplicateCheck", {
+          type: "server",
+          message: "بررسی اطلاعات با خطا مواجه شد. لطفاً دوباره تلاش کنید.",
+        });
+      }
+
       return;
     }
 
     if (currentStep === 2) {
-      if (isInvestor) {
-        setCurrentStep(3);
-        return;
-      }
-
       await form.handleSubmit(handleSubmit)();
     }
   };
@@ -132,15 +204,42 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
     setCurrentStep((step) => Math.max(1, step - 1));
   };
 
-  const handleRoleChange = (role: CreateUserInputTypes["role"]) => {
+  const handleRoleChange = async (role: CreateUserInputTypes["role"]) => {
     form.setValue("role", role, {
       shouldValidate: true,
     });
 
-    // form.setValue("permissions", [...ROLE_DEFAULT_PERMISSIONS[role]], {
-    //   shouldDirty: true,
-    //   shouldValidate: true,
-    // });
+    setCurrentStep(1);
+
+    form.clearErrors("root.permissions");
+
+    if (!PERMISSION_ROLES.includes(role as (typeof PERMISSION_ROLES)[number])) {
+      form.setValue("permissions", [], {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      return;
+    }
+
+    try {
+      const permissionIds = await getDefaultPermissions(role);
+
+      if (form.getValues("role") !== role) return;
+
+      form.setValue("permissions", permissionIds, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    } catch {
+      form.setValue("permissions", [], {
+        shouldValidate: true,
+      });
+
+      form.setError("root.permissions", {
+        type: "server",
+        message: "دریافت دسترسی‌های پیش‌فرض با خطا مواجه شد.",
+      });
+    }
   };
 
   return (
@@ -158,11 +257,11 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
       <div className="mt-5 mb-2">
         <UserFormStepper currentStep={currentStep} steps={visibleSteps} />
       </div>
+
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
         className="mt-5 flex flex-col gap-6"
       >
-        {/* Step 1: Identity */}
         {currentStep === 1 && (
           <UserIdentity
             control={form.control}
@@ -171,21 +270,32 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
           />
         )}
 
-        {/* Step 2: Permissions */}
-        {currentStep === 2 && <UserPermissionsStep control={form.control} />}
+        {currentStep === 2 && needsPermissions && (
+          <UserPermissionsStep control={form.control} />
+        )}
 
-        {/* Step 3: Investor contract */}
-        {currentStep === 3 && isInvestor && (
+        {currentStep === 2 && isInvestor && (
           <InvestorContractStep control={form.control} />
         )}
 
-        {/* Navigation */}
+        {form.formState.errors.root?.duplicateCheck && (
+          <p className="text-sm text-destructive">
+            {form.formState.errors.root.duplicateCheck.message}
+          </p>
+        )}
+
+        {form.formState.errors.root?.permissions && (
+          <p className="text-sm text-destructive">
+            {form.formState.errors.root.permissions.message}
+          </p>
+        )}
+
         <div className="flex items-center gap-3 pt-2 mr-auto border-t">
           <Button
             type="button"
             variant="outline"
             onClick={currentStep === 1 ? onCloseDialog : handlePrevious}
-            disabled={isWorking}
+            disabled={isWorking || isChecking || isLoadingDefaults}
           >
             {currentStep === 1 ? (
               "انصراف"
@@ -198,13 +308,17 @@ export function CreateUserForm({ user, onCloseDialog }: Props) {
           </Button>
 
           <Button
-            type={currentStep === 3 ? "submit" : "button"}
-            onClick={currentStep !== 3 ? handleNext : undefined}
-            disabled={isWorking}
+            type={currentStep === 2 ? "submit" : "button"}
+            onClick={currentStep === 1 ? handleNext : undefined}
+            disabled={isWorking || isChecking || isLoadingDefaults}
           >
             {isWorking ? (
               "در حال ثبت..."
-            ) : currentStep === 3 || !isInvestor ? (
+            ) : isChecking ? (
+              "در حال بررسی اطلاعات..."
+            ) : isLoadingDefaults ? (
+              "در حال دریافت دسترسی‌ها..."
+            ) : currentStep === 2 ? (
               isEditSession ? (
                 "ذخیره تغییرات"
               ) : (

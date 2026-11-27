@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import { PermissionModel } from "../../models/permission.model.js";
 import { ApiFeatures } from "../../utils/ApiFeatures.js";
 import { AppError } from "../../utils/AppError.js";
+import { ROLE_PERMISSION_PRESETS } from "./permission.constants.js";
+import type { UserRole } from "../../models/user.model.js";
 
 type CreatePermissionInput = {
   key: string;
@@ -128,6 +130,20 @@ export class PermissionService {
         400,
       );
     }
+
+    return permissions.map((permission) => permission._id);
+  }
+
+  async getDefaultPermissions(role: UserRole) {
+    const permissionKeys = ROLE_PERMISSION_PRESETS[role];
+
+    const permissions = await PermissionModel
+      .find({
+        key: { $in: permissionKeys },
+        isActive: true,
+      })
+      .select("_id")
+      .lean();
 
     return permissions.map((permission) => permission._id);
   }

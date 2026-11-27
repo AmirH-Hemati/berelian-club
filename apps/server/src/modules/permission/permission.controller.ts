@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import CatchError from "../../utils/catchAsync.js";
 import { permissionService } from "../../container/index.js";
+import type { UserRole } from "../../models/user.model.js";
 
 export const getAllPermission = CatchError(
   async (req: Request, res: Response) => {
@@ -25,6 +26,19 @@ export const getOnePermission = CatchError(
     });
   },
 );
+
+export const getDefaultPermissions = CatchError(async (req, res) => {
+  const permissions = await permissionService.getDefaultPermissions(
+    req.params.role as UserRole,
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      permissions,
+    },
+  });
+});
 
 export const createPermission = CatchError(
   async (req: Request, res: Response) => {

@@ -55,3 +55,28 @@ export const PERMISSIONS = [
     group: "appointments",
   },
 ];
+
+export const ROLE_PERMISSION_PRESETS = {
+  admin: [],
+
+  investor: [
+    "profile.read",
+    "profile.update",
+    "appointments.create",
+    "appointments.read",
+  ],
+
+  reception: [
+    "users.read",
+    "requests.read",
+    "requests.update",
+    "appointments.read",
+  ],
+
+  consultant: [
+    "users.read",
+    "appointments.read",
+    "reports.create",
+    "reports.read",
+  ],
+} as const;

@@ -1,3 +1,4 @@
+import type { CheckUserDuplicatesInput } from "@repo/schema";
 import type { ContractStatus } from "../../models/contract.model.js";
 import UserModel, { type UserRole } from "../../models/user.model.js";
 import { ApiFeatures } from "../../utils/ApiFeatures.js";
@@ -88,6 +89,52 @@ export class UserService {
         limit,
         page,
       },
+    };
+  }
+
+  async checkDuplicates(data: CheckUserDuplicatesInput) {
+    const { phoneNumber, nationalCode, email, excludeUserId } = data;
+
+    const conditions = [];
+
+    if (phoneNumber) {
+      conditions.push({ phoneNumber });
+    }
+
+    if (nationalCode) {
+      conditions.push({ nationalCode });
+    }
+
+    if (email) {
+      conditions.push({ email });
+    }
+
+    const filter: Record<string, unknown> = {
+      $or: conditions,
+    };
+
+    if (excludeUserId) {
+      filter._id = {
+        $ne: excludeUserId,
+      };
+    }
+
+    const users = await UserModel.find(filter)
+      .select("phoneNumber nationalCode email")
+      .lean();
+
+    return {
+      phoneNumber: data.phoneNumber
+        ? users.some((user) => user.phoneNumber === data.phoneNumber)
+        : false,
+
+      nationalCode: data.nationalCode
+        ? users.some((user) => user.nationalCode === data.nationalCode)
+        : false,
+
+      email: data.email
+        ? users.some((user) => user.email === data.email)
+        : false,
     };
   }
 

@@ -1,6 +1,10 @@
 import { axiosInstance } from "@repo/auth";
 import { buildQueryParams, GetRequestsParams } from "@/utils/buildQueryParams";
-import { CreateUserInputTypes, updateUserInputTypes } from "@repo/schema";
+import {
+  CheckUserDuplicatesInput,
+  CreateUserInputTypes,
+  updateUserInputTypes,
+} from "@repo/schema";
 
 export async function getAllUsers(query: GetRequestsParams) {
   const searchFields = ["firstName", "lastName", "email", "phoneNumber"];
@@ -21,6 +25,18 @@ export type UserOption = {
   phoneNumber: string;
   role: UserRole;
 };
+
+export type CheckUserDuplicatesResult = {
+  phoneNumber: boolean;
+  nationalCode: boolean;
+  email: boolean;
+};
+
+export async function checkUserDuplicates(data: CheckUserDuplicatesInput) {
+  const response = await axiosInstance.post("/users/check-duplicates", data);
+
+  return response.data.data;
+}
 
 export async function getUsersByRole(role: UserRole) {
   const { data } = await axiosInstance.get(`/users/by-role/${role}`);

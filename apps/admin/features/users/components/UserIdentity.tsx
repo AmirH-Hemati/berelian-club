@@ -12,8 +12,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui";
-import { BriefcaseBusiness, Headset, IdCard, Mail, Phone, Shield, User } from "lucide-react";
-import { Control, Controller, UseFormReturn } from "react-hook-form";
+import {
+  BriefcaseBusiness,
+  Headset,
+  IdCard,
+  Mail,
+  Phone,
+  Shield,
+  User,
+} from "lucide-react";
+import { Control, Controller, UseFormReturn, useWatch } from "react-hook-form";
 
 type Props = {
   control: Control<CreateUserInputTypes>;
