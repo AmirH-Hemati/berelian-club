@@ -19,6 +19,8 @@ import { OtpService } from "../modules/verification/verification.service.js";
 import { SmsService } from "../services/sms/sms.service.js";
 import { PermissionService } from "../modules/permission/permission.service.js";
 import ContractService from "../modules/contract/contract.service.js";
+import { notificationQueue } from "../infrastructure/queues/notification.queue.js";
+import { createNotificationWorker } from "../infrastructure/queues/notification.worker.js";
 
 const SmsProvider = new SmsService();
 const otpService = new OtpService(SmsProvider);
@@ -64,6 +66,7 @@ export const initializeSocketServices = (io: Server) => {
     conversationService,
     messageService,
     userService,
+    notificationQueue,
   );
 
   fileService = new FileService();
@@ -79,4 +82,9 @@ export const initializeSocketServices = (io: Server) => {
   );
 
   setupSocketGateway(io, socketService);
+
+  const notificationWorker = createNotificationWorker({
+    userService,
+    notificationService,
+  });
 };

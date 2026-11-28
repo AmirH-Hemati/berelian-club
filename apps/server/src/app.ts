@@ -42,7 +42,7 @@ app.use(express.static(path.join(process.cwd(), "/public")));
 app.use(express.json());
 
 app.use(cookiePraser());
-// app.use(morgan("dev"));
+app.use(morgan("dev"));
 
 app.use("/api", generalLimiter);
 

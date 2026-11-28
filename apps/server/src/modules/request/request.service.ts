@@ -12,6 +12,11 @@ import type { UserService } from "../user/user.service.js";
 import type { UserDocument, UserRole } from "../../models/user.model.js";
 import mongoose from "mongoose";
 import type { MessageService } from "../message/message.service.js";
+import type {
+  NotificationJobData,
+  NotificationJobName,
+} from "../../infrastructure/queues/notification.types.js";
+import type { Queue } from "bullmq";
 
 export const REQUEST_TYPE_LABELS = {
   renew_contract: "تمدید قرارداد",
@@ -19,12 +24,15 @@ export const REQUEST_TYPE_LABELS = {
   decrease_capital: "کاهش سرمایه",
 } as const;
 
+type NotificationQueue = Queue<NotificationJobData, void, NotificationJobName>;
+
 export class RequestService {
   constructor(
     private readonly notificationService: NotificationService,
     private readonly conversationService: ConversationService,
     private readonly messageService: MessageService,
     private readonly userService: UserService,
+    private readonly notificationQueue: NotificationQueue,
   ) {}
   async createRequest(
     userId: string,
@@ -38,19 +46,29 @@ export class RequestService {
       assignedTo: null,
     });
 
-    const receptions = await this.userService.getUsersByRole("reception");
-    const receptionsIds = receptions.map((user) => user._id);
+    await this.notificationQueue.add(
+      "request-created",
+      {
+        requestId: request._id.toString(),
+      },
+      {
+        jobId: `request-created-${request._id}`,
+      },
+    );
 
-    const notifications = receptionsIds.map((reception) => ({
-      userId: reception._id.toString(),
-      title: "درخواست جدید",
-      message: "یک درخواست جدید ثبت شده است. برای بررسی وارد پنل شوید.",
-      type: "request_new" as const,
-      link: `/requests/${request._id}`,
-      deduplicationKey: `request-new-${request._id}-${reception._id}`,
-    }));
+    // const receptions = await this.userService.getUsersByRole("reception");
+    // const receptionsIds = receptions.map((user) => user._id);
 
-    await this.notificationService.sendMany(notifications);
+    // const notifications = receptionsIds.map((reception) => ({
+    //   userId: reception._id.toString(),
+    //   title: "درخواست جدید",
+    //   message: "یک درخواست جدید ثبت شده است. برای بررسی وارد پنل شوید.",
+    //   type: "request_new" as const,
+    //   link: `/requests/${request._id}`,
+    //   deduplicationKey: `request-new-${request._id}-${reception._id}`,
+    // }));
+
+    // await this.notificationService.sendMany(notifications);
 
     return request;
   }
@@ -97,7 +115,7 @@ export class RequestService {
 
     const requestTypeLabel = REQUEST_TYPE_LABELS[request.type];
 
-    await this.notificationService.send({
+    await this.notificationQueue.add("request-approved", {
       userId: request.investor._id.toString(),
       title: "درخواست شما تایید شد",
       message: `درخواست ${requestTypeLabel} شما تأیید شد. برای ادامه گفتگو وارد چت شوید.`,
@@ -129,7 +147,7 @@ export class RequestService {
     const conversation =
       await this.conversationService.closeByRequest(requestId);
 
-    await this.notificationService.send({
+    await this.notificationQueue.add("request-completed", {
       userId: request.investor._id.toString(),
       title: "درخواست شما تکمیل شد",
       message:
@@ -138,7 +156,6 @@ export class RequestService {
       link: `/requests/${request._id}`,
       deduplicationKey: `request-completed-${request._id}`,
     });
-
     return {
       request,
       conversation,
@@ -170,7 +187,7 @@ export class RequestService {
 
     await request.save();
 
-    await this.notificationService.send({
+    await this.notificationQueue.add("request-rejected", {
       userId: request.investor._id.toString(),
       title: "درخواست شما لغو شد",
       message: `درخواست ${REQUEST_TYPE_LABELS[request.type]} شما لغو شد.`,
