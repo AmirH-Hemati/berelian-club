@@ -62,7 +62,7 @@ export class AppointmentService {
     );
 
     if (appointmentDateTime <= new Date()) {
-      throw new Error("زمان مشاوره باید در آینده باشد");
+      throw new AppError("زمان مشاوره باید در آینده باشد", 400);
     }
 
     const endAt = this.calculateEndAt(startAt);
@@ -79,18 +79,16 @@ export class AppointmentService {
     });
 
     const consultants = await this.userService.getUsersByRole("consultant");
-    const consultantIds = consultants.map((user) => user._id);
 
-    const notifications = consultantIds.map((consultant) => ({
-      userId: consultant._id.toString(),
+    await this.notificationService.enqueueMany({
+      userIds: consultants.map((consultant) => consultant._id.toString()),
       title: "درخواست مشاوره جدید",
       message: "یک درخواست مشاوره جدید ثبت شده است. برای بررسی وارد پنل شوید.",
-      type: "appointment_new" as const,
+      type: "appointment_new",
       link: `/appointments/${appointment._id}`,
-      deduplicationKey: `appointment-new-${appointment._id}-${consultant._id}`,
-    }));
-
-    await this.notificationService.sendMany(notifications);
+      deduplicationKey: (consultantId) =>
+        `appointment-new-${appointment._id}-${consultantId}`,
+    });
 
     return appointment;
   }
@@ -131,18 +129,17 @@ export class AppointmentService {
       );
     }
 
-    await this.notificationService.send({
+    await this.notificationService.enqueue({
       userId: appointment.investor._id.toString(),
       title: "تأیید نوبت مشاوره",
       message: `نوبت مشاوره شما در تاریخ ${formatPersianDate(appointment.appointmentDate)} تأیید شد.`,
       type: "appointment_approved",
       link: `/appointments/${appointment._id}`,
-      deduplicationKey: `appointment-approve-${appointment._id}-${consultantId}`,
+      deduplicationKey: `appointment-approved-${appointment._id}`,
     });
 
     return appointment;
   }
-
   async rejectAppointment(
     appointmentId: string,
     reason: string,
@@ -177,45 +174,58 @@ export class AppointmentService {
       throw new AppError("این نوبت در وضعیت قابل رد نیست", 400);
     }
 
-    await this.notificationService.send({
+    await this.notificationService.enqueue({
       userId: appointment.investor._id.toString(),
       title: "رد درخواست مشاوره",
       message: `درخواست مشاوره شما در تاریخ ${formatPersianDate(appointment.appointmentDate)} رد شد. دلیل: ${reason}`,
       type: "appointment_rejected",
       link: `/appointments/${appointment._id}`,
-      deduplicationKey: `appointment-reject-${appointment._id}-${userId}`,
+      deduplicationKey: `appointment-rejected-${appointment._id}`,
     });
 
     return appointment;
   }
 
   async completeAppointment(appointmentId: string) {
-    const appointment = await AppointmentModel.findById(appointmentId);
+    const appointment = await AppointmentModel.findOneAndUpdate(
+      {
+        _id: appointmentId,
+        status: "approved",
+      },
+      {
+        $set: {
+          status: "completed",
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
 
     if (!appointment) {
-      throw new Error("نوبت مشاوره پیدا نشد");
+      const existingAppointment = await AppointmentModel.exists({
+        _id: appointmentId,
+      });
+
+      if (!existingAppointment) {
+        throw new AppError("نوبت مشاوره پیدا نشد", 404);
+      }
+
+      throw new AppError("فقط نوبت‌های تأیید شده قابل تکمیل هستند", 400);
     }
 
-    if (appointment.status !== "approved") {
-      throw new Error("فقط نوبت‌های تأیید شده قابل تکمیل هستند");
-    }
-
-    appointment.status = "completed";
-
-    await appointment.save();
-
-    await this.notificationService.send({
+    await this.notificationService.enqueue({
       userId: appointment.investor._id.toString(),
       title: "تکمیل مشاوره",
       message: `مشاوره شما در تاریخ ${formatPersianDate(appointment.appointmentDate)} تکمیل شد.`,
       type: "appointment_completed",
       link: `/appointments/${appointment._id}`,
-      deduplicationKey: `appointment-complete-${appointment._id}-${appointment.investor._id}`,
+      deduplicationKey: `appointment-completed-${appointment._id}`,
     });
 
     return appointment;
   }
-
   async rescheduleAppointment(
     appointmentId: string,
     appointmentDate: Date,
@@ -262,18 +272,17 @@ export class AppointmentService {
       throw new AppError("امکان تغییر زمان این نوبت وجود ندارد", 400);
     }
 
-    await this.notificationService.send({
+    await this.notificationService.enqueue({
       userId: appointment.investor._id.toString(),
       title: "تغییر زمان مشاوره",
-      message: `زمان مشاوره شما به ${formatPersianDate(appointment.appointmentDate)} ساعت ${startAt} تغییر کرد.`,
+      message: `زمان مشاوره شما به ${formatPersianDate(appointment.appointmentDate)} ساعت ${startAt} تغییر کرد. دلیل: ${reason}`,
       type: "appointment_rescheduled",
       link: `/appointments/${appointment._id}`,
-      deduplicationKey: `appointment-complete-${appointment._id}-${appointment.investor._id}`,
+      deduplicationKey: `appointment-rescheduled-${appointment._id}`,
     });
 
     return appointment;
   }
-
   async getUserAppointments(userId: string, query: Record<string, any>) {
     const features = new ApiFeatures(
       AppointmentModel.find({ investor: userId }),

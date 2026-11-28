@@ -1,9 +1,7 @@
 import mongoose, { Types } from "mongoose";
-import UserFileModel, {
-  type UserFileDocument,
-} from "../../models/userFile.model.js";
-import { AppError } from "../../utils/AppError.js";
+import UserFileModel from "../../models/userFile.model.js";
 import { ApiFeatures } from "../../utils/ApiFeatures.js";
+import { AppError } from "../../utils/AppError.js";
 import type { FileService } from "../file/file.service.js";
 import type { NotificationService } from "../notification/notification.service.js";
 
@@ -24,7 +22,6 @@ export class UserFileService {
     private readonly fileService: FileService,
     private readonly notificationService: NotificationService,
   ) {}
-
   async sendFileToUser(data: SendFileToUserInput) {
     const file = await this.fileService.getFileById(data.fileId);
 
@@ -34,7 +31,7 @@ export class UserFileService {
       sentBy: data.sentBy,
     });
 
-    await this.notificationService.send({
+    await this.notificationService.enqueue({
       userId: data.userId,
       title: "فایل جدید برای شما ارسال شد",
       message: `فایل «${file.originalName}» برای شما ارسال شد.`,
