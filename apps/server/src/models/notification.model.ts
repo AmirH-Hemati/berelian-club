@@ -1,25 +1,26 @@
 import mongoose from "mongoose";
 
+export type NotificationType =
+  | "file_received"
+  | "request_new"
+  | "request_approved"
+  | "request_rejected"
+  | "request_completed"
+  | "appointment_new"
+  | "appointment_approved"
+  | "appointment_rejected"
+  | "appointment_completed"
+  | "appointment_rescheduled"
+  | "reminder"
+  | "contract_start"
+  | "contract_expiry"
+  | "birthday";
+
 export interface NotificationDocument extends mongoose.Document {
   user: mongoose.Types.ObjectId;
   title: string;
   message: string;
-  type:
-    | "file_received"
-    | "request_new"
-    | "request_approved"
-    | "request_rejected"
-    | "request_completed"
-    | "appointment_new"
-    | "appointment_approved"
-    | "appointment_rejected"
-    | "appointment_completed"
-    | "appointment_rescheduled"
-    | "reminder"
-    | "contract_start"
-    | "contract_expiry"
-    | "birthday";
-
+  type: NotificationType;
   link?: string;
   deduplicationKey?: string;
   isRead: boolean;

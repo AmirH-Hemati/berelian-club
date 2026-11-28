@@ -66,7 +66,6 @@ export const initializeSocketServices = (io: Server) => {
     conversationService,
     messageService,
     userService,
-    notificationQueue,
   );
 
   fileService = new FileService();
@@ -84,7 +83,6 @@ export const initializeSocketServices = (io: Server) => {
   setupSocketGateway(io, socketService);
 
   const notificationWorker = createNotificationWorker({
-    userService,
     notificationService,
   });
 };

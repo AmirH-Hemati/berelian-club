@@ -1,68 +1,86 @@
-import NotificationModel from "../../models/notification.model.js";
+import NotificationModel, {
+  type NotificationType,
+} from "../../models/notification.model.js";
+
 import { AppError } from "../../utils/AppError.js";
 import { ApiFeatures } from "../../utils/ApiFeatures.js";
+
 import type { SocketService } from "../socket/socket.service.js";
 
-export type SendNotification = {
-  userId: string;
+import { notificationQueue } from "../../infrastructure/queues/notification.queue.js";
+
+import type { SendNotificationJobData } from "../../infrastructure/queues/notification.types.js";
+
+type EnqueueManyInput = {
+  userIds: string[];
   title: string;
   message: string;
-  type:
-    | "file_received"
-    | "request_new"
-    | "request_approved"
-    | "request_rejected"
-    | "request_completed"
-    | "appointment_new"
-    | "appointment_approved"
-    | "appointment_rejected"
-    | "appointment_completed"
-    | "appointment_rescheduled"
-    | "reminder"
-    | "contract_start"
-    | "contract_expiry"
-    | "birthday";
-  deduplicationKey?: string;
-  link?: string;
+  type: NotificationType;
+  link: string;
+  deduplicationKey: (userId: string) => string;
 };
 
 export class NotificationService {
   constructor(private readonly socketService: SocketService) {}
-  async send(data: SendNotification) {
-    const notification = await NotificationModel.create({
-      user: data.userId,
-      title: data.title,
-      message: data.message,
-      type: data.type,
-      link: data.link,
-      deduplicationKey: data.deduplicationKey,
+
+  async enqueue(data: SendNotificationJobData) {
+    return notificationQueue.add("send-notification", data, {
+      jobId: data.deduplicationKey,
     });
-
-    this.emitNotification(notification);
-
-    return notification;
   }
 
-  async sendMany(notifications: SendNotification[]) {
-    for (const data of notifications) {
-      try {
-        const notification = await NotificationModel.create({
-          user: data.userId,
+  async enqueueMany(data: EnqueueManyInput) {
+    const jobs = data.userIds.map((userId) => {
+      const deduplicationKey = data.deduplicationKey(userId);
+
+      return {
+        name: "send-notification" as const,
+
+        data: {
+          userId,
           title: data.title,
           message: data.message,
           type: data.type,
           link: data.link,
-          deduplicationKey: data.deduplicationKey,
-        });
+          deduplicationKey,
+        },
 
-        this.emitNotification(notification);
-      } catch (error: any) {
-        if (error.code === 11000) {
-          continue;
-        }
+        opts: {
+          jobId: deduplicationKey,
+        },
+      };
+    });
 
-        throw error;
+    if (jobs.length === 0) return [];
+
+    return notificationQueue.addBulk(jobs);
+  }
+
+  async send(data: SendNotificationJobData) {
+    try {
+      const notification = await NotificationModel.create({
+        user: data.userId,
+        title: data.title,
+        message: data.message,
+        type: data.type,
+        link: data.link,
+        deduplicationKey: data.deduplicationKey,
+      });
+
+      this.emitNotification(notification);
+
+      return notification;
+    } catch (error: unknown) {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        error.code === 11000
+      ) {
+        return null;
       }
+
+      throw error;
     }
   }
 

@@ -1,12 +1,14 @@
 import { Queue } from "bullmq";
+
 import type {
-  NotificationJobData,
+  SendNotificationJobData,
   NotificationJobName,
 } from "./notification.types.js";
+
 import { redisQueueConnection } from "./redis-queue.connection.js";
 
 export const notificationQueue = new Queue<
-  NotificationJobData,
+  SendNotificationJobData,
   void,
   NotificationJobName
 >("notifications", {

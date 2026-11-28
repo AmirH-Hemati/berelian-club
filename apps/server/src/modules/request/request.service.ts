@@ -12,11 +12,6 @@ import type { UserService } from "../user/user.service.js";
 import type { UserDocument, UserRole } from "../../models/user.model.js";
 import mongoose from "mongoose";
 import type { MessageService } from "../message/message.service.js";
-import type {
-  NotificationJobData,
-  NotificationJobName,
-} from "../../infrastructure/queues/notification.types.js";
-import type { Queue } from "bullmq";
 
 export const REQUEST_TYPE_LABELS = {
   renew_contract: "تمدید قرارداد",
@@ -24,16 +19,14 @@ export const REQUEST_TYPE_LABELS = {
   decrease_capital: "کاهش سرمایه",
 } as const;
 
-type NotificationQueue = Queue<NotificationJobData, void, NotificationJobName>;
-
 export class RequestService {
   constructor(
     private readonly notificationService: NotificationService,
     private readonly conversationService: ConversationService,
     private readonly messageService: MessageService,
     private readonly userService: UserService,
-    private readonly notificationQueue: NotificationQueue,
   ) {}
+
   async createRequest(
     userId: string,
     data: Pick<RequestDocument, "type" | "description">,
@@ -46,32 +39,20 @@ export class RequestService {
       assignedTo: null,
     });
 
-    await this.notificationQueue.add(
-      "request-created",
-      {
-        requestId: request._id.toString(),
-      },
-      {
-        jobId: `request-created-${request._id}`,
-      },
-    );
+    const receptions = await this.userService.getUsersByRole("reception");
 
-    // const receptions = await this.userService.getUsersByRole("reception");
-    // const receptionsIds = receptions.map((user) => user._id);
-
-    // const notifications = receptionsIds.map((reception) => ({
-    //   userId: reception._id.toString(),
-    //   title: "درخواست جدید",
-    //   message: "یک درخواست جدید ثبت شده است. برای بررسی وارد پنل شوید.",
-    //   type: "request_new" as const,
-    //   link: `/requests/${request._id}`,
-    //   deduplicationKey: `request-new-${request._id}-${reception._id}`,
-    // }));
-
-    // await this.notificationService.sendMany(notifications);
+    await this.notificationService.enqueueMany({
+      userIds: receptions.map((reception) => reception._id.toString()),
+      title: "درخواست جدید",
+      message: "یک درخواست جدید ثبت شده است. برای بررسی وارد پنل شوید.",
+      type: "request_new",
+      link: `/requests/${request._id}`,
+      deduplicationKey: (userId) => `request-new-${request._id}-${userId}`,
+    });
 
     return request;
   }
+
   async approveRequest(requestId: string, receptionId: string) {
     const request = await RequestModel.findOneAndUpdate(
       {
@@ -79,7 +60,6 @@ export class RequestService {
         status: "pending",
         assignedTo: null,
       },
-
       {
         $set: {
           status: "approved",
@@ -115,7 +95,7 @@ export class RequestService {
 
     const requestTypeLabel = REQUEST_TYPE_LABELS[request.type];
 
-    await this.notificationQueue.add("request-approved", {
+    await this.notificationService.enqueue({
       userId: request.investor._id.toString(),
       title: "درخواست شما تایید شد",
       message: `درخواست ${requestTypeLabel} شما تأیید شد. برای ادامه گفتگو وارد چت شوید.`,
@@ -131,23 +111,39 @@ export class RequestService {
   }
 
   async completeRequest(requestId: string) {
-    const request = await RequestModel.findById(requestId);
+    const request = await RequestModel.findOneAndUpdate(
+      {
+        _id: requestId,
+        status: "approved",
+      },
+      {
+        $set: {
+          status: "completed",
+          completedAt: new Date(),
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
 
     if (!request) {
-      throw new AppError("درخواستی یافت نشد", 404);
-    }
+      const existingRequest = await RequestModel.exists({
+        _id: requestId,
+      });
 
-    if (request.status !== "approved") {
+      if (!existingRequest) {
+        throw new AppError("درخواستی یافت نشد", 404);
+      }
+
       throw new AppError("فقط درخواست‌های تایید شده را می‌توان تکمیل کرد", 400);
     }
-    request.status = "completed";
-    request.completedAt = new Date();
-    await request.save();
 
     const conversation =
       await this.conversationService.closeByRequest(requestId);
 
-    await this.notificationQueue.add("request-completed", {
+    await this.notificationService.enqueue({
       userId: request.investor._id.toString(),
       title: "درخواست شما تکمیل شد",
       message:
@@ -156,38 +152,52 @@ export class RequestService {
       link: `/requests/${request._id}`,
       deduplicationKey: `request-completed-${request._id}`,
     });
+
     return {
       request,
       conversation,
     };
   }
+
   async rejectRequest(
     requestId: string,
     reason: string | undefined,
     adminId: Types.ObjectId,
   ) {
-    const request = await RequestModel.findById(requestId);
+    const request = await RequestModel.findOneAndUpdate(
+      {
+        _id: requestId,
+        status: "pending",
+      },
+      {
+        $set: {
+          status: "cancelled",
+          cancellationReason: reason || "کنسل شده توسط ادمین",
+          cancelledBy: adminId,
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    );
 
     if (!request) {
-      throw new AppError("درخواستی یافت نشد", 404);
-    }
+      const existingRequest = await RequestModel.exists({
+        _id: requestId,
+      });
 
-    if (request.status !== "pending") {
+      if (!existingRequest) {
+        throw new AppError("درخواستی یافت نشد", 404);
+      }
+
       throw new AppError(
         "این درخواست قبلاً بررسی شده و امکان لغو آن وجود ندارد",
         400,
       );
     }
 
-    request.status = "cancelled";
-
-    request.cancellationReason = reason || "کنسل شده توسط ادمین";
-
-    request.cancelledBy = adminId;
-
-    await request.save();
-
-    await this.notificationQueue.add("request-rejected", {
+    await this.notificationService.enqueue({
       userId: request.investor._id.toString(),
       title: "درخواست شما لغو شد",
       message: `درخواست ${REQUEST_TYPE_LABELS[request.type]} شما لغو شد.`,
